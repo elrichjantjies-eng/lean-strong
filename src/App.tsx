@@ -5,6 +5,9 @@ import { Screen } from "./components/Screen";
 import { TabBar } from "./components/TabBar";
 import { Onboarding } from "./features/onboarding/Onboarding";
 import { TodayScreen } from "./features/today/Today";
+import { LogPastScreen } from "./features/player/LogPast";
+import { WorkoutScreen } from "./features/player/Player";
+import { WalkScreen } from "./features/player/WalkScreen";
 
 function TabsLayout() {
   return (
@@ -46,11 +49,11 @@ function Gate() {
           <Route path="exercises/*" element={<Placeholder title="Exercises" />} />
           <Route path="progress/*" element={<Placeholder title="Progress" />} />
           <Route path="more/*" element={<Placeholder title="More" />} />
-          <Route path="log-past" element={<Placeholder title="Log a past workout" />} />
+          <Route path="log-past" element={<LogPastScreen />} />
           <Route path="complete" element={<Placeholder title="Program complete" />} />
         </Route>
-        <Route path="workout/:sessionId" element={<Placeholder title="Workout" />} />
-        <Route path="walk" element={<Placeholder title="Walk" />} />
+        <Route path="workout/:sessionId" element={<WorkoutScreen />} />
+        <Route path="walk" element={<WalkScreen />} />
         <Route path="new-profile" element={<AddProfile />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
