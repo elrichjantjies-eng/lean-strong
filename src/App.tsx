@@ -1,7 +1,10 @@
-import { HashRouter, Outlet, Route, Routes } from "react-router";
-import { TabBar } from "./components/TabBar";
+import { HashRouter, Navigate, Outlet, Route, Routes, useNavigate } from "react-router";
+import { useActiveState, useAppTheme } from "./app/active";
+import { ActiveProvider } from "./app/ActiveProvider";
 import { Screen } from "./components/Screen";
-import { programList } from "./content/loader";
+import { TabBar } from "./components/TabBar";
+import { Onboarding } from "./features/onboarding/Onboarding";
+import { TodayScreen } from "./features/today/Today";
 
 function TabsLayout() {
   return (
@@ -9,27 +12,6 @@ function TabsLayout() {
       <Outlet />
       <TabBar />
     </>
-  );
-}
-
-function TodayScreen() {
-  return (
-    <Screen title="Today" kicker="Lean & Strong">
-      <ul className="space-y-3">
-        {programList.map((p) => (
-          <li key={p.id} className="rounded-2xl bg-surface p-4 shadow-sm ring-1 ring-line">
-            <p
-              className="text-xs font-semibold tracking-wide uppercase"
-              style={{ color: p.theme.accent }}
-            >
-              {p.weeks} weeks · {p.setting}
-            </p>
-            <h2 className="text-lg font-bold">{p.title}</h2>
-            <p className="text-sm text-muted">{p.subtitle}</p>
-          </li>
-        ))}
-      </ul>
-    </Screen>
   );
 }
 
@@ -41,18 +23,45 @@ function Placeholder({ title }: { title: string }) {
   );
 }
 
-export function App() {
+function AddProfile() {
+  const navigate = useNavigate();
+  return <Onboarding onCancel={() => navigate(-1)} />;
+}
+
+function Gate() {
+  const state = useActiveState();
+  useAppTheme(state.status === "ready" ? state.program : undefined);
+
+  if (state.status === "loading") {
+    return <div className="min-h-dvh bg-bg" aria-busy="true" />;
+  }
+  if (state.status === "none") return <Onboarding />;
+
   return (
-    <HashRouter>
+    <ActiveProvider value={{ profile: state.profile, program: state.program }}>
       <Routes>
         <Route element={<TabsLayout />}>
           <Route index element={<TodayScreen />} />
-          <Route path="plan" element={<Placeholder title="Plan" />} />
-          <Route path="exercises" element={<Placeholder title="Exercises" />} />
-          <Route path="progress" element={<Placeholder title="Progress" />} />
-          <Route path="more" element={<Placeholder title="More" />} />
+          <Route path="plan/*" element={<Placeholder title="Plan" />} />
+          <Route path="exercises/*" element={<Placeholder title="Exercises" />} />
+          <Route path="progress/*" element={<Placeholder title="Progress" />} />
+          <Route path="more/*" element={<Placeholder title="More" />} />
+          <Route path="log-past" element={<Placeholder title="Log a past workout" />} />
+          <Route path="complete" element={<Placeholder title="Program complete" />} />
         </Route>
+        <Route path="workout/:sessionId" element={<Placeholder title="Workout" />} />
+        <Route path="walk" element={<Placeholder title="Walk" />} />
+        <Route path="new-profile" element={<AddProfile />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+    </ActiveProvider>
+  );
+}
+
+export function App() {
+  return (
+    <HashRouter>
+      <Gate />
     </HashRouter>
   );
 }
