@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  
+  <rect width="512" height="512" rx="112" fill="#1c2a4a"/>
+  <g transform="translate(0.0 0.0) scale(1)">
+    <text x="256" y="298" text-anchor="middle" font-family="Poppins, Arial, sans-serif" font-weight="700" font-size="212" letter-spacing="-6" fill="#f0642d">LS</text>
+    <g fill="#ffffff">
+      <rect x="150" y="346" width="212" height="16" rx="8"/>
+      <rect x="128" y="322" width="26" height="64" rx="8"/>
+      <rect x="358" y="322" width="26" height="64" rx="8"/>
+      <rect x="110" y="334" width="16" height="40" rx="6"/>
+      <rect x="386" y="334" width="16" height="40" rx="6"/>
+    </g>
+  </g>
+</svg>
