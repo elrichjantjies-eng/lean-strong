@@ -7,7 +7,7 @@
  * Writes PWA icons to public/icons/ and, when android/ exists, Android launcher icons and the
  * splash image into android/app/src/main/res/.
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { chromium } from "@playwright/test";
 
@@ -77,26 +77,51 @@ if (existsSync(RES)) {
       },
     );
   }
-  outputs.push({
-    file: `${RES}/drawable/splash_logo.png`,
-    size: 288,
-    svg: svg({ rounded: true }),
-    transparent: true,
-  });
+  // Notification small icon: white silhouette on transparent (Android tints it).
+  for (const [d, k] of Object.entries(densities)) {
+    outputs.push({
+      file: `${RES}/drawable-${d}/ic_stat_ls.png`,
+      size: 24 * k,
+      svg: svg({ rounded: false, scale: 1.15, background: false }).replace(
+        `fill="${ACCENT}"`,
+        'fill="#ffffff"',
+      ),
+      transparent: true,
+    });
+  }
+  // Splash screens: keep each template file's size, navy with the icon in the middle.
+  for (const dir of readdirSync(RES).filter((n) => n.startsWith("drawable"))) {
+    const file = `${RES}/${dir}/splash.png`;
+    if (!existsSync(file)) continue;
+    const buf = readFileSync(file);
+    const width = buf.readUInt32BE(16);
+    const height = buf.readUInt32BE(20);
+    const icon = Math.round(Math.min(width, height) * 0.32);
+    outputs.push({
+      file,
+      width,
+      height,
+      html: `<div style="width:${width}px;height:${height}px;background:${NAVY};display:flex;align-items:center;justify-content:center">${svg({ rounded: true }).replace('width="512" height="512"', `width="${icon}" height="${icon}"`)}</div>`,
+    });
+  }
 }
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ deviceScaleFactor: 1 });
 for (const o of outputs) {
-  await page.setViewportSize({ width: o.size, height: o.size });
+  const width = o.width ?? o.size;
+  const height = o.height ?? o.size;
+  await page.setViewportSize({ width, height });
+  const body =
+    o.html ?? o.svg.replace('width="512" height="512"', `width="${o.size}" height="${o.size}"`);
   await page.setContent(
-    `<html><body style="margin:0;background:transparent">${o.svg.replace('width="512" height="512"', `width="${o.size}" height="${o.size}"`)}</body></html>`,
+    `<html><body style="margin:0;background:transparent">${body}</body></html>`,
   );
   await page.evaluate(() => document.fonts.ready);
   mkdirSync(dirname(o.file), { recursive: true });
   const png = await page.screenshot({
     omitBackground: !!o.transparent,
-    clip: { x: 0, y: 0, width: o.size, height: o.size },
+    clip: { x: 0, y: 0, width, height },
   });
   writeFileSync(o.file, png);
   console.log("wrote", o.file);

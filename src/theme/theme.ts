@@ -1,3 +1,4 @@
+import { Capacitor, SystemBars, SystemBarsStyle } from "@capacitor/core";
 import type { Theme } from "@/content/types";
 
 export type ColorMode = "light" | "dark";
@@ -93,6 +94,12 @@ export function applyTheme(theme: Theme, mode: ColorMode): void {
     root.style.setProperty(key, value);
   }
   root.dataset.theme = mode;
+  // Android: status/navigation bar icons readable on the app background.
+  if (Capacitor.isNativePlatform()) {
+    void SystemBars.setStyle({
+      style: mode === "dark" ? SystemBarsStyle.Dark : SystemBarsStyle.Light,
+    });
+  }
   document
     .querySelector('meta[name="theme-color"]')
     ?.setAttribute("content", mode === "dark" ? "#0e1424" : theme.primary);

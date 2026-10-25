@@ -8,6 +8,9 @@ import { KeepAwake } from "@capacitor-community/keep-awake";
 import { LocalNotifications } from "@capacitor/local-notifications";
 
 export const isNative = Capacitor.isNativePlatform();
+
+/** Fired when Android's back button is pressed during a workout; the player asks before leaving. */
+export const REQUEST_EXIT_EVENT = "ls:request-exit";
 export const platform = Capacitor.getPlatform() as "web" | "android" | "ios";
 
 export function isIosBrowser(): boolean {

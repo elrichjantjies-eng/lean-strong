@@ -11,6 +11,7 @@ import {
   isIosBrowser,
   isNative,
   keepAwake,
+  REQUEST_EXIT_EVENT,
   scheduleTimerAlert,
   wakeLockSupported,
 } from "@/platform";
@@ -181,6 +182,13 @@ function ActivePlayer({ ctx, step, progress }: { ctx: PlayerCtx; step: Step; pro
   const [sheet, setSheet] = useState<null | "exit" | "note" | "sets">(null);
   const back = usePlayer((s) => s.back);
   const awakeOk = wakeLockSupported();
+
+  // Android back button: ask before leaving the workout.
+  useEffect(() => {
+    const ask = () => setSheet("exit");
+    window.addEventListener(REQUEST_EXIT_EVENT, ask);
+    return () => window.removeEventListener(REQUEST_EXIT_EVENT, ask);
+  }, []);
 
   return (
     <PlayerFrame

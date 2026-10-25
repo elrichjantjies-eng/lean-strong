@@ -1,7 +1,7 @@
 {
   "name": "lean-strong",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,7 +12,10 @@
     "test:watch": "vitest",
     "e2e": "playwright test",
     "lint": "eslint . && prettier --check .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "icons": "node scripts/make-icons.mjs",
+    "android:sync": "npm run build && cap sync android",
+    "android:apk": "npm run android:sync && cd android && gradlew assembleRelease"
   },
   "dependencies": {
     "@capacitor-community/keep-awake": "8.0.1",

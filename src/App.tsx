@@ -28,6 +28,7 @@ const SettingsScreen = named(() => import("./features/settings/Settings"), "Sett
 const BackupScreen = named(() => import("./features/settings/Backup"), "BackupScreen");
 import { InstallBanner, UpdatePrompt } from "./features/pwa/WebApp";
 import { isNative } from "./platform";
+import { NativeBridge } from "./platform/NativeBridge";
 
 function TabsLayout() {
   return (
@@ -99,6 +100,7 @@ export function App() {
   return (
     <HashRouter>
       {!isNative && <UpdatePrompt />}
+      {isNative && <NativeBridge />}
       <Gate />
     </HashRouter>
   );
