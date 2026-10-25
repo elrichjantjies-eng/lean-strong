@@ -471,10 +471,12 @@ export function RemindersForm({
   program,
   value,
   onChange,
+  platformNote = true,
 }: {
   program: Program;
   value: ReminderPrefs;
   onChange: (v: ReminderPrefs) => void;
+  platformNote?: boolean;
 }) {
   const toggle = (key: keyof ReminderPrefs, label: string, hint?: string) => (
     <label className="flex min-h-14 items-center justify-between gap-4 border-b border-line py-2 last:border-0">
@@ -536,10 +538,12 @@ export function RemindersForm({
           </Field>
         </div>
       )}
-      <p className="text-sm text-muted">
-        On Android these arrive as notifications. On iPhone you can add your workouts to the
-        Calendar app from More → Settings.
-      </p>
+      {platformNote && (
+        <p className="text-sm text-muted">
+          On Android these arrive as notifications. On iPhone you can add your workouts to the
+          Calendar app from More → Settings.
+        </p>
+      )}
     </div>
   );
 }

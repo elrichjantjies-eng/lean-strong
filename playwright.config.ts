@@ -5,6 +5,9 @@ const port = 4173;
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
+  // WebKit is slow when several workers share one machine; give UI assertions room.
+  workers: process.env.CI ? 2 : 3,
+  expect: { timeout: 10_000 },
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? "github" : "list",

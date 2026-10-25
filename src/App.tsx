@@ -15,6 +15,9 @@ import { MoreScreen } from "./features/more/More";
 import { PlanScreen } from "./features/plan/Plan";
 import { SessionPageScreen } from "./features/plan/SessionPage";
 import { ProgressScreen } from "./features/progress/Progress";
+import { BackupScreen } from "./features/settings/Backup";
+import { SettingsScreen } from "./features/settings/Settings";
+import { useStartupTasks } from "./app/startup";
 
 function TabsLayout() {
   return (
@@ -41,6 +44,10 @@ function AddProfile() {
 function Gate() {
   const state = useActiveState();
   useAppTheme(state.status === "ready" ? state.program : undefined);
+  useStartupTasks(
+    state.status === "ready" ? state.profile : undefined,
+    state.status === "ready" ? state.program : undefined,
+  );
 
   if (state.status === "loading") {
     return <div className="min-h-dvh bg-bg" aria-busy="true" />;
@@ -59,7 +66,8 @@ function Gate() {
           <Route path="progress" element={<ProgressScreen />} />
           <Route path="more" element={<MoreScreen />} />
           <Route path="more/guide/:pageId" element={<GuidePageScreen />} />
-          <Route path="more/*" element={<Placeholder title="Settings" />} />
+          <Route path="more/settings" element={<SettingsScreen />} />
+          <Route path="more/backup" element={<BackupScreen />} />
           <Route path="log-past" element={<LogPastScreen />} />
           <Route path="complete" element={<Placeholder title="Program complete" />} />
         </Route>
