@@ -14,6 +14,7 @@ import { LibraryScreen } from "./features/library/Library";
 import { MoreScreen } from "./features/more/More";
 import { PlanScreen } from "./features/plan/Plan";
 import { SessionPageScreen } from "./features/plan/SessionPage";
+import { ProgressScreen } from "./features/progress/Progress";
 
 function TabsLayout() {
   return (
@@ -55,7 +56,7 @@ function Gate() {
           <Route path="plan/session/:sessionId" element={<SessionPageScreen />} />
           <Route path="exercises" element={<LibraryScreen />} />
           <Route path="exercises/:exerciseId" element={<ExerciseDetailScreen />} />
-          <Route path="progress/*" element={<Placeholder title="Progress" />} />
+          <Route path="progress" element={<ProgressScreen />} />
           <Route path="more" element={<MoreScreen />} />
           <Route path="more/guide/:pageId" element={<GuidePageScreen />} />
           <Route path="more/*" element={<Placeholder title="Settings" />} />

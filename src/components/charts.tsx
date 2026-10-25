@@ -81,7 +81,12 @@ export function LineChart({
   if (xs.length === 0 || ys.length === 0) return null;
   const [x0, x1] = [Math.min(...xs), Math.max(...xs)];
   let [y0, y1] = [Math.min(...ys), Math.max(...ys)];
-  const span = y1 - y0 || Math.abs(y1) * 0.1 || 1;
+  // A flat line still gets a readable axis (±1 around the value).
+  const span = y1 - y0 || 2;
+  if (y1 === y0) {
+    y0 -= 1;
+    y1 += 1;
+  }
   y0 -= span * yPadding;
   y1 += span * yPadding;
 
