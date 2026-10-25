@@ -1,0 +1,2542 @@
+{
+  "schemaVersion": 1,
+  "id": "gym-12wk",
+  "title": "Lean & Strong",
+  "subtitle": "12-week fat-loss strength program",
+  "summary": "3 gym days + 1 home day a week. Weight training with time-saving power sets to lose fat and build muscle.",
+  "setting": "gym",
+  "weeks": 12,
+  "theme": {
+    "primary": "#1c2a4a",
+    "ink": "#2a3349",
+    "muted": "#6b7489",
+    "line": "#e1e6ef",
+    "panel": "#f3f5f9",
+    "accent": "#f0642d",
+    "accentSoft": "#fde8df",
+    "phaseColors": [
+      "#f6a77f",
+      "#f0642d",
+      "#c4441a"
+    ],
+    "dayColors": {
+      "A": "#2d6cdf",
+      "B": "#12a07c",
+      "C": "#8752d4",
+      "H": "#d2457a",
+      "walk": "#9aa6bd",
+      "rest": "#c4cbd8"
+    }
+  },
+  "equipmentNeeded": [
+    "Full gym (no rowing machine needed)",
+    "Skipping rope"
+  ],
+  "weightPlan": {
+    "defaultRateKgPerWeek": 0.4,
+    "maxRateKgPerWeek": 1.0,
+    "onTrackBandKgPerWeek": [
+      0.3,
+      0.6
+    ],
+    "checkpointWeek": null,
+    "calorieFloorKcal": null,
+    "proteinGPerDay": [
+      160,
+      190
+    ]
+  },
+  "phases": [
+    {
+      "number": 1,
+      "name": "Rebuild",
+      "weeks": [
+        1,
+        4
+      ],
+      "summary": {
+        "sets": "3 sets of every exercise",
+        "effort": "Stop 3 reps short of failure (effort 7/10)",
+        "rest": "90 s after each pair",
+        "warmup": "5 rounds: 30 s skip / 30 s rest"
+      },
+      "restSeconds": 90,
+      "ropeWarmup": {
+        "activity": "Skipping",
+        "rounds": 5,
+        "workSec": 30,
+        "restSec": 30
+      }
+    },
+    {
+      "number": 2,
+      "name": "Build",
+      "weeks": [
+        5,
+        8
+      ],
+      "summary": {
+        "sets": "4 sets on pairs A & B, 3 sets on C & D",
+        "effort": "Stop 2 reps short (effort 8/10)",
+        "rest": "75 s after each pair",
+        "warmup": "6 rounds: 40 s skip / 20 s rest"
+      },
+      "restSeconds": 75,
+      "ropeWarmup": {
+        "activity": "Skipping",
+        "rounds": 6,
+        "workSec": 40,
+        "restSec": 20
+      }
+    },
+    {
+      "number": 3,
+      "name": "Burn",
+      "weeks": [
+        9,
+        12
+      ],
+      "summary": {
+        "sets": "4 sets on pairs A, B & C, 3 sets on D",
+        "effort": "Stop 1–2 reps short (effort 8–9/10)",
+        "rest": "60 s after each pair",
+        "warmup": "8 rounds: 40 s skip / 20 s rest"
+      },
+      "restSeconds": 60,
+      "ropeWarmup": {
+        "activity": "Skipping",
+        "rounds": 8,
+        "workSec": 40,
+        "restSec": 20
+      }
+    }
+  ],
+  "weekTemplate": [
+    {
+      "weekday": "mon",
+      "title": "Day A",
+      "subtitle": "Chest & Back",
+      "kind": "workout",
+      "sessionId": "A"
+    },
+    {
+      "weekday": "tue",
+      "title": "Active rest",
+      "subtitle": "30–45 min brisk walk",
+      "kind": "walk",
+      "walk": {
+        "minutesByPhase": [
+          [
+            30,
+            45
+          ],
+          [
+            30,
+            45
+          ],
+          [
+            30,
+            45
+          ]
+        ]
+      }
+    },
+    {
+      "weekday": "wed",
+      "title": "Day B",
+      "subtitle": "Legs & Core",
+      "kind": "workout",
+      "sessionId": "B"
+    },
+    {
+      "weekday": "thu",
+      "title": "Active rest",
+      "subtitle": "30–45 min brisk walk",
+      "kind": "walk",
+      "walk": {
+        "minutesByPhase": [
+          [
+            30,
+            45
+          ],
+          [
+            30,
+            45
+          ],
+          [
+            30,
+            45
+          ]
+        ]
+      }
+    },
+    {
+      "weekday": "fri",
+      "title": "Day C",
+      "subtitle": "Shoulders & Arms",
+      "kind": "workout",
+      "sessionId": "C"
+    },
+    {
+      "weekday": "sat",
+      "title": "Home Day",
+      "subtitle": "Full body, no kit",
+      "kind": "workout",
+      "sessionId": "H"
+    },
+    {
+      "weekday": "sun",
+      "title": "Full rest",
+      "subtitle": "Recover",
+      "kind": "rest"
+    }
+  ],
+  "sessions": {
+    "A": {
+      "id": "A",
+      "title": "Day A",
+      "focus": "Chest & Back",
+      "weekdayLabel": "Monday",
+      "color": "#2d6cdf",
+      "intro": "Push and pull muscles are paired, so one side rests while the other works. Chest gets 4 exercises and back gets 4.",
+      "pairs": [
+        {
+          "code": "A",
+          "items": [
+            {
+              "code": "A1",
+              "exerciseId": "bench_press",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "8–10",
+              "target": {
+                "kind": "reps",
+                "min": 8,
+                "max": 10,
+                "perSide": false
+              }
+            },
+            {
+              "code": "A2",
+              "exerciseId": "lat_pulldown",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "10–12",
+              "target": {
+                "kind": "reps",
+                "min": 10,
+                "max": 12,
+                "perSide": false
+              }
+            }
+          ]
+        },
+        {
+          "code": "B",
+          "items": [
+            {
+              "code": "B1",
+              "exerciseId": "incline_db_press",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "10–12",
+              "target": {
+                "kind": "reps",
+                "min": 10,
+                "max": 12,
+                "perSide": false
+              }
+            },
+            {
+              "code": "B2",
+              "exerciseId": "seated_cable_row",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "10–12",
+              "target": {
+                "kind": "reps",
+                "min": 10,
+                "max": 12,
+                "perSide": false
+              }
+            }
+          ]
+        },
+        {
+          "code": "C",
+          "items": [
+            {
+              "code": "C1",
+              "exerciseId": "cable_fly",
+              "setsByPhase": [
+                3,
+                3,
+                4
+              ],
+              "display": "12–15",
+              "target": {
+                "kind": "reps",
+                "min": 12,
+                "max": 15,
+                "perSide": false
+              }
+            },
+            {
+              "code": "C2",
+              "exerciseId": "one_arm_db_row",
+              "setsByPhase": [
+                3,
+                3,
+                4
+              ],
+              "display": "10–12 each arm",
+              "target": {
+                "kind": "reps",
+                "min": 10,
+                "max": 12,
+                "perSide": true
+              }
+            }
+          ]
+        },
+        {
+          "code": "D",
+          "items": [
+            {
+              "code": "D1",
+              "exerciseId": "push_up",
+              "setsByPhase": [
+                3,
+                3,
+                3
+              ],
+              "display": "8–15 (2 short of failure)",
+              "target": {
+                "kind": "reps",
+                "min": 8,
+                "max": 15,
+                "perSide": false,
+                "note": "Stop 2 reps short of failure"
+              }
+            },
+            {
+              "code": "D2",
+              "exerciseId": "straight_arm_pulldown",
+              "setsByPhase": [
+                3,
+                3,
+                3
+              ],
+              "display": "12–15",
+              "target": {
+                "kind": "reps",
+                "min": 12,
+                "max": 15,
+                "perSide": false
+              }
+            }
+          ]
+        }
+      ],
+      "notes": [
+        "No spotter for bench press? Set the safety bars just below chest height, or use dumbbells instead.",
+        "On every back exercise, pull with your elbows, not your hands. Think “elbows to your back pockets”.",
+        "If you can't get 8 good push-ups at the end, put your hands on a bench. Quality reps only."
+      ],
+      "warmup": {
+        "text": "Skip rope (rounds depend on the phase: 5, 6 or 8 rounds), then 3 min of mobility, then 1–2 light warm-up sets of A1 and A2.",
+        "rope": "phase",
+        "mobility": [
+          "10 arm circles each way",
+          "10 leg swings each leg",
+          "10 hip hinges",
+          "10 bodyweight squats",
+          "10 incline push-ups"
+        ],
+        "warmupSets": "Before the first pair, do 1–2 light sets of A1 and A2 (about half your working weight, 8–10 easy reps)."
+      },
+      "restSecondsByPhase": [
+        90,
+        75,
+        60
+      ],
+      "restNote": "Go straight from the 1st to the 2nd exercise of a pair (≤ 15 s), then rest **90 s** (weeks 1–4), **75 s** (weeks 5–8) or **60 s** (weeks 9–12). Finish all sets of a pair before moving on.",
+      "finisher": {
+        "name": "Rope intervals",
+        "description": "Weeks 1–4: 6 rounds of 30 s skip / 30 s rest.  Weeks 5–8: 8 rounds of 30 / 30.  Weeks 9–12: 10 rounds of 40 s skip / 20 s rest.",
+        "kind": "intervals",
+        "byPhase": [
+          {
+            "activity": "Skipping",
+            "rounds": 6,
+            "workSec": 30,
+            "restSec": 30
+          },
+          {
+            "activity": "Skipping",
+            "rounds": 8,
+            "workSec": 30,
+            "restSec": 30
+          },
+          {
+            "activity": "Skipping",
+            "rounds": 10,
+            "workSec": 40,
+            "restSec": 20
+          }
+        ]
+      },
+      "cooldown": {
+        "text": "3–5 min of easy stretching, 30 s per stretch.",
+        "stretches": [
+          "Chest",
+          "Lats",
+          "Hip flexors",
+          "Hamstrings",
+          "Quads"
+        ],
+        "holdSec": 30
+      }
+    },
+    "B": {
+      "id": "B",
+      "title": "Day B",
+      "focus": "Legs & Core",
+      "weekdayLabel": "Wednesday",
+      "color": "#12a07c",
+      "intro": "Your biggest calorie-burning day. Legs get 5 exercises and core gets 3. Core moves are paired with leg moves so you're never just standing around.",
+      "pairs": [
+        {
+          "code": "A",
+          "items": [
+            {
+              "code": "A1",
+              "exerciseId": "back_squat",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "8–10",
+              "target": {
+                "kind": "reps",
+                "min": 8,
+                "max": 10,
+                "perSide": false
+              }
+            },
+            {
+              "code": "A2",
+              "exerciseId": "plank",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "30–60 s hold",
+              "target": {
+                "kind": "time",
+                "min": 30,
+                "max": 60,
+                "perSide": false
+              }
+            }
+          ]
+        },
+        {
+          "code": "B",
+          "items": [
+            {
+              "code": "B1",
+              "exerciseId": "romanian_deadlift",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "8–10",
+              "target": {
+                "kind": "reps",
+                "min": 8,
+                "max": 10,
+                "perSide": false
+              }
+            },
+            {
+              "code": "B2",
+              "exerciseId": "hanging_knee_raise",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "10–15",
+              "target": {
+                "kind": "reps",
+                "min": 10,
+                "max": 15,
+                "perSide": false
+              }
+            }
+          ]
+        },
+        {
+          "code": "C",
+          "items": [
+            {
+              "code": "C1",
+              "exerciseId": "leg_press",
+              "setsByPhase": [
+                3,
+                3,
+                4
+              ],
+              "display": "12–15",
+              "target": {
+                "kind": "reps",
+                "min": 12,
+                "max": 15,
+                "perSide": false
+              }
+            },
+            {
+              "code": "C2",
+              "exerciseId": "cable_crunch",
+              "setsByPhase": [
+                3,
+                3,
+                4
+              ],
+              "display": "12–15",
+              "target": {
+                "kind": "reps",
+                "min": 12,
+                "max": 15,
+                "perSide": false
+              }
+            }
+          ]
+        },
+        {
+          "code": "D",
+          "items": [
+            {
+              "code": "D1",
+              "exerciseId": "db_walking_lunge",
+              "setsByPhase": [
+                3,
+                3,
+                3
+              ],
+              "display": "10 each leg",
+              "target": {
+                "kind": "reps",
+                "min": 10,
+                "max": 10,
+                "perSide": true
+              }
+            },
+            {
+              "code": "D2",
+              "exerciseId": "leg_curl",
+              "setsByPhase": [
+                3,
+                3,
+                3
+              ],
+              "display": "12–15",
+              "target": {
+                "kind": "reps",
+                "min": 12,
+                "max": 15,
+                "perSide": false
+              }
+            }
+          ]
+        }
+      ],
+      "notes": [
+        "Squats and Romanian deadlifts move your strength (and calorie burn) the most. Give them your full focus.",
+        "New to squatting? Use a goblet squat (dumbbell held at your chest) for weeks 1–2, then move to the bar.",
+        "Leg day makes you hungry. Have a protein-rich meal planned for after this session."
+      ],
+      "warmup": {
+        "text": "Skip rope (rounds depend on the phase: 5, 6 or 8 rounds), then 3 min of mobility, then 1–2 light warm-up sets of A1 and A2.",
+        "rope": "phase",
+        "mobility": [
+          "10 arm circles each way",
+          "10 leg swings each leg",
+          "10 hip hinges",
+          "10 bodyweight squats",
+          "10 incline push-ups"
+        ],
+        "warmupSets": "Before the first pair, do 1–2 light sets of A1 and A2 (about half your working weight, 8–10 easy reps)."
+      },
+      "restSecondsByPhase": [
+        90,
+        75,
+        60
+      ],
+      "restNote": "Go straight from the 1st to the 2nd exercise of a pair (≤ 15 s), then rest **90 s** (weeks 1–4), **75 s** (weeks 5–8) or **60 s** (weeks 9–12). Finish all sets of a pair before moving on.",
+      "finisher": {
+        "name": "Bike sprints",
+        "description": "20 s hard / 40 s easy.  Weeks 1–4: 6 rounds.  Weeks 5–8: 8 rounds.  Weeks 9–12: 10 rounds. No bike free? Walk 10–15 min on a steep incline treadmill.",
+        "kind": "intervals",
+        "byPhase": [
+          {
+            "activity": "Bike sprint",
+            "rounds": 6,
+            "workSec": 20,
+            "restSec": 40
+          },
+          {
+            "activity": "Bike sprint",
+            "rounds": 8,
+            "workSec": 20,
+            "restSec": 40
+          },
+          {
+            "activity": "Bike sprint",
+            "rounds": 10,
+            "workSec": 20,
+            "restSec": 40
+          }
+        ],
+        "alternative": "No bike free? Walk 10–15 min on a steep incline treadmill."
+      },
+      "cooldown": {
+        "text": "3–5 min of easy stretching, 30 s per stretch.",
+        "stretches": [
+          "Chest",
+          "Lats",
+          "Hip flexors",
+          "Hamstrings",
+          "Quads"
+        ],
+        "holdSec": 30
+      }
+    },
+    "C": {
+      "id": "C",
+      "title": "Day C",
+      "focus": "Shoulders & Arms",
+      "weekdayLabel": "Friday",
+      "color": "#8752d4",
+      "intro": "Shoulders, biceps and triceps each get 3 exercises. The third triceps move (bench dips) is built into the finisher.",
+      "pairs": [
+        {
+          "code": "A",
+          "items": [
+            {
+              "code": "A1",
+              "exerciseId": "db_shoulder_press",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "8–10",
+              "target": {
+                "kind": "reps",
+                "min": 8,
+                "max": 10,
+                "perSide": false
+              }
+            },
+            {
+              "code": "A2",
+              "exerciseId": "barbell_curl",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "8–10",
+              "target": {
+                "kind": "reps",
+                "min": 8,
+                "max": 10,
+                "perSide": false
+              }
+            }
+          ]
+        },
+        {
+          "code": "B",
+          "items": [
+            {
+              "code": "B1",
+              "exerciseId": "lateral_raise",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "12–15",
+              "target": {
+                "kind": "reps",
+                "min": 12,
+                "max": 15,
+                "perSide": false
+              }
+            },
+            {
+              "code": "B2",
+              "exerciseId": "triceps_pushdown",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "10–12",
+              "target": {
+                "kind": "reps",
+                "min": 10,
+                "max": 12,
+                "perSide": false
+              }
+            }
+          ]
+        },
+        {
+          "code": "C",
+          "items": [
+            {
+              "code": "C1",
+              "exerciseId": "face_pull",
+              "setsByPhase": [
+                3,
+                3,
+                4
+              ],
+              "display": "15",
+              "target": {
+                "kind": "reps",
+                "min": 15,
+                "max": 15,
+                "perSide": false
+              }
+            },
+            {
+              "code": "C2",
+              "exerciseId": "hammer_curl",
+              "setsByPhase": [
+                3,
+                3,
+                4
+              ],
+              "display": "10–12",
+              "target": {
+                "kind": "reps",
+                "min": 10,
+                "max": 12,
+                "perSide": false
+              }
+            }
+          ]
+        },
+        {
+          "code": "D",
+          "items": [
+            {
+              "code": "D1",
+              "exerciseId": "overhead_triceps_ext",
+              "setsByPhase": [
+                3,
+                3,
+                3
+              ],
+              "display": "10–12",
+              "target": {
+                "kind": "reps",
+                "min": 10,
+                "max": 12,
+                "perSide": false
+              }
+            },
+            {
+              "code": "D2",
+              "exerciseId": "incline_db_curl",
+              "setsByPhase": [
+                3,
+                3,
+                3
+              ],
+              "display": "10–12",
+              "target": {
+                "kind": "reps",
+                "min": 10,
+                "max": 12,
+                "perSide": false
+              }
+            }
+          ]
+        }
+      ],
+      "notes": [
+        "Lateral raises and face pulls work best light. If you have to swing the weight, drop it.",
+        "Keep your elbows still on every curl and triceps move. If they drift, your shoulders take over.",
+        "Shoulder press feeling cranky? Turn your palms to face each other (neutral grip)."
+      ],
+      "warmup": {
+        "text": "Skip rope (rounds depend on the phase: 5, 6 or 8 rounds), then 3 min of mobility, then 1–2 light warm-up sets of A1 and A2.",
+        "rope": "phase",
+        "mobility": [
+          "10 arm circles each way",
+          "10 leg swings each leg",
+          "10 hip hinges",
+          "10 bodyweight squats",
+          "10 incline push-ups"
+        ],
+        "warmupSets": "Before the first pair, do 1–2 light sets of A1 and A2 (about half your working weight, 8–10 easy reps)."
+      },
+      "restSecondsByPhase": [
+        90,
+        75,
+        60
+      ],
+      "restNote": "Go straight from the 1st to the 2nd exercise of a pair (≤ 15 s), then rest **90 s** (weeks 1–4), **75 s** (weeks 5–8) or **60 s** (weeks 9–12). Finish all sets of a pair before moving on.",
+      "finisher": {
+        "name": "Dip & skip",
+        "description": "12 bench dips, then 60 s skipping = 1 round. Rest 60 s.  Weeks 1–8: 3 rounds.  Weeks 9–12: 4 rounds.",
+        "kind": "circuit",
+        "circuit": {
+          "title": "Dip & skip",
+          "roundsByPhase": [
+            3,
+            3,
+            4
+          ],
+          "restBetweenRoundsSec": 60,
+          "steps": [
+            {
+              "exerciseId": "bench_dip",
+              "target": {
+                "kind": "reps",
+                "min": 12,
+                "max": 12,
+                "perSide": false
+              },
+              "display": "12 reps"
+            },
+            {
+              "exerciseId": "skipping",
+              "target": {
+                "kind": "time",
+                "min": 60,
+                "max": 60,
+                "perSide": false
+              },
+              "display": "60 s"
+            }
+          ]
+        }
+      },
+      "cooldown": {
+        "text": "3–5 min of easy stretching, 30 s per stretch.",
+        "stretches": [
+          "Chest",
+          "Lats",
+          "Hip flexors",
+          "Hamstrings",
+          "Quads"
+        ],
+        "holdSec": 30
+      }
+    },
+    "H": {
+      "id": "H",
+      "title": "Home Day",
+      "focus": "Full Body, No Equipment",
+      "weekdayLabel": "Saturday",
+      "color": "#d2457a",
+      "intro": "Everything here uses only your bodyweight. Same power-set style: do the pair back to back, rest 45–60 s, repeat. About 30–35 minutes.",
+      "pairs": [
+        {
+          "code": "A",
+          "items": [
+            {
+              "code": "A1",
+              "exerciseId": "bodyweight_squat",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "15–20 (weeks 9–12: 2 s pause at bottom)",
+              "target": {
+                "kind": "reps",
+                "min": 15,
+                "max": 20,
+                "perSide": false,
+                "noteByPhase": [
+                  null,
+                  null,
+                  "Pause 2 s at the bottom"
+                ]
+              }
+            },
+            {
+              "code": "A2",
+              "exerciseId": "push_up",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "8–15 (knees or hands on a couch if needed)",
+              "target": {
+                "kind": "reps",
+                "min": 8,
+                "max": 15,
+                "perSide": false
+              }
+            }
+          ]
+        },
+        {
+          "code": "B",
+          "items": [
+            {
+              "code": "B1",
+              "exerciseId": "reverse_lunge",
+              "setsByPhase": [
+                3,
+                3,
+                4
+              ],
+              "display": "10 each leg",
+              "target": {
+                "kind": "reps",
+                "min": 10,
+                "max": 10,
+                "perSide": true
+              }
+            },
+            {
+              "code": "B2",
+              "exerciseId": "superman",
+              "setsByPhase": [
+                3,
+                3,
+                4
+              ],
+              "display": "12 (2 s hold at the top)",
+              "target": {
+                "kind": "reps",
+                "min": 12,
+                "max": 12,
+                "perSide": false
+              }
+            }
+          ]
+        },
+        {
+          "code": "C",
+          "items": [
+            {
+              "code": "C1",
+              "exerciseId": "glute_bridge",
+              "setsByPhase": [
+                3,
+                3,
+                4
+              ],
+              "display": "15–20",
+              "target": {
+                "kind": "reps",
+                "min": 15,
+                "max": 20,
+                "perSide": false
+              }
+            },
+            {
+              "code": "C2",
+              "exerciseId": "mountain_climber",
+              "setsByPhase": [
+                3,
+                3,
+                4
+              ],
+              "display": "30 s (weeks 5–12: 40 s)",
+              "target": {
+                "kind": "time",
+                "min": 30,
+                "max": 30,
+                "perSide": false,
+                "byPhase": [
+                  {
+                    "min": 30,
+                    "max": 30
+                  },
+                  {
+                    "min": 40,
+                    "max": 40
+                  },
+                  {
+                    "min": 40,
+                    "max": 40
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "notes": [
+        "No rope at home? 2 minutes of jumping jacks or a brisk march on the spot works as a warm-up.",
+        "Push-ups too easy by week 6? Lower for 3 seconds or put your feet up on a step.",
+        "This session is shorter, so don't skip the cardio at the end. That's where the extra calories go."
+      ],
+      "warmup": {
+        "text": "5 min skipping if you have your rope at home (or jog on the spot), then the mobility moves below.",
+        "rope": {
+          "activity": "Skipping (or jog on the spot)",
+          "rounds": 1,
+          "workSec": 300,
+          "restSec": 0
+        },
+        "mobility": [
+          "10 arm circles each way",
+          "10 leg swings each leg",
+          "10 hip hinges",
+          "10 bodyweight squats",
+          "10 incline push-ups"
+        ]
+      },
+      "restSecondsByPhase": [
+        60,
+        50,
+        45
+      ],
+      "restNote": "Do each pair back to back, then rest **45–60 s**. Finish all sets of a pair before moving on.",
+      "finisher": {
+        "name": "Cardio",
+        "description": "10–15 min of rope intervals (30 s skip / 30 s rest), or a 30–45 min brisk walk outside.",
+        "kind": "choice",
+        "options": [
+          {
+            "label": "Rope intervals, 10–15 min",
+            "interval": {
+              "activity": "Skipping",
+              "rounds": 12,
+              "workSec": 30,
+              "restSec": 30
+            }
+          },
+          {
+            "label": "Brisk walk outside, 30–45 min",
+            "durationMin": [
+              30,
+              45
+            ]
+          }
+        ]
+      },
+      "cooldown": {
+        "text": "3–5 min of easy stretching, 30 s per stretch.",
+        "stretches": [
+          "Chest",
+          "Lats",
+          "Hip flexors",
+          "Hamstrings",
+          "Quads"
+        ],
+        "holdSec": 30
+      }
+    }
+  },
+  "exercises": {
+    "bench_press": {
+      "id": "bench_press",
+      "name": "Barbell Bench Press",
+      "muscles": [
+        "Chest",
+        "front shoulders",
+        "triceps"
+      ],
+      "cues": [
+        "Lie with your eyes under the bar, feet flat, shoulder blades squeezed together.",
+        "Lower the bar with control to your mid-chest, elbows about 45° from your body.",
+        "Press up until your arms are straight over your shoulders."
+      ],
+      "watchOut": "Bouncing the bar off your chest or lifting your hips. Use a spotter or safety bars when heavy.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/bench_press-start.webp",
+        "end": "assets/exercises/gym-12wk/bench_press-end.webp",
+        "loop": "assets/exercises/gym-12wk/bench_press-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Lower to chest"
+      ],
+      "framesAreVariants": false,
+      "load": "barbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "barbell",
+        "bench",
+        "rack"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 2.5
+      }
+    },
+    "lat_pulldown": {
+      "id": "lat_pulldown",
+      "name": "Lat Pulldown",
+      "muscles": [
+        "Lats",
+        "upper back",
+        "biceps"
+      ],
+      "cues": [
+        "Grip just wider than your shoulders, thighs locked under the pad.",
+        "Lean back slightly and pull the bar to your upper chest, driving elbows down to your sides.",
+        "Let the bar rise slowly until your arms are straight."
+      ],
+      "watchOut": "Swinging your body or pulling the bar behind your neck.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/lat_pulldown-start.webp",
+        "end": "assets/exercises/gym-12wk/lat_pulldown-end.webp",
+        "loop": "assets/exercises/gym-12wk/lat_pulldown-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Pull to chest"
+      ],
+      "framesAreVariants": false,
+      "load": "machine",
+      "logAs": "weight-reps",
+      "equipment": [
+        "lat pulldown machine"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 2.5
+      }
+    },
+    "incline_db_press": {
+      "id": "incline_db_press",
+      "name": "Incline Dumbbell Press",
+      "muscles": [
+        "Upper chest",
+        "shoulders",
+        "triceps"
+      ],
+      "cues": [
+        "Set the bench to 30–45°. Start with the dumbbells at chest level.",
+        "Press up until the dumbbells are over your upper chest.",
+        "Lower slowly, 2–3 seconds, back to chest level."
+      ],
+      "watchOut": "Flaring your elbows straight out to the sides.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/incline_db_press-start.webp",
+        "end": "assets/exercises/gym-12wk/incline_db_press-end.webp",
+        "loop": "assets/exercises/gym-12wk/incline_db_press-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Lower to chest"
+      ],
+      "framesAreVariants": false,
+      "load": "dumbbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "dumbbells",
+        "adjustable bench"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 2,
+        "note": "per dumbbell (1–2 kg)"
+      }
+    },
+    "seated_cable_row": {
+      "id": "seated_cable_row",
+      "name": "Seated Cable Row",
+      "muscles": [
+        "Mid-back",
+        "lats",
+        "rear shoulders"
+      ],
+      "cues": [
+        "Sit tall, knees slightly bent, chest up.",
+        "Pull the handle to your belly button and squeeze your shoulder blades together.",
+        "Let your arms straighten forward slowly, back flat."
+      ],
+      "watchOut": "Rocking your torso back and forth to move the weight.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/seated_cable_row-start.webp",
+        "end": "assets/exercises/gym-12wk/seated_cable_row-end.webp",
+        "loop": "assets/exercises/gym-12wk/seated_cable_row-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Row to belly"
+      ],
+      "framesAreVariants": false,
+      "load": "cable",
+      "logAs": "weight-reps",
+      "equipment": [
+        "cable row"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 2.5
+      }
+    },
+    "cable_fly": {
+      "id": "cable_fly",
+      "name": "Cable Chest Fly",
+      "muscles": [
+        "Chest"
+      ],
+      "cues": [
+        "Set both pulleys at shoulder height, step forward, slight bend in the elbows.",
+        "Bring your hands together in a wide hugging arc in front of your chest.",
+        "Open back up slowly until you feel a stretch across the chest."
+      ],
+      "watchOut": "Bending and straightening the elbows. That turns it into a press. Pec-deck machine also works.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/cable_fly-start.webp",
+        "end": "assets/exercises/gym-12wk/cable_fly-end.webp",
+        "loop": "assets/exercises/gym-12wk/cable_fly-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Hug together"
+      ],
+      "framesAreVariants": false,
+      "load": "cable",
+      "logAs": "weight-reps",
+      "equipment": [
+        "cable crossover"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 2.5,
+        "note": "smallest step on the stack"
+      }
+    },
+    "one_arm_db_row": {
+      "id": "one_arm_db_row",
+      "name": "One-Arm Dumbbell Row",
+      "muscles": [
+        "Lats",
+        "mid-back",
+        "biceps"
+      ],
+      "cues": [
+        "One knee and one hand on the bench, back flat, other foot on the floor.",
+        "Pull the dumbbell up towards your hip, elbow close to your side.",
+        "Lower until your arm is straight and feel the stretch."
+      ],
+      "watchOut": "Twisting your torso to heave the weight up.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/one_arm_db_row-start.webp",
+        "end": "assets/exercises/gym-12wk/one_arm_db_row-end.webp",
+        "loop": "assets/exercises/gym-12wk/one_arm_db_row-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Row to hip"
+      ],
+      "framesAreVariants": false,
+      "load": "dumbbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "dumbbell",
+        "bench"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 2,
+        "note": "per dumbbell (1–2 kg)"
+      }
+    },
+    "push_up": {
+      "id": "push_up",
+      "name": "Push-Up",
+      "muscles": [
+        "Chest",
+        "shoulders",
+        "triceps",
+        "core"
+      ],
+      "cues": [
+        "Hands just wider than shoulders, body in one straight line from head to heels.",
+        "Lower until your chest is a fist from the floor, elbows about 45°.",
+        "Push the floor away back to straight arms."
+      ],
+      "watchOut": "Sagging hips. Too hard? Hands on a bench or couch, or do them from your knees.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/push_up-start.webp",
+        "end": "assets/exercises/gym-12wk/push_up-end.webp",
+        "loop": "assets/exercises/gym-12wk/push_up-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Lower chest"
+      ],
+      "framesAreVariants": false,
+      "load": "bodyweight",
+      "logAs": "reps",
+      "equipment": [],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Add reps",
+          "Lower for a slow count of 3",
+          "Feet up on a step"
+        ]
+      }
+    },
+    "straight_arm_pulldown": {
+      "id": "straight_arm_pulldown",
+      "name": "Straight-Arm Pulldown",
+      "muscles": [
+        "Lats"
+      ],
+      "cues": [
+        "Face a high pulley, slight hip hinge, arms straight on the bar.",
+        "Sweep the bar down in an arc to your thighs, keeping your arms straight.",
+        "Let it rise back to head height under control."
+      ],
+      "watchOut": "Bending your elbows. That makes it a triceps exercise.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/straight_arm_pulldown-start.webp",
+        "end": "assets/exercises/gym-12wk/straight_arm_pulldown-end.webp",
+        "loop": "assets/exercises/gym-12wk/straight_arm_pulldown-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Sweep to thighs"
+      ],
+      "framesAreVariants": false,
+      "load": "cable",
+      "logAs": "weight-reps",
+      "equipment": [
+        "high cable"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 2.5
+      }
+    },
+    "back_squat": {
+      "id": "back_squat",
+      "name": "Barbell Back Squat",
+      "muscles": [
+        "Quads",
+        "glutes",
+        "core"
+      ],
+      "cues": [
+        "Bar on your upper back (not your neck), feet shoulder-width, toes slightly out.",
+        "Brace your core, then sit down and back until your thighs are about parallel.",
+        "Drive up through your whole foot, knees tracking over your toes."
+      ],
+      "watchOut": "Knees caving in or heels lifting. New to squats? Hold a dumbbell at your chest (goblet squat) for weeks 1–2.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/back_squat-start.webp",
+        "end": "assets/exercises/gym-12wk/back_squat-end.webp",
+        "loop": "assets/exercises/gym-12wk/back_squat-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Sit down & back"
+      ],
+      "framesAreVariants": false,
+      "load": "barbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "barbell",
+        "squat rack"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 5
+      }
+    },
+    "plank": {
+      "id": "plank",
+      "name": "Forearm Plank",
+      "muscles": [
+        "Core"
+      ],
+      "cues": [
+        "Elbows under your shoulders, forearms on the floor.",
+        "Squeeze your glutes and brace your stomach: straight line from head to heels.",
+        "Breathe slowly and hold for the set time."
+      ],
+      "watchOut": "Hips sagging or piking up. Can't hold good form? Drop to your knees (right picture).",
+      "images": {
+        "start": "assets/exercises/gym-12wk/plank-start.webp",
+        "end": "assets/exercises/gym-12wk/plank-end.webp",
+        "loop": null
+      },
+      "frameLabels": [
+        "Hold",
+        "Easier: knees down"
+      ],
+      "framesAreVariants": true,
+      "load": "bodyweight",
+      "logAs": "time",
+      "equipment": [],
+      "progression": {
+        "type": "time",
+        "addSecMin": 5,
+        "addSecMax": 10
+      }
+    },
+    "romanian_deadlift": {
+      "id": "romanian_deadlift",
+      "name": "Romanian Deadlift",
+      "muscles": [
+        "Hamstrings",
+        "glutes",
+        "lower back"
+      ],
+      "cues": [
+        "Stand tall holding the bar at your thighs, knees soft.",
+        "Push your hips back and slide the bar down your legs to just below the knees.",
+        "Squeeze your glutes and drive your hips forward to stand tall."
+      ],
+      "watchOut": "Rounding your back. The stretch should be in your hamstrings, not your spine.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/romanian_deadlift-start.webp",
+        "end": "assets/exercises/gym-12wk/romanian_deadlift-end.webp",
+        "loop": "assets/exercises/gym-12wk/romanian_deadlift-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Hips back"
+      ],
+      "framesAreVariants": false,
+      "load": "barbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "barbell"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 5
+      }
+    },
+    "hanging_knee_raise": {
+      "id": "hanging_knee_raise",
+      "name": "Hanging Knee Raise",
+      "muscles": [
+        "Lower abs",
+        "hip flexors"
+      ],
+      "cues": [
+        "Hang from a bar with straight arms, or use the knee-raise station.",
+        "Curl your knees up to hip height or higher, tilting your pelvis.",
+        "Lower slowly without swinging."
+      ],
+      "watchOut": "Using momentum. Grip giving out first? Use the knee-raise station with arm pads.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/hanging_knee_raise-start.webp",
+        "end": "assets/exercises/gym-12wk/hanging_knee_raise-end.webp",
+        "loop": "assets/exercises/gym-12wk/hanging_knee_raise-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Knees up"
+      ],
+      "framesAreVariants": false,
+      "load": "bodyweight",
+      "logAs": "reps",
+      "equipment": [
+        "pull-up bar or knee-raise station"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Add reps",
+          "Pause 1 s at the top",
+          "Lower for a slow count of 3"
+        ]
+      }
+    },
+    "leg_press": {
+      "id": "leg_press",
+      "name": "45° Leg Press",
+      "muscles": [
+        "Quads",
+        "glutes"
+      ],
+      "cues": [
+        "Feet shoulder-width in the middle of the plate, back flat on the pad.",
+        "Release the safeties and lower until your knees are near 90°.",
+        "Press back up without locking your knees."
+      ],
+      "watchOut": "Letting your lower back curl off the pad at the bottom.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/leg_press-start.webp",
+        "end": "assets/exercises/gym-12wk/leg_press-end.webp",
+        "loop": "assets/exercises/gym-12wk/leg_press-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Lower knees"
+      ],
+      "framesAreVariants": false,
+      "load": "machine",
+      "logAs": "weight-reps",
+      "equipment": [
+        "45° leg press"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 5
+      }
+    },
+    "cable_crunch": {
+      "id": "cable_crunch",
+      "name": "Cable Crunch",
+      "muscles": [
+        "Abs"
+      ],
+      "cues": [
+        "Kneel facing a high pulley and hold the rope beside your head.",
+        "Crunch down by curling your ribs towards your hips.",
+        "Come back up slowly, keeping your hips still."
+      ],
+      "watchOut": "Sitting back onto your heels. Your abs move the weight, not your arms or hips.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/cable_crunch-start.webp",
+        "end": "assets/exercises/gym-12wk/cable_crunch-end.webp",
+        "loop": "assets/exercises/gym-12wk/cable_crunch-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Crunch down"
+      ],
+      "framesAreVariants": false,
+      "load": "cable",
+      "logAs": "weight-reps",
+      "equipment": [
+        "high cable",
+        "rope"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 2.5
+      }
+    },
+    "db_walking_lunge": {
+      "id": "db_walking_lunge",
+      "name": "Dumbbell Walking Lunge",
+      "muscles": [
+        "Quads",
+        "glutes"
+      ],
+      "cues": [
+        "Stand tall with a dumbbell in each hand.",
+        "Take a long step and lower your back knee towards the floor.",
+        "Push through your front heel and step straight into the next lunge."
+      ],
+      "watchOut": "Front knee collapsing inward. Short on space? Lunge in place and alternate legs.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/db_walking_lunge-start.webp",
+        "end": "assets/exercises/gym-12wk/db_walking_lunge-end.webp",
+        "loop": "assets/exercises/gym-12wk/db_walking_lunge-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Step & drop"
+      ],
+      "framesAreVariants": false,
+      "load": "dumbbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "dumbbells"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 2,
+        "note": "per dumbbell (1–2 kg)"
+      }
+    },
+    "leg_curl": {
+      "id": "leg_curl",
+      "name": "Leg Curl",
+      "muscles": [
+        "Hamstrings"
+      ],
+      "cues": [
+        "Lie face down with the pad just above your heels, knees just off the bench.",
+        "Curl your heels up towards your glutes.",
+        "Lower slowly, about 3 seconds, to straight legs."
+      ],
+      "watchOut": "Lifting your hips off the pad. The seated leg-curl machine works too.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/leg_curl-start.webp",
+        "end": "assets/exercises/gym-12wk/leg_curl-end.webp",
+        "loop": "assets/exercises/gym-12wk/leg_curl-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Curl heels up"
+      ],
+      "framesAreVariants": false,
+      "load": "machine",
+      "logAs": "weight-reps",
+      "equipment": [
+        "leg curl machine"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 2.5
+      }
+    },
+    "db_shoulder_press": {
+      "id": "db_shoulder_press",
+      "name": "Seated Dumbbell Shoulder Press",
+      "muscles": [
+        "Shoulders",
+        "triceps"
+      ],
+      "cues": [
+        "Sit tall against the back pad, dumbbells at shoulder height, palms forward.",
+        "Press up until your arms are straight and the dumbbells nearly touch.",
+        "Lower slowly back to shoulder height."
+      ],
+      "watchOut": "Arching your lower back off the pad.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/db_shoulder_press-start.webp",
+        "end": "assets/exercises/gym-12wk/db_shoulder_press-end.webp",
+        "loop": "assets/exercises/gym-12wk/db_shoulder_press-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Press overhead"
+      ],
+      "framesAreVariants": false,
+      "load": "dumbbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "dumbbells",
+        "bench with back support"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 2,
+        "note": "per dumbbell (1–2 kg)"
+      }
+    },
+    "barbell_curl": {
+      "id": "barbell_curl",
+      "name": "Barbell Curl",
+      "muscles": [
+        "Biceps"
+      ],
+      "cues": [
+        "Stand tall, shoulder-width grip, elbows by your sides.",
+        "Curl the bar up to your shoulders, keeping your elbows still.",
+        "Lower slowly to straight arms."
+      ],
+      "watchOut": "Swinging your back to lift the bar. An EZ-bar is fine if your wrists complain.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/barbell_curl-start.webp",
+        "end": "assets/exercises/gym-12wk/barbell_curl-end.webp",
+        "loop": "assets/exercises/gym-12wk/barbell_curl-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Curl up"
+      ],
+      "framesAreVariants": false,
+      "load": "barbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "barbell or EZ-bar"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 2.5
+      }
+    },
+    "lateral_raise": {
+      "id": "lateral_raise",
+      "name": "Dumbbell Lateral Raise",
+      "muscles": [
+        "Side shoulders"
+      ],
+      "cues": [
+        "Stand tall, dumbbells at your sides, slight bend in the elbows.",
+        "Raise your arms out to the sides up to shoulder height, leading with the elbows.",
+        "Lower slowly, 2–3 seconds."
+      ],
+      "watchOut": "Shrugging or swinging. Go light and strict.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/lateral_raise-start.webp",
+        "end": "assets/exercises/gym-12wk/lateral_raise-end.webp",
+        "loop": "assets/exercises/gym-12wk/lateral_raise-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Raise to shoulders"
+      ],
+      "framesAreVariants": false,
+      "load": "dumbbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "dumbbells"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 1,
+        "note": "per dumbbell, smallest jump available"
+      }
+    },
+    "triceps_pushdown": {
+      "id": "triceps_pushdown",
+      "name": "Cable Triceps Pushdown",
+      "muscles": [
+        "Triceps"
+      ],
+      "cues": [
+        "Face a high pulley, elbows pinned to your sides.",
+        "Push the bar or rope down until your arms are straight.",
+        "Let your forearms come back up to chest height slowly."
+      ],
+      "watchOut": "Elbows drifting forward or leaning your bodyweight over the bar.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/triceps_pushdown-start.webp",
+        "end": "assets/exercises/gym-12wk/triceps_pushdown-end.webp",
+        "loop": "assets/exercises/gym-12wk/triceps_pushdown-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Push down"
+      ],
+      "framesAreVariants": false,
+      "load": "cable",
+      "logAs": "weight-reps",
+      "equipment": [
+        "high cable",
+        "bar or rope"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 2.5
+      }
+    },
+    "face_pull": {
+      "id": "face_pull",
+      "name": "Cable Face Pull",
+      "muscles": [
+        "Rear shoulders",
+        "upper back"
+      ],
+      "cues": [
+        "Rope at face height, arms straight, take a step back.",
+        "Pull the rope towards your face, elbows high, hands ending beside your ears.",
+        "Squeeze your shoulder blades, then return slowly."
+      ],
+      "watchOut": "Leaning back to cheat. Keep it light: this one is for posture and healthy shoulders.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/face_pull-start.webp",
+        "end": "assets/exercises/gym-12wk/face_pull-end.webp",
+        "loop": "assets/exercises/gym-12wk/face_pull-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Pull to face"
+      ],
+      "framesAreVariants": false,
+      "load": "cable",
+      "logAs": "weight-reps",
+      "equipment": [
+        "cable",
+        "rope"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 2.5,
+        "note": "keep it light"
+      }
+    },
+    "hammer_curl": {
+      "id": "hammer_curl",
+      "name": "Dumbbell Hammer Curl",
+      "muscles": [
+        "Biceps",
+        "forearms"
+      ],
+      "cues": [
+        "Dumbbells at your sides, palms facing each other.",
+        "Curl up with your palms still facing in, elbows still.",
+        "Lower slowly."
+      ],
+      "watchOut": "Swinging. You can alternate arms if you prefer.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/hammer_curl-start.webp",
+        "end": "assets/exercises/gym-12wk/hammer_curl-end.webp",
+        "loop": "assets/exercises/gym-12wk/hammer_curl-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Curl up"
+      ],
+      "framesAreVariants": false,
+      "load": "dumbbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "dumbbells"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 2,
+        "note": "per dumbbell (1–2 kg)"
+      }
+    },
+    "overhead_triceps_ext": {
+      "id": "overhead_triceps_ext",
+      "name": "Overhead Triceps Extension",
+      "muscles": [
+        "Triceps"
+      ],
+      "cues": [
+        "Sit tall and hold one dumbbell overhead with both hands under the top plate.",
+        "Lower it behind your head by bending your elbows; keep elbows pointing up.",
+        "Straighten your arms back to the top."
+      ],
+      "watchOut": "Elbows flaring wide or your lower back arching.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/overhead_triceps_ext-start.webp",
+        "end": "assets/exercises/gym-12wk/overhead_triceps_ext-end.webp",
+        "loop": "assets/exercises/gym-12wk/overhead_triceps_ext-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Extend up"
+      ],
+      "framesAreVariants": false,
+      "load": "dumbbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "dumbbell",
+        "bench"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 2
+      }
+    },
+    "incline_db_curl": {
+      "id": "incline_db_curl",
+      "name": "Incline Dumbbell Curl",
+      "muscles": [
+        "Biceps"
+      ],
+      "cues": [
+        "Bench at about 60°, sit back with your arms hanging straight down.",
+        "Curl the dumbbells up without moving your upper arms forward.",
+        "Lower all the way to a full stretch."
+      ],
+      "watchOut": "Lifting your head and shoulders off the pad.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/incline_db_curl-start.webp",
+        "end": "assets/exercises/gym-12wk/incline_db_curl-end.webp",
+        "loop": "assets/exercises/gym-12wk/incline_db_curl-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Curl up"
+      ],
+      "framesAreVariants": false,
+      "load": "dumbbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "dumbbells",
+        "adjustable bench"
+      ],
+      "progression": {
+        "type": "load",
+        "incrementKg": 2,
+        "note": "per dumbbell (1–2 kg)"
+      }
+    },
+    "bench_dip": {
+      "id": "bench_dip",
+      "name": "Bench Dip",
+      "muscles": [
+        "Triceps"
+      ],
+      "cues": [
+        "Hands on the bench edge behind you, feet flat, knees bent.",
+        "Bend your elbows to lower until your upper arms are about level with the floor.",
+        "Push back up to straight arms."
+      ],
+      "watchOut": "Going too deep if your shoulders feel pinched. Straighter legs make it harder.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/bench_dip-start.webp",
+        "end": "assets/exercises/gym-12wk/bench_dip-end.webp",
+        "loop": "assets/exercises/gym-12wk/bench_dip-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Lower down"
+      ],
+      "framesAreVariants": false,
+      "load": "bodyweight",
+      "logAs": "reps",
+      "equipment": [
+        "bench"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Straighter legs",
+          "Lower for a slow count of 3"
+        ]
+      }
+    },
+    "bodyweight_squat": {
+      "id": "bodyweight_squat",
+      "name": "Bodyweight Squat",
+      "muscles": [
+        "Quads",
+        "glutes"
+      ],
+      "cues": [
+        "Feet shoulder-width, arms out in front for balance.",
+        "Sit down and back until your thighs are about parallel.",
+        "Drive up through your heels."
+      ],
+      "watchOut": "Heels lifting. To make it harder in weeks 9–12, pause 2 s at the bottom.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/bodyweight_squat-start.webp",
+        "end": "assets/exercises/gym-12wk/bodyweight_squat-end.webp",
+        "loop": "assets/exercises/gym-12wk/bodyweight_squat-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Sit down & back"
+      ],
+      "framesAreVariants": false,
+      "load": "bodyweight",
+      "logAs": "reps",
+      "equipment": [],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Add reps",
+          "Pause 2 s at the bottom (weeks 9–12)"
+        ]
+      }
+    },
+    "reverse_lunge": {
+      "id": "reverse_lunge",
+      "name": "Reverse Lunge",
+      "muscles": [
+        "Quads",
+        "glutes"
+      ],
+      "cues": [
+        "Stand tall, hands on your hips.",
+        "Step one foot back and lower your back knee towards the floor.",
+        "Push through your front heel to stand back up. Alternate legs."
+      ],
+      "watchOut": "Leaning forward. Hold a wall or chair for balance at first.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/reverse_lunge-start.webp",
+        "end": "assets/exercises/gym-12wk/reverse_lunge-end.webp",
+        "loop": "assets/exercises/gym-12wk/reverse_lunge-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Step back & drop"
+      ],
+      "framesAreVariants": false,
+      "load": "bodyweight",
+      "logAs": "reps",
+      "equipment": [],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Add reps",
+          "Lower for a slow count of 3"
+        ]
+      }
+    },
+    "superman": {
+      "id": "superman",
+      "name": "Superman",
+      "muscles": [
+        "Lower back",
+        "glutes"
+      ],
+      "cues": [
+        "Lie face down, arms stretched out in front.",
+        "Lift your arms, chest and legs a few centimetres off the floor and hold 2 s.",
+        "Lower slowly."
+      ],
+      "watchOut": "Cranking your neck up. Keep your eyes on the floor.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/superman-start.webp",
+        "end": "assets/exercises/gym-12wk/superman-end.webp",
+        "loop": "assets/exercises/gym-12wk/superman-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Lift & hold"
+      ],
+      "framesAreVariants": false,
+      "load": "bodyweight",
+      "logAs": "reps",
+      "equipment": [],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Hold 3–4 s at the top"
+        ]
+      }
+    },
+    "glute_bridge": {
+      "id": "glute_bridge",
+      "name": "Glute Bridge",
+      "muscles": [
+        "Glutes",
+        "hamstrings"
+      ],
+      "cues": [
+        "Lie on your back, knees bent, feet flat near your glutes.",
+        "Squeeze your glutes and lift your hips until you're straight from knees to shoulders.",
+        "Hold 1–2 s at the top, then lower slowly."
+      ],
+      "watchOut": "Arching your lower back. Want it harder? Do it one leg at a time.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/glute_bridge-start.webp",
+        "end": "assets/exercises/gym-12wk/glute_bridge-end.webp",
+        "loop": "assets/exercises/gym-12wk/glute_bridge-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Hips up"
+      ],
+      "framesAreVariants": false,
+      "load": "bodyweight",
+      "logAs": "reps",
+      "equipment": [],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Pause 2 s at the top",
+          "One leg at a time"
+        ]
+      }
+    },
+    "mountain_climber": {
+      "id": "mountain_climber",
+      "name": "Mountain Climber",
+      "muscles": [
+        "Core",
+        "cardio"
+      ],
+      "cues": [
+        "Start in the top of a push-up, hands under your shoulders.",
+        "Drive one knee towards your chest, then quickly switch legs.",
+        "Keep your hips level and keep moving for the set time."
+      ],
+      "watchOut": "Hips bouncing high. Slow it down rather than lose form.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/mountain_climber-start.webp",
+        "end": "assets/exercises/gym-12wk/mountain_climber-end.webp",
+        "loop": "assets/exercises/gym-12wk/mountain_climber-loop.webp"
+      },
+      "frameLabels": [
+        "Drive one knee in",
+        "Switch legs"
+      ],
+      "framesAreVariants": false,
+      "load": "bodyweight",
+      "logAs": "time",
+      "equipment": [],
+      "progression": {
+        "type": "time",
+        "addSecMin": 10,
+        "addSecMax": 10
+      }
+    },
+    "skipping": {
+      "id": "skipping",
+      "name": "Skipping Rope",
+      "muscles": [
+        "Warm-up",
+        "cardio"
+      ],
+      "cues": [
+        "Elbows close to your sides; turn the rope with your wrists, not your arms.",
+        "Small hops of 2–3 cm, landing softly on the balls of your feet.",
+        "Breathe steadily and rest when your form breaks down."
+      ],
+      "watchOut": "Big jumps or landing flat-footed. Knees or shins sore? Swap for the bike.",
+      "images": {
+        "start": "assets/exercises/gym-12wk/skipping-start.webp",
+        "end": "assets/exercises/gym-12wk/skipping-end.webp",
+        "loop": "assets/exercises/gym-12wk/skipping-loop.webp"
+      },
+      "frameLabels": [
+        "Rope overhead",
+        "Small hop"
+      ],
+      "framesAreVariants": false,
+      "load": "cardio",
+      "logAs": "none",
+      "equipment": [
+        "skipping rope"
+      ],
+      "progression": {
+        "type": "none"
+      }
+    }
+  },
+  "guideSections": [
+    {
+      "title": "Warm-up",
+      "exerciseIds": [
+        "skipping"
+      ]
+    },
+    {
+      "title": "Day A · Chest & Back",
+      "exerciseIds": [
+        "bench_press",
+        "lat_pulldown",
+        "incline_db_press",
+        "seated_cable_row",
+        "cable_fly",
+        "one_arm_db_row",
+        "push_up",
+        "straight_arm_pulldown"
+      ]
+    },
+    {
+      "title": "Day B · Legs & Core",
+      "exerciseIds": [
+        "back_squat",
+        "plank",
+        "romanian_deadlift",
+        "hanging_knee_raise",
+        "leg_press",
+        "cable_crunch",
+        "db_walking_lunge",
+        "leg_curl"
+      ]
+    },
+    {
+      "title": "Day C · Shoulders & Arms",
+      "exerciseIds": [
+        "db_shoulder_press",
+        "barbell_curl",
+        "lateral_raise",
+        "triceps_pushdown",
+        "face_pull",
+        "hammer_curl",
+        "overhead_triceps_ext",
+        "incline_db_curl",
+        "bench_dip"
+      ]
+    },
+    {
+      "title": "Home Day · Bodyweight",
+      "exerciseIds": [
+        "bodyweight_squat",
+        "reverse_lunge",
+        "superman",
+        "glute_bridge",
+        "mountain_climber"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "id": "how-it-works",
+      "title": "How this program works",
+      "kicker": "Start here",
+      "sections": [
+        {
+          "type": "text",
+          "body": "You have {weeks} weeks to get from **{startKg} kg to {goalKg} kg** while adding muscle. That's about **{ratePerWeek} kg a week**, slow enough that what you lose is fat, not the muscle you're building. Weights do the muscle-building, power sets keep your heart rate up, and your eating takes care of the fat loss."
+        },
+        {
+          "type": "weekStrip",
+          "title": "Your week",
+          "note": "Keep at least one day between gym sessions where you can. If you miss a day, just do the next session in order. Walk days count: aim for 8,000–10,000 steps every day."
+        },
+        {
+          "type": "text",
+          "title": "How power sets work",
+          "body": "Each workout is built from **pairs** (A1 + A2, B1 + B2…). The two exercises hit different muscles, so one rests while the other works. You get the same amount of training done in far less time, and with less standing around your heart rate stays up, which helps the fat-burning side."
+        },
+        {
+          "type": "powerSets",
+          "boxes": [
+            [
+              "A1",
+              "First exercise",
+              "e.g. Bench Press"
+            ],
+            [
+              "A2",
+              "Straight into the second",
+              "≤ 15 s to switch"
+            ],
+            [
+              "REST",
+              "60–90 s",
+              "depends on phase"
+            ],
+            [
+              "REPEAT",
+              "3–4 sets",
+              "then move to pair B"
+            ]
+          ],
+          "note": "**Gym tip:** set up both stations before you start a pair (grab your dumbbells, set the cable) so the switch really is under 15 seconds."
+        },
+        {
+          "type": "sessionFlow",
+          "title": "Every gym session, in order",
+          "steps": [
+            [
+              "Rope warm-up",
+              "5–8 min"
+            ],
+            [
+              "Mobility",
+              "3 min"
+            ],
+            [
+              "Warm-up sets",
+              "1–2 light sets"
+            ],
+            [
+              "Power sets",
+              "35–40 min"
+            ],
+            [
+              "Finisher",
+              "6–10 min"
+            ],
+            [
+              "Stretch",
+              "3–5 min"
+            ]
+          ],
+          "highlight": [
+            4
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "items": [
+            "**Mobility (3 min) after skipping:** 10 arm circles each way · 10 leg swings each leg · 10 hip hinges · 10 bodyweight squats · 10 incline push-ups.",
+            "**Warm-up sets:** Before the first pair, do 1–2 light sets of A1 and A2 (about half your working weight, 8–10 easy reps).",
+            "**Stretch (3–5 min):** hold 30 s each for chest, lats, hip flexors, hamstrings and quads."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phases",
+      "title": "Your 12 weeks: three phases",
+      "kicker": "The plan",
+      "sections": [
+        {
+          "type": "text",
+          "body": "Same exercises all the way through. What changes is how many sets you do, how hard you push and how short your rests are. Check this at the start of each phase."
+        },
+        {
+          "type": "phaseTable",
+          "rows": [
+            "sets",
+            "effort",
+            "rest",
+            "warmup"
+          ],
+          "rowLabels": [
+            "Sets",
+            "Effort",
+            "Rest",
+            "Rope warm-up"
+          ],
+          "note": "In the workout tables, sets are written as **Phase 1 / Phase 2 / Phase 3**. So “3 / 4 / 4” means 3 sets in weeks 1–4, then 4 sets from week 5."
+        },
+        {
+          "type": "text",
+          "title": "How to pick the weight",
+          "body": "“Stop 2 reps short of failure” means you finish the set feeling like you could have done exactly 2 more good reps. If you could have done 5 more, it's too light. If your form broke down, it's too heavy."
+        },
+        {
+          "type": "steps",
+          "title": "How to progress (the rule that makes this work)",
+          "items": [
+            "Every exercise has a rep range, like 8–10.",
+            "Start with a weight you can lift for the **bottom** of the range with good form.",
+            "Each session, try to add a rep or two.",
+            "When you hit the **top** of the range on **every** set, go up next session: **+2.5 kg** on upper-body barbells and machines, **+1–2 kg** per dumbbell, **+5 kg** on squats, Romanian deadlifts and leg press.",
+            "Bodyweight moves: add reps, lower slower (3 seconds), or pause at the hardest point."
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "accent",
+          "title": "Coming back after a break: week 1",
+          "items": [
+            "Use about **60% of what you think you can lift** and focus on form. Your muscles and joints need a week or two to remember the movements. Some soreness for 2–3 days is normal. Sharp or joint pain is not: stop that exercise and swap it for a lighter version.",
+            "If you have a heart, blood-pressure, joint or other medical condition, get the all-clear from your doctor before starting.",
+            "Skipping at a heavier bodyweight: keep hops low and land softly. If your shins or knees complain, swap the rope for the bike until they settle."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fuel",
+      "title": "Fuel & recovery",
+      "kicker": "Outside the gym",
+      "sections": [
+        {
+          "type": "text",
+          "body": "Training builds the muscle. Eating slightly less than you burn removes the fat. Both have to happen for the scale and the mirror to move together."
+        },
+        {
+          "type": "cards",
+          "cards": [
+            {
+              "title": "Calories: a small, steady deficit",
+              "color": "accent",
+              "items": [
+                "Aim to eat about **500 kcal a day less** than you burn. That's roughly 0.4–0.5 kg of fat a week.",
+                "Easiest way to find your number: log your normal eating for 7 days in a calorie app, then eat 500 kcal less than that average.",
+                "No time to track first? Start around **2,500–2,700 kcal a day** and let the scale guide you."
+              ]
+            },
+            {
+              "title": "Protein: 160–190 g a day",
+              "color": "#12a07c",
+              "items": [
+                "Protein protects your muscle while you lose fat and keeps you full.",
+                "Split it over 3–4 meals of 40–50 g each.",
+                "Easy sources: chicken, eggs, lean mince, fish or tinned tuna, Greek yoghurt, cottage cheese, beans and lentils, lean biltong, a whey shake."
+              ]
+            },
+            {
+              "title": "Adjust every 2 weeks",
+              "color": "primary",
+              "items": [
+                "Weekly average dropping **0.3–0.7 kg**: perfect, change nothing.",
+                "Not dropping: cut **150–200 kcal** a day (a snack or a drink).",
+                "Dropping over 1 kg a week or feeling drained in the gym: **add 150–200 kcal**."
+              ]
+            },
+            {
+              "title": "Recovery basics",
+              "color": "#8752d4",
+              "items": [
+                "**Sleep 7–9 hours.** Short sleep makes you hungrier and weaker in the gym.",
+                "**Water 2.5–3 litres** a day, more on gym days.",
+                "**Steps 8,000–10,000** every day. Your walk days do a lot of the work."
+              ]
+            },
+            {
+              "title": "Build each meal",
+              "color": "primary",
+              "items": [
+                "Half the plate vegetables or salad, a quarter protein, a quarter carbs (rice, pap, potatoes, oats, bread).",
+                "Put most of your carbs in the meals before and after training.",
+                "Sugary drinks and alcohol are the easiest calories to cut. Keep them to 1–2 times a week."
+              ]
+            },
+            {
+              "title": "Weighing in the smart way",
+              "color": "#2d6cdf",
+              "items": [
+                "Weigh yourself 3–4 mornings a week, after the toilet and before eating.",
+                "Log the **weekly average**, not single days. Water and salt move the daily number by 1–2 kg.",
+                "Measure your waist every 2 weeks. Lifting adds muscle, so some weeks the scale is slow while your waist still shrinks. Waist down + lifts up = it's working."
+              ]
+            }
+          ]
+        },
+        {
+          "type": "sampleDay",
+          "title": "A sample day",
+          "intro": "Roughly 2,400 kcal and 170+ g protein. Scale the rice, potato or pap portions up or down to land on your number.",
+          "rows": [
+            [
+              "Breakfast",
+              "3 eggs, 2 slices wholegrain toast, a piece of fruit"
+            ],
+            [
+              "Lunch",
+              "150 g chicken breast, 1 cup cooked rice, big salad"
+            ],
+            [
+              "Snack",
+              "200 g plain Greek yoghurt with berries, or 40 g lean biltong"
+            ],
+            [
+              "After the gym",
+              "Whey shake in water and an apple"
+            ],
+            [
+              "Dinner",
+              "180 g lean mince or fish, potatoes or pap, a plate of vegetables"
+            ]
+          ]
+        },
+        {
+          "type": "disclaimer",
+          "body": "These are general guidelines, not a medical or dietitian's plan. If you have a medical condition or take medication that affects appetite or blood sugar, check with your doctor first."
+        }
+      ]
+    }
+  ],
+  "tracking": {
+    "weighIn": {
+      "text": "Weigh yourself 3–4 mornings a week, after the toilet and before eating. The app averages each week for you.",
+      "suggestedDays": [
+        "mon",
+        "wed",
+        "fri",
+        "sun"
+      ]
+    },
+    "measurements": {
+      "everyWeeks": 2,
+      "fields": [
+        {
+          "id": "waist",
+          "label": "Waist",
+          "unit": "cm",
+          "hint": "At your belly button, relaxed, tape level."
+        },
+        {
+          "id": "chest",
+          "label": "Chest",
+          "unit": "cm",
+          "hint": "Around the fullest part, arms relaxed."
+        },
+        {
+          "id": "arm",
+          "label": "Arm",
+          "unit": "cm",
+          "hint": "Around the biggest part of the upper arm, relaxed."
+        },
+        {
+          "id": "thigh",
+          "label": "Thigh",
+          "unit": "cm",
+          "hint": "Around the biggest part of the thigh, standing."
+        }
+      ]
+    },
+    "strengthCheckins": {
+      "weeks": [
+        1,
+        4,
+        8,
+        12
+      ],
+      "exerciseIds": [
+        "bench_press",
+        "lat_pulldown",
+        "back_squat",
+        "romanian_deadlift",
+        "leg_press",
+        "db_shoulder_press"
+      ],
+      "text": "Best set (kg × reps) for each lift. Filled in automatically from your logs."
+    },
+    "fitnessTests": null,
+    "steps": {
+      "dailyTargetByWeek": [
+        8000,
+        8000,
+        8000,
+        8000,
+        8000,
+        8000,
+        8000,
+        8000,
+        8000,
+        8000,
+        8000,
+        8000
+      ],
+      "text": "Aim for 8,000–10,000 steps every day."
+    },
+    "wins": [
+      "Clothes feel looser around the waist",
+      "Waist down 3 cm from the start",
+      "Every session done for a full week",
+      "Bench press up 10 kg from week 1",
+      "15 push-ups in a row",
+      "A week averaging 10,000 steps"
+    ],
+    "daily": {
+      "calories": true,
+      "protein": true,
+      "water": true
+    }
+  },
+  "coaching": {
+    "reviewEveryWeeks": 2,
+    "minWeeksOfData": 2,
+    "bands": [
+      {
+        "maxKgPerWeek": 0.1,
+        "status": "stalled",
+        "message": "Not dropping: cut **150–200 kcal** a day (a snack or a drink)."
+      },
+      {
+        "minKgPerWeek": 0.1,
+        "maxKgPerWeek": 0.3,
+        "status": "slow",
+        "message": "A little slow. Check your logging is honest and keep steps at 8,000–10,000 before cutting food."
+      },
+      {
+        "minKgPerWeek": 0.3,
+        "maxKgPerWeek": 0.7,
+        "status": "on-track",
+        "message": "Weekly average dropping **0.3–0.7 kg**: perfect, change nothing."
+      },
+      {
+        "minKgPerWeek": 0.7,
+        "maxKgPerWeek": 1.0,
+        "status": "on-track",
+        "message": "Good pace. Keep protein high so what you lose is fat, not muscle."
+      },
+      {
+        "minKgPerWeek": 1.0,
+        "status": "fast",
+        "message": "Dropping over 1 kg a week: **add 150–200 kcal** a day so you keep your muscle and your energy in the gym."
+      }
+    ],
+    "notes": [
+      "Feeling drained in the gym? Add 150–200 kcal a day even if the scale is on track.",
+      "Waist down + lifts up = it's working, even in a slow scale week."
+    ]
+  }
+}

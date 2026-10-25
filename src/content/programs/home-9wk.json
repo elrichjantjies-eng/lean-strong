@@ -1,0 +1,2310 @@
+{
+  "schemaVersion": 1,
+  "id": "home-9wk",
+  "title": "Lean & Strong",
+  "subtitle": "9-week home program · waistline focus",
+  "summary": "3 home workouts a week with dumbbells, a kettlebell and ankle weights, a waist circuit every session, and a walk every day.",
+  "setting": "home",
+  "weeks": 9,
+  "theme": {
+    "primary": "#1c2a4a",
+    "ink": "#2a3349",
+    "muted": "#6b7489",
+    "line": "#e1e6ef",
+    "panel": "#f3f5f9",
+    "accent": "#e24d74",
+    "accentSoft": "#fce6ec",
+    "phaseColors": [
+      "#f2a3b8",
+      "#e24d74",
+      "#b02a50"
+    ],
+    "dayColors": {
+      "A": "#3a6ee8",
+      "B": "#12a07c",
+      "C": "#8752d4",
+      "walk": "#0b9fbf",
+      "rest": "#c4cbd8"
+    }
+  },
+  "equipmentNeeded": [
+    "Walking pad",
+    "5 kg dumbbells",
+    "Kettlebell",
+    "Skipping rope",
+    "Ankle weights",
+    "Gym mat",
+    "A sturdy chair"
+  ],
+  "weightPlan": {
+    "defaultRateKgPerWeek": 1.0,
+    "maxRateKgPerWeek": 1.0,
+    "onTrackBandKgPerWeek": [
+      0.5,
+      1.0
+    ],
+    "checkpointWeek": 6,
+    "calorieFloorKcal": 1200,
+    "proteinGPerDay": [
+      100,
+      120
+    ]
+  },
+  "phases": [
+    {
+      "number": 1,
+      "name": "Start",
+      "weeks": [
+        1,
+        3
+      ],
+      "summary": {
+        "sets": "3 sets of every pair",
+        "effort": "Finish each set feeling you could do 3 more reps",
+        "rest": "60 s after each pair",
+        "warmup": "4 rounds: 30 s skip / 30 s rest",
+        "waistCircuit": "2 rounds",
+        "walkAfter": "25 min brisk walk"
+      },
+      "restSeconds": 60,
+      "ropeWarmup": {
+        "activity": "Skipping",
+        "rounds": 4,
+        "workSec": 30,
+        "restSec": 30
+      }
+    },
+    {
+      "number": 2,
+      "name": "Build",
+      "weeks": [
+        4,
+        6
+      ],
+      "summary": {
+        "sets": "4 sets on pair A, 3 sets on B & C",
+        "effort": "2 reps left in the tank",
+        "rest": "45–60 s after each pair",
+        "warmup": "5 rounds: 40 s skip / 20 s rest",
+        "waistCircuit": "3 rounds",
+        "walkAfter": "30 min brisk walk"
+      },
+      "restSeconds": 50,
+      "ropeWarmup": {
+        "activity": "Skipping",
+        "rounds": 5,
+        "workSec": 40,
+        "restSec": 20
+      }
+    },
+    {
+      "number": 3,
+      "name": "Burn",
+      "weeks": [
+        7,
+        9
+      ],
+      "summary": {
+        "sets": "4 sets on pairs A & B, 3 sets on C",
+        "effort": "1–2 reps left in the tank",
+        "rest": "45 s after each pair",
+        "warmup": "6 rounds: 40 s skip / 20 s rest",
+        "waistCircuit": "3 rounds, add 10 s to every hold",
+        "walkAfter": "35–40 min brisk walk"
+      },
+      "restSeconds": 45,
+      "ropeWarmup": {
+        "activity": "Skipping",
+        "rounds": 6,
+        "workSec": 40,
+        "restSec": 20
+      }
+    }
+  ],
+  "weekTemplate": [
+    {
+      "weekday": "mon",
+      "title": "Workout A",
+      "subtitle": "Strength, waist circuit, walk",
+      "kind": "workout",
+      "sessionId": "A"
+    },
+    {
+      "weekday": "tue",
+      "title": "Walk day",
+      "subtitle": "45–60 min on the walking pad",
+      "kind": "walk",
+      "walk": {
+        "minutesByPhase": [
+          [
+            45,
+            45
+          ],
+          [
+            50,
+            50
+          ],
+          [
+            60,
+            60
+          ]
+        ],
+        "intervalsFromWeek": 4
+      }
+    },
+    {
+      "weekday": "wed",
+      "title": "Workout B",
+      "subtitle": "Strength, waist circuit, walk",
+      "kind": "workout",
+      "sessionId": "B"
+    },
+    {
+      "weekday": "thu",
+      "title": "Walk day",
+      "subtitle": "45–60 min on the walking pad",
+      "kind": "walk",
+      "walk": {
+        "minutesByPhase": [
+          [
+            45,
+            45
+          ],
+          [
+            50,
+            50
+          ],
+          [
+            60,
+            60
+          ]
+        ],
+        "intervalsFromWeek": 4
+      }
+    },
+    {
+      "weekday": "fri",
+      "title": "Workout C",
+      "subtitle": "Strength, waist circuit, walk",
+      "kind": "workout",
+      "sessionId": "C"
+    },
+    {
+      "weekday": "sat",
+      "title": "Long walk",
+      "subtitle": "60 min, outdoors if you can",
+      "kind": "walk",
+      "walk": {
+        "minutesByPhase": [
+          [
+            60,
+            60
+          ],
+          [
+            60,
+            60
+          ],
+          [
+            60,
+            75
+          ]
+        ],
+        "intervalsFromWeek": null
+      }
+    },
+    {
+      "weekday": "sun",
+      "title": "Easy day",
+      "subtitle": "Gentle walk & stretch",
+      "kind": "rest",
+      "walk": {
+        "minutesByPhase": [
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ],
+          [
+            20,
+            30
+          ]
+        ],
+        "optional": true
+      }
+    }
+  ],
+  "sessions": {
+    "A": {
+      "id": "A",
+      "title": "Workout A",
+      "focus": "Legs, Back & Waist",
+      "weekdayLabel": "Monday",
+      "color": "#3a6ee8",
+      "intro": "Your legs are your biggest muscles, so working them burns the most energy. Rows build the upper back that pulls your shoulders back and makes your waist look slimmer.",
+      "warmup": {
+        "text": "Skip rope (4, 5 or 6 rounds by phase) or walk briskly on the pad for 5 min, then 2–3 min of mobility.",
+        "rope": "phase",
+        "alternative": "5 min brisk walk on the walking pad",
+        "mobility": [
+          "10 arm circles each way",
+          "10 hip circles each way",
+          "10 bodyweight squats",
+          "10 glute bridges",
+          "5 slow cat-cows"
+        ]
+      },
+      "pairs": [
+        {
+          "code": "A",
+          "items": [
+            {
+              "code": "A1",
+              "exerciseId": "kb_goblet_squat",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "12–15",
+              "target": {
+                "kind": "reps",
+                "min": 12,
+                "max": 15,
+                "perSide": false
+              }
+            },
+            {
+              "code": "A2",
+              "exerciseId": "db_bent_over_row",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "12–15",
+              "target": {
+                "kind": "reps",
+                "min": 12,
+                "max": 15,
+                "perSide": false
+              }
+            }
+          ]
+        },
+        {
+          "code": "B",
+          "items": [
+            {
+              "code": "B1",
+              "exerciseId": "db_reverse_lunge",
+              "setsByPhase": [
+                3,
+                3,
+                4
+              ],
+              "display": "10 each leg",
+              "target": {
+                "kind": "reps",
+                "min": 10,
+                "max": 10,
+                "perSide": true
+              }
+            },
+            {
+              "code": "B2",
+              "exerciseId": "knee_push_up",
+              "setsByPhase": [
+                3,
+                3,
+                4
+              ],
+              "display": "8–12",
+              "target": {
+                "kind": "reps",
+                "min": 8,
+                "max": 12,
+                "perSide": false
+              }
+            }
+          ]
+        },
+        {
+          "code": "C",
+          "items": [
+            {
+              "code": "C1",
+              "exerciseId": "kb_glute_bridge",
+              "setsByPhase": [
+                3,
+                3,
+                3
+              ],
+              "display": "15–20",
+              "target": {
+                "kind": "reps",
+                "min": 15,
+                "max": 20,
+                "perSide": false
+              }
+            },
+            {
+              "code": "C2",
+              "exerciseId": "hammer_curl",
+              "setsByPhase": [
+                3,
+                3,
+                3
+              ],
+              "display": "12–15",
+              "target": {
+                "kind": "reps",
+                "min": 12,
+                "max": 15,
+                "perSide": false
+              }
+            }
+          ]
+        }
+      ],
+      "restSecondsByPhase": [
+        60,
+        50,
+        45
+      ],
+      "restNote": "Go straight from the 1st to the 2nd exercise of a pair, then rest **60 s** (weeks 1–3), **45–60 s** (weeks 4–6) or **45 s** (weeks 7–9). Finish all sets of a pair before moving on.",
+      "waistCircuit": {
+        "title": "Waist circuit",
+        "roundsByPhase": [
+          2,
+          3,
+          3
+        ],
+        "restBetweenRoundsSec": 60,
+        "holdBonus": {
+          "fromWeek": 7,
+          "addSec": 10
+        },
+        "description": "Do the three moves back to back, rest 45–60 s, repeat: **2 rounds** (weeks 1–3), **3 rounds** (weeks 4–9, holds +10 s from week 7).",
+        "steps": [
+          {
+            "exerciseId": "dead_bug",
+            "display": "8 each side",
+            "target": {
+              "kind": "reps",
+              "min": 8,
+              "max": 8,
+              "perSide": true
+            }
+          },
+          {
+            "exerciseId": "plank",
+            "display": "30–45 s",
+            "target": {
+              "kind": "time",
+              "min": 30,
+              "max": 45,
+              "perSide": false
+            }
+          },
+          {
+            "exerciseId": "side_plank",
+            "display": "20–30 s each side",
+            "target": {
+              "kind": "time",
+              "min": 20,
+              "max": 30,
+              "perSide": true
+            }
+          }
+        ]
+      },
+      "walkAfter": {
+        "minutesByPhase": [
+          [
+            25,
+            25
+          ],
+          [
+            30,
+            30
+          ],
+          [
+            35,
+            40
+          ]
+        ],
+        "text": "Walk after: 25 min (weeks 1–3), 30 min (weeks 4–6), 35–40 min (weeks 7–9) at a brisk pace."
+      },
+      "notes": [
+        "Goblet squat: hold the kettlebell by the horns, close to your chest, elbows pointing down.",
+        "Rows: pull your elbows towards your back pockets. When 5 kg feels easy, lower for a slow count of 3.",
+        "Knee push-ups are a real exercise, not a cheat. Move to full push-ups once you can do 12 good ones."
+      ],
+      "equipment": [
+        "Kettlebell",
+        "5 kg dumbbells",
+        "Ankle weights",
+        "Mat",
+        "A sturdy chair"
+      ],
+      "cooldown": {
+        "text": "Stretch for 3 min, 30 s per stretch. Hip-flexor stretches matter most for anyone who sits all day.",
+        "stretches": [
+          "Hip flexors (each side)",
+          "Hamstrings",
+          "Chest",
+          "Child's pose"
+        ],
+        "holdSec": 30
+      }
+    },
+    "B": {
+      "id": "B",
+      "title": "Workout B",
+      "focus": "Hips, Shoulders & Waist",
+      "weekdayLabel": "Wednesday",
+      "color": "#12a07c",
+      "intro": "Kettlebell swings get your heart rate up fast, which makes this the sweatiest session of the week. The waist circuit trains your core from three angles.",
+      "warmup": {
+        "text": "Skip rope (4, 5 or 6 rounds by phase) or walk briskly on the pad for 5 min, then 2–3 min of mobility.",
+        "rope": "phase",
+        "alternative": "5 min brisk walk on the walking pad",
+        "mobility": [
+          "10 arm circles each way",
+          "10 hip circles each way",
+          "10 bodyweight squats",
+          "10 glute bridges",
+          "5 slow cat-cows"
+        ]
+      },
+      "pairs": [
+        {
+          "code": "A",
+          "items": [
+            {
+              "code": "A1",
+              "exerciseId": "kb_swing",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "15",
+              "target": {
+                "kind": "reps",
+                "min": 15,
+                "max": 15,
+                "perSide": false
+              }
+            },
+            {
+              "code": "A2",
+              "exerciseId": "db_floor_press",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "12–15",
+              "target": {
+                "kind": "reps",
+                "min": 12,
+                "max": 15,
+                "perSide": false
+              }
+            }
+          ]
+        },
+        {
+          "code": "B",
+          "items": [
+            {
+              "code": "B1",
+              "exerciseId": "kb_rdl",
+              "setsByPhase": [
+                3,
+                3,
+                4
+              ],
+              "display": "12–15",
+              "target": {
+                "kind": "reps",
+                "min": 12,
+                "max": 15,
+                "perSide": false
+              }
+            },
+            {
+              "code": "B2",
+              "exerciseId": "db_shoulder_press",
+              "setsByPhase": [
+                3,
+                3,
+                4
+              ],
+              "display": "10–12",
+              "target": {
+                "kind": "reps",
+                "min": 10,
+                "max": 12,
+                "perSide": false
+              }
+            }
+          ]
+        },
+        {
+          "code": "C",
+          "items": [
+            {
+              "code": "C1",
+              "exerciseId": "side_lying_leg_raise",
+              "setsByPhase": [
+                3,
+                3,
+                3
+              ],
+              "display": "15 each side",
+              "target": {
+                "kind": "reps",
+                "min": 15,
+                "max": 15,
+                "perSide": true
+              }
+            },
+            {
+              "code": "C2",
+              "exerciseId": "overhead_triceps_ext",
+              "setsByPhase": [
+                3,
+                3,
+                3
+              ],
+              "display": "12–15",
+              "target": {
+                "kind": "reps",
+                "min": 12,
+                "max": 15,
+                "perSide": false
+              }
+            }
+          ]
+        }
+      ],
+      "restSecondsByPhase": [
+        60,
+        50,
+        45
+      ],
+      "restNote": "Go straight from the 1st to the 2nd exercise of a pair, then rest **60 s** (weeks 1–3), **45–60 s** (weeks 4–6) or **45 s** (weeks 7–9). Finish all sets of a pair before moving on.",
+      "waistCircuit": {
+        "title": "Waist circuit",
+        "roundsByPhase": [
+          2,
+          3,
+          3
+        ],
+        "restBetweenRoundsSec": 60,
+        "holdBonus": {
+          "fromWeek": 7,
+          "addSec": 10
+        },
+        "description": "Do the three moves back to back, rest 45–60 s, repeat: **2 rounds** (weeks 1–3), **3 rounds** (weeks 4–9, holds +10 s from week 7).",
+        "steps": [
+          {
+            "exerciseId": "reverse_crunch",
+            "display": "12–15",
+            "target": {
+              "kind": "reps",
+              "min": 12,
+              "max": 15,
+              "perSide": false
+            }
+          },
+          {
+            "exerciseId": "bird_dog",
+            "display": "8 each side",
+            "target": {
+              "kind": "reps",
+              "min": 8,
+              "max": 8,
+              "perSide": true
+            }
+          },
+          {
+            "exerciseId": "mountain_climber",
+            "display": "30 s",
+            "target": {
+              "kind": "time",
+              "min": 30,
+              "max": 30,
+              "perSide": false
+            }
+          }
+        ]
+      },
+      "walkAfter": {
+        "minutesByPhase": [
+          [
+            25,
+            25
+          ],
+          [
+            30,
+            30
+          ],
+          [
+            35,
+            40
+          ]
+        ],
+        "text": "Walk after: 25 min (weeks 1–3), 30 min (weeks 4–6), 35–40 min (weeks 7–9) at a brisk pace."
+      },
+      "notes": [
+        "Swings are a hip snap, not an arm lift. The kettlebell floats to chest height because your hips drive it.",
+        "Keep your lower back pressed into the mat during reverse crunches. Slow beats fast.",
+        "Ankle weights are for the leg raises and kickbacks only. Never walk in them; they strain your knees and hips."
+      ],
+      "equipment": [
+        "Kettlebell",
+        "5 kg dumbbells",
+        "Ankle weights",
+        "Mat",
+        "A sturdy chair"
+      ],
+      "cooldown": {
+        "text": "Stretch for 3 min, 30 s per stretch. Hip-flexor stretches matter most for anyone who sits all day.",
+        "stretches": [
+          "Hip flexors (each side)",
+          "Hamstrings",
+          "Chest",
+          "Child's pose"
+        ],
+        "holdSec": 30
+      }
+    },
+    "C": {
+      "id": "C",
+      "title": "Workout C",
+      "focus": "Full Body & Waist",
+      "weekdayLabel": "Friday",
+      "color": "#8752d4",
+      "intro": "A mix of A and B with extra glute work. Slow squats make a light kettlebell feel heavy, and that's the point. Finish the week with your longest walk if you have time.",
+      "warmup": {
+        "text": "Skip rope (4, 5 or 6 rounds by phase) or walk briskly on the pad for 5 min, then 2–3 min of mobility.",
+        "rope": "phase",
+        "alternative": "5 min brisk walk on the walking pad",
+        "mobility": [
+          "10 arm circles each way",
+          "10 hip circles each way",
+          "10 bodyweight squats",
+          "10 glute bridges",
+          "5 slow cat-cows"
+        ]
+      },
+      "pairs": [
+        {
+          "code": "A",
+          "items": [
+            {
+              "code": "A1",
+              "exerciseId": "kb_goblet_squat",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "12 (3 s on the way down)",
+              "target": {
+                "kind": "reps",
+                "min": 12,
+                "max": 12,
+                "perSide": false,
+                "note": "3 s on the way down"
+              }
+            },
+            {
+              "code": "A2",
+              "exerciseId": "db_bent_over_row",
+              "setsByPhase": [
+                3,
+                4,
+                4
+              ],
+              "display": "12–15",
+              "target": {
+                "kind": "reps",
+                "min": 12,
+                "max": 15,
+                "perSide": false
+              }
+            }
+          ]
+        },
+        {
+          "code": "B",
+          "items": [
+            {
+              "code": "B1",
+              "exerciseId": "glute_kickback",
+              "setsByPhase": [
+                3,
+                3,
+                4
+              ],
+              "display": "15 each leg",
+              "target": {
+                "kind": "reps",
+                "min": 15,
+                "max": 15,
+                "perSide": true
+              }
+            },
+            {
+              "code": "B2",
+              "exerciseId": "db_shoulder_press",
+              "setsByPhase": [
+                3,
+                3,
+                4
+              ],
+              "display": "10–12",
+              "target": {
+                "kind": "reps",
+                "min": 10,
+                "max": 12,
+                "perSide": false
+              }
+            }
+          ]
+        },
+        {
+          "code": "C",
+          "items": [
+            {
+              "code": "C1",
+              "exerciseId": "kb_swing",
+              "setsByPhase": [
+                3,
+                3,
+                3
+              ],
+              "display": "15",
+              "target": {
+                "kind": "reps",
+                "min": 15,
+                "max": 15,
+                "perSide": false
+              }
+            },
+            {
+              "code": "C2",
+              "exerciseId": "knee_push_up",
+              "setsByPhase": [
+                3,
+                3,
+                3
+              ],
+              "display": "8–12",
+              "target": {
+                "kind": "reps",
+                "min": 8,
+                "max": 12,
+                "perSide": false
+              }
+            }
+          ]
+        }
+      ],
+      "restSecondsByPhase": [
+        60,
+        50,
+        45
+      ],
+      "restNote": "Go straight from the 1st to the 2nd exercise of a pair, then rest **60 s** (weeks 1–3), **45–60 s** (weeks 4–6) or **45 s** (weeks 7–9). Finish all sets of a pair before moving on.",
+      "waistCircuit": {
+        "title": "Waist circuit",
+        "roundsByPhase": [
+          2,
+          3,
+          3
+        ],
+        "restBetweenRoundsSec": 60,
+        "holdBonus": {
+          "fromWeek": 7,
+          "addSec": 10
+        },
+        "description": "Do the three moves back to back, rest 45–60 s, repeat: **2 rounds** (weeks 1–3), **3 rounds** (weeks 4–9, holds +10 s from week 7).",
+        "steps": [
+          {
+            "exerciseId": "woodchop",
+            "display": "10 each side",
+            "target": {
+              "kind": "reps",
+              "min": 10,
+              "max": 10,
+              "perSide": true
+            }
+          },
+          {
+            "exerciseId": "plank",
+            "display": "30–45 s",
+            "target": {
+              "kind": "time",
+              "min": 30,
+              "max": 45,
+              "perSide": false
+            }
+          },
+          {
+            "exerciseId": "reverse_crunch",
+            "display": "12–15",
+            "target": {
+              "kind": "reps",
+              "min": 12,
+              "max": 15,
+              "perSide": false
+            }
+          }
+        ]
+      },
+      "walkAfter": {
+        "minutesByPhase": [
+          [
+            25,
+            25
+          ],
+          [
+            30,
+            30
+          ],
+          [
+            35,
+            40
+          ]
+        ],
+        "text": "Walk after: 25 min (weeks 1–3), 30 min (weeks 4–6), 35–40 min (weeks 7–9) at a brisk pace."
+      },
+      "notes": [
+        "Squeeze your glute at the top of every kickback and hold for a second.",
+        "On the woodchop, turn from your ribs and pivot your back foot. Keep your arms long.",
+        "Friday's walk is a good one to make longer: it sets up a strong weekend."
+      ],
+      "equipment": [
+        "Kettlebell",
+        "5 kg dumbbells",
+        "Ankle weights",
+        "Mat",
+        "A sturdy chair"
+      ],
+      "cooldown": {
+        "text": "Stretch for 3 min, 30 s per stretch. Hip-flexor stretches matter most for anyone who sits all day.",
+        "stretches": [
+          "Hip flexors (each side)",
+          "Hamstrings",
+          "Chest",
+          "Child's pose"
+        ],
+        "holdSec": 30
+      }
+    }
+  },
+  "exercises": {
+    "skipping": {
+      "id": "skipping",
+      "name": "Skipping Rope",
+      "muscles": [
+        "Warm-up",
+        "cardio"
+      ],
+      "cues": [
+        "Elbows close to your sides; turn the rope with your wrists, not your arms.",
+        "Small hops of 2–3 cm, landing softly on the balls of your feet.",
+        "Breathe steadily and rest when your form breaks down."
+      ],
+      "watchOut": "Big jumps or landing flat-footed. Sore knees or shins? Warm up with 5 min brisk walking instead.",
+      "images": {
+        "start": "assets/exercises/home-9wk/skipping-start.webp",
+        "end": "assets/exercises/home-9wk/skipping-end.webp",
+        "loop": "assets/exercises/home-9wk/skipping-loop.webp"
+      },
+      "frameLabels": [
+        "Rope overhead",
+        "Small hop"
+      ],
+      "framesAreVariants": false,
+      "load": "cardio",
+      "logAs": "none",
+      "equipment": [
+        "skipping rope"
+      ],
+      "progression": {
+        "type": "none"
+      }
+    },
+    "walking_pad": {
+      "id": "walking_pad",
+      "name": "Walking Pad Walk",
+      "muscles": [
+        "Calorie burn",
+        "heart",
+        "recovery"
+      ],
+      "cues": [
+        "Stand tall, eyes forward, shoulders relaxed and arms swinging naturally.",
+        "Take short, quick steps and land under your hips, heel to toe.",
+        "Brisk pace: you can talk in short sentences but not sing."
+      ],
+      "watchOut": "Looking down at your phone the whole time. Prop it at eye level, and never wear ankle weights while walking.",
+      "images": {
+        "start": "assets/exercises/home-9wk/walking_pad-start.webp",
+        "end": "assets/exercises/home-9wk/walking_pad-end.webp",
+        "loop": "assets/exercises/home-9wk/walking_pad-loop.webp"
+      },
+      "frameLabels": [
+        "Tall, arms swinging",
+        "Quick, light steps"
+      ],
+      "framesAreVariants": false,
+      "load": "cardio",
+      "logAs": "none",
+      "equipment": [
+        "walking pad"
+      ],
+      "progression": {
+        "type": "none"
+      }
+    },
+    "kb_goblet_squat": {
+      "id": "kb_goblet_squat",
+      "name": "Kettlebell Goblet Squat",
+      "muscles": [
+        "Thighs",
+        "glutes",
+        "core"
+      ],
+      "cues": [
+        "Hold the kettlebell by the horns at your chest, feet shoulder-width, toes slightly out.",
+        "Sit down and back between your heels until your thighs are about parallel.",
+        "Drive up through your whole foot and squeeze your glutes at the top."
+      ],
+      "watchOut": "Heels lifting or knees caving in. Keep your chest proud and the kettlebell close.",
+      "images": {
+        "start": "assets/exercises/home-9wk/kb_goblet_squat-start.webp",
+        "end": "assets/exercises/home-9wk/kb_goblet_squat-end.webp",
+        "loop": "assets/exercises/home-9wk/kb_goblet_squat-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Sit down & back"
+      ],
+      "framesAreVariants": false,
+      "load": "kettlebell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "kettlebell"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Lower for a slow count of 3",
+          "Pause 2 s at the bottom"
+        ]
+      }
+    },
+    "db_bent_over_row": {
+      "id": "db_bent_over_row",
+      "name": "Dumbbell Bent-Over Row",
+      "muscles": [
+        "Upper back",
+        "lats",
+        "biceps"
+      ],
+      "cues": [
+        "Hold a dumbbell in each hand, soften your knees and hinge forward with a flat back.",
+        "Pull both dumbbells to your hips, squeezing your shoulder blades together.",
+        "Lower slowly until your arms are straight."
+      ],
+      "watchOut": "Rounding your back or standing up as you pull. Brace your stomach and keep the hinge.",
+      "images": {
+        "start": "assets/exercises/home-9wk/db_bent_over_row-start.webp",
+        "end": "assets/exercises/home-9wk/db_bent_over_row-end.webp",
+        "loop": "assets/exercises/home-9wk/db_bent_over_row-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Row to hips"
+      ],
+      "framesAreVariants": false,
+      "load": "dumbbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "5 kg dumbbells"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Lower for a slow count of 3",
+          "Pause 1 s at the top",
+          "Upgrade to 8 kg dumbbells"
+        ]
+      }
+    },
+    "db_reverse_lunge": {
+      "id": "db_reverse_lunge",
+      "name": "Dumbbell Reverse Lunge",
+      "muscles": [
+        "Thighs",
+        "glutes"
+      ],
+      "cues": [
+        "Stand tall with a 5 kg dumbbell in each hand.",
+        "Step one foot back and lower your back knee towards the floor.",
+        "Push through your front heel to stand back up. Alternate legs."
+      ],
+      "watchOut": "Leaning forward or your front knee caving in. Too wobbly? Skip the dumbbells and hold a wall.",
+      "images": {
+        "start": "assets/exercises/home-9wk/db_reverse_lunge-start.webp",
+        "end": "assets/exercises/home-9wk/db_reverse_lunge-end.webp",
+        "loop": "assets/exercises/home-9wk/db_reverse_lunge-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Step back & drop"
+      ],
+      "framesAreVariants": false,
+      "load": "dumbbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "5 kg dumbbells"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Lower for a slow count of 3",
+          "Pause 1 s at the bottom",
+          "Upgrade to 8 kg dumbbells"
+        ]
+      }
+    },
+    "knee_push_up": {
+      "id": "knee_push_up",
+      "name": "Knee Push-Up",
+      "muscles": [
+        "Chest",
+        "shoulders",
+        "triceps",
+        "core"
+      ],
+      "cues": [
+        "Knees on the mat, hands just wider than shoulders, straight line from knees to head.",
+        "Lower until your chest is a fist from the floor, elbows about 45°.",
+        "Push the floor away back to straight arms."
+      ],
+      "watchOut": "Hips piking up or sagging. Too hard? Do them with your hands on the couch or a table.",
+      "images": {
+        "start": "assets/exercises/home-9wk/knee_push_up-start.webp",
+        "end": "assets/exercises/home-9wk/knee_push_up-end.webp",
+        "loop": "assets/exercises/home-9wk/knee_push_up-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Lower chest"
+      ],
+      "framesAreVariants": false,
+      "load": "bodyweight",
+      "logAs": "reps",
+      "equipment": [
+        "mat"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Lower for a slow count of 3",
+          "Move to full push-ups at 12 good reps"
+        ]
+      }
+    },
+    "kb_glute_bridge": {
+      "id": "kb_glute_bridge",
+      "name": "Kettlebell Glute Bridge",
+      "muscles": [
+        "Glutes",
+        "hamstrings"
+      ],
+      "cues": [
+        "Lie on your back, knees bent, feet flat, kettlebell resting on your hip bones.",
+        "Squeeze your glutes and lift your hips until you're straight from knees to shoulders.",
+        "Hold 2 s at the top, then lower slowly."
+      ],
+      "watchOut": "Arching your lower back. Push through your heels and let the glutes do the work.",
+      "images": {
+        "start": "assets/exercises/home-9wk/kb_glute_bridge-start.webp",
+        "end": "assets/exercises/home-9wk/kb_glute_bridge-end.webp",
+        "loop": "assets/exercises/home-9wk/kb_glute_bridge-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Hips up"
+      ],
+      "framesAreVariants": false,
+      "load": "kettlebell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "kettlebell",
+        "mat"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Pause 2 s at the top",
+          "One leg at a time"
+        ]
+      }
+    },
+    "hammer_curl": {
+      "id": "hammer_curl",
+      "name": "Dumbbell Hammer Curl",
+      "muscles": [
+        "Biceps",
+        "forearms"
+      ],
+      "cues": [
+        "Dumbbells at your sides, palms facing each other.",
+        "Curl up with your palms still facing in, elbows still.",
+        "Lower slowly, for a count of 3 when 5 kg gets easy."
+      ],
+      "watchOut": "Swinging your body to lift the weights.",
+      "images": {
+        "start": "assets/exercises/home-9wk/hammer_curl-start.webp",
+        "end": "assets/exercises/home-9wk/hammer_curl-end.webp",
+        "loop": "assets/exercises/home-9wk/hammer_curl-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Curl up"
+      ],
+      "framesAreVariants": false,
+      "load": "dumbbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "5 kg dumbbells"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Lower for a slow count of 3"
+        ]
+      }
+    },
+    "kb_swing": {
+      "id": "kb_swing",
+      "name": "Kettlebell Swing",
+      "muscles": [
+        "Glutes",
+        "hamstrings",
+        "core",
+        "heart rate"
+      ],
+      "cues": [
+        "Feet wider than hips, hinge and 'hike' the kettlebell back between your legs.",
+        "Snap your hips forward hard and stand tall; let the bell float to chest height.",
+        "Let it fall back between your legs and hinge straight into the next rep."
+      ],
+      "watchOut": "Squatting it or lifting with your arms. It's a hip hinge. Start with 10 reps if it feels new.",
+      "images": {
+        "start": "assets/exercises/home-9wk/kb_swing-start.webp",
+        "end": "assets/exercises/home-9wk/kb_swing-end.webp",
+        "loop": "assets/exercises/home-9wk/kb_swing-loop.webp"
+      },
+      "frameLabels": [
+        "Hike back",
+        "Snap hips forward"
+      ],
+      "framesAreVariants": false,
+      "load": "kettlebell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "kettlebell"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Build to 20 reps",
+          "Shorter rest between sets"
+        ]
+      }
+    },
+    "db_floor_press": {
+      "id": "db_floor_press",
+      "name": "Dumbbell Floor Press",
+      "muscles": [
+        "Chest",
+        "shoulders",
+        "triceps"
+      ],
+      "cues": [
+        "Lie on the mat, knees bent, a dumbbell in each hand with elbows on the floor.",
+        "Press the dumbbells straight up over your chest.",
+        "Lower slowly until your upper arms touch the floor."
+      ],
+      "watchOut": "Bouncing your elbows off the floor. Pause for a second there instead.",
+      "images": {
+        "start": "assets/exercises/home-9wk/db_floor_press-start.webp",
+        "end": "assets/exercises/home-9wk/db_floor_press-end.webp",
+        "loop": "assets/exercises/home-9wk/db_floor_press-loop.webp"
+      },
+      "frameLabels": [
+        "Elbows on floor",
+        "Press up"
+      ],
+      "framesAreVariants": false,
+      "load": "dumbbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "5 kg dumbbells",
+        "mat"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Lower for a slow count of 3",
+          "Pause 1 s at the bottom",
+          "Upgrade to 8 kg dumbbells"
+        ]
+      }
+    },
+    "kb_rdl": {
+      "id": "kb_rdl",
+      "name": "Kettlebell Romanian Deadlift",
+      "muscles": [
+        "Hamstrings",
+        "glutes",
+        "lower back"
+      ],
+      "cues": [
+        "Stand tall holding the kettlebell in both hands in front of your thighs, knees soft.",
+        "Push your hips back and slide the bell down your legs to just below the knees.",
+        "Squeeze your glutes and drive your hips forward to stand tall."
+      ],
+      "watchOut": "Rounding your back. The stretch belongs in the back of your legs.",
+      "images": {
+        "start": "assets/exercises/home-9wk/kb_rdl-start.webp",
+        "end": "assets/exercises/home-9wk/kb_rdl-end.webp",
+        "loop": "assets/exercises/home-9wk/kb_rdl-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Hips back"
+      ],
+      "framesAreVariants": false,
+      "load": "kettlebell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "kettlebell"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Lower for a slow count of 3",
+          "Pause 1 s at the bottom"
+        ]
+      }
+    },
+    "db_shoulder_press": {
+      "id": "db_shoulder_press",
+      "name": "Seated Dumbbell Shoulder Press",
+      "muscles": [
+        "Shoulders",
+        "triceps"
+      ],
+      "cues": [
+        "Sit tall on a sturdy chair, dumbbells at shoulder height, palms forward.",
+        "Press up until your arms are straight and the dumbbells nearly touch.",
+        "Lower slowly back to shoulder height."
+      ],
+      "watchOut": "Arching your lower back. Brace your stomach as if someone might poke it.",
+      "images": {
+        "start": "assets/exercises/home-9wk/db_shoulder_press-start.webp",
+        "end": "assets/exercises/home-9wk/db_shoulder_press-end.webp",
+        "loop": "assets/exercises/home-9wk/db_shoulder_press-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Press overhead"
+      ],
+      "framesAreVariants": false,
+      "load": "dumbbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "5 kg dumbbells",
+        "chair"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Lower for a slow count of 3",
+          "Upgrade to 8 kg dumbbells"
+        ]
+      }
+    },
+    "side_lying_leg_raise": {
+      "id": "side_lying_leg_raise",
+      "name": "Side-Lying Leg Raise",
+      "muscles": [
+        "Outer hips",
+        "glutes"
+      ],
+      "cues": [
+        "Ankle weights on, lie on your side with your head resting on your lower arm.",
+        "Lift the top leg up to about 45°, toes pointing forward, not up.",
+        "Lower slowly. Do all reps, then switch sides."
+      ],
+      "watchOut": "Rolling your hips backwards. Stack your hips and keep the movement small and slow.",
+      "images": {
+        "start": "assets/exercises/home-9wk/side_lying_leg_raise-start.webp",
+        "end": "assets/exercises/home-9wk/side_lying_leg_raise-end.webp",
+        "loop": "assets/exercises/home-9wk/side_lying_leg_raise-loop.webp"
+      },
+      "frameLabels": [
+        "Lie on your side",
+        "Lift top leg"
+      ],
+      "framesAreVariants": false,
+      "load": "ankle-weights",
+      "logAs": "reps",
+      "equipment": [
+        "ankle weights",
+        "mat"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Pause 2 s at the top"
+        ]
+      }
+    },
+    "overhead_triceps_ext": {
+      "id": "overhead_triceps_ext",
+      "name": "Overhead Triceps Extension",
+      "muscles": [
+        "Backs of the arms"
+      ],
+      "cues": [
+        "Sit tall on a chair and hold one dumbbell overhead with both hands.",
+        "Lower it behind your head by bending your elbows; keep your elbows pointing up.",
+        "Straighten your arms back to the top."
+      ],
+      "watchOut": "Elbows flaring wide or your lower back arching.",
+      "images": {
+        "start": "assets/exercises/home-9wk/overhead_triceps_ext-start.webp",
+        "end": "assets/exercises/home-9wk/overhead_triceps_ext-end.webp",
+        "loop": "assets/exercises/home-9wk/overhead_triceps_ext-loop.webp"
+      },
+      "frameLabels": [
+        "Start",
+        "Extend up"
+      ],
+      "framesAreVariants": false,
+      "load": "dumbbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "5 kg dumbbell",
+        "chair"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Lower for a slow count of 3"
+        ]
+      }
+    },
+    "glute_kickback": {
+      "id": "glute_kickback",
+      "name": "Glute Kickback",
+      "muscles": [
+        "Glutes"
+      ],
+      "cues": [
+        "Ankle weights on, start on all fours with hands under shoulders and knees under hips.",
+        "Keeping the knee bent, push your heel up towards the ceiling.",
+        "Squeeze at the top for a second, then lower. Do all reps, then switch legs."
+      ],
+      "watchOut": "Arching your back to kick higher. Stop when your thigh is level with your body.",
+      "images": {
+        "start": "assets/exercises/home-9wk/glute_kickback-start.webp",
+        "end": "assets/exercises/home-9wk/glute_kickback-end.webp",
+        "loop": "assets/exercises/home-9wk/glute_kickback-loop.webp"
+      },
+      "frameLabels": [
+        "On all fours",
+        "Kick heel to ceiling"
+      ],
+      "framesAreVariants": false,
+      "load": "ankle-weights",
+      "logAs": "reps",
+      "equipment": [
+        "ankle weights",
+        "mat"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Squeeze and pause 2 s at the top"
+        ]
+      }
+    },
+    "dead_bug": {
+      "id": "dead_bug",
+      "name": "Dead Bug",
+      "muscles": [
+        "Deep core",
+        "waist"
+      ],
+      "cues": [
+        "Lie on your back, arms up and knees bent at 90° over your hips.",
+        "Press your lower back into the mat, then slowly lower one arm and the opposite leg.",
+        "Return and switch sides. Breathe out as you reach."
+      ],
+      "watchOut": "Your lower back lifting off the mat. Only go as low as you can keep it flat.",
+      "images": {
+        "start": "assets/exercises/home-9wk/dead_bug-start.webp",
+        "end": "assets/exercises/home-9wk/dead_bug-end.webp",
+        "loop": "assets/exercises/home-9wk/dead_bug-loop.webp"
+      },
+      "frameLabels": [
+        "Arms up, knees at 90°",
+        "Opposite arm & leg out"
+      ],
+      "framesAreVariants": false,
+      "load": "bodyweight",
+      "logAs": "reps",
+      "equipment": [
+        "mat"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Add 2 reps each side",
+          "Slower reach"
+        ]
+      }
+    },
+    "plank": {
+      "id": "plank",
+      "name": "Forearm Plank",
+      "muscles": [
+        "Deep core",
+        "waist"
+      ],
+      "cues": [
+        "Elbows under your shoulders, forearms on the mat.",
+        "Squeeze your glutes and pull your belly button in: straight line from head to heels.",
+        "Breathe slowly and hold for the set time."
+      ],
+      "watchOut": "Hips sagging or piking up. Can't hold good form? Drop to your knees (right picture).",
+      "images": {
+        "start": "assets/exercises/home-9wk/plank-start.webp",
+        "end": "assets/exercises/home-9wk/plank-end.webp",
+        "loop": null
+      },
+      "frameLabels": [
+        "Hold",
+        "Easier: knees down"
+      ],
+      "framesAreVariants": true,
+      "load": "bodyweight",
+      "logAs": "time",
+      "equipment": [
+        "mat"
+      ],
+      "progression": {
+        "type": "time",
+        "addSecMin": 5,
+        "addSecMax": 10
+      }
+    },
+    "side_plank": {
+      "id": "side_plank",
+      "name": "Side Plank",
+      "muscles": [
+        "Obliques",
+        "waist"
+      ],
+      "cues": [
+        "Lie on your side, elbow under your shoulder, feet stacked.",
+        "Lift your hips until your body is a straight line from head to feet.",
+        "Hold, breathing slowly, then switch sides."
+      ],
+      "watchOut": "Hips sagging towards the floor. Start with knees bent (right picture) and build up.",
+      "images": {
+        "start": "assets/exercises/home-9wk/side_plank-start.webp",
+        "end": "assets/exercises/home-9wk/side_plank-end.webp",
+        "loop": null
+      },
+      "frameLabels": [
+        "Hold",
+        "Easier: knees down"
+      ],
+      "framesAreVariants": true,
+      "load": "bodyweight",
+      "logAs": "time",
+      "equipment": [
+        "mat"
+      ],
+      "progression": {
+        "type": "time",
+        "addSecMin": 5,
+        "addSecMax": 10
+      }
+    },
+    "reverse_crunch": {
+      "id": "reverse_crunch",
+      "name": "Reverse Crunch",
+      "muscles": [
+        "Lower abs",
+        "waist"
+      ],
+      "cues": [
+        "Lie on your back, arms by your sides, knees bent at 90° over your hips.",
+        "Curl your knees towards your chest, lifting your hips a few centimetres off the mat.",
+        "Lower slowly back to 90°."
+      ],
+      "watchOut": "Swinging your legs to build momentum. Small and controlled works the abs.",
+      "images": {
+        "start": "assets/exercises/home-9wk/reverse_crunch-start.webp",
+        "end": "assets/exercises/home-9wk/reverse_crunch-end.webp",
+        "loop": "assets/exercises/home-9wk/reverse_crunch-loop.webp"
+      },
+      "frameLabels": [
+        "Knees at 90°",
+        "Curl knees in"
+      ],
+      "framesAreVariants": false,
+      "load": "bodyweight",
+      "logAs": "reps",
+      "equipment": [
+        "mat"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Add 2 reps",
+          "Lower for a slow count of 3"
+        ]
+      }
+    },
+    "bird_dog": {
+      "id": "bird_dog",
+      "name": "Bird Dog",
+      "muscles": [
+        "Deep core",
+        "lower back",
+        "posture"
+      ],
+      "cues": [
+        "On all fours, hands under shoulders, knees under hips, back flat.",
+        "Reach one arm forward and the opposite leg back until both are level with your body.",
+        "Hold 2 s, return and switch sides."
+      ],
+      "watchOut": "Twisting your hips. Imagine a glass of water balanced on your lower back.",
+      "images": {
+        "start": "assets/exercises/home-9wk/bird_dog-start.webp",
+        "end": "assets/exercises/home-9wk/bird_dog-end.webp",
+        "loop": "assets/exercises/home-9wk/bird_dog-loop.webp"
+      },
+      "frameLabels": [
+        "On all fours",
+        "Opposite arm & leg"
+      ],
+      "framesAreVariants": false,
+      "load": "bodyweight",
+      "logAs": "reps",
+      "equipment": [
+        "mat"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Hold 3–4 s at full reach"
+        ]
+      }
+    },
+    "mountain_climber": {
+      "id": "mountain_climber",
+      "name": "Mountain Climber",
+      "muscles": [
+        "Core",
+        "cardio"
+      ],
+      "cues": [
+        "Start in the top of a push-up, hands under your shoulders.",
+        "Drive one knee towards your chest, then quickly switch legs.",
+        "Keep your hips level and keep moving for the set time."
+      ],
+      "watchOut": "Hips bouncing high. Slow it down or step the feet in rather than lose form.",
+      "images": {
+        "start": "assets/exercises/home-9wk/mountain_climber-start.webp",
+        "end": "assets/exercises/home-9wk/mountain_climber-end.webp",
+        "loop": "assets/exercises/home-9wk/mountain_climber-loop.webp"
+      },
+      "frameLabels": [
+        "Drive one knee in",
+        "Switch legs"
+      ],
+      "framesAreVariants": false,
+      "load": "bodyweight",
+      "logAs": "time",
+      "equipment": [
+        "mat"
+      ],
+      "progression": {
+        "type": "time",
+        "addSecMin": 5,
+        "addSecMax": 10
+      }
+    },
+    "woodchop": {
+      "id": "woodchop",
+      "name": "Standing Dumbbell Woodchop",
+      "muscles": [
+        "Obliques",
+        "waist",
+        "shoulders"
+      ],
+      "cues": [
+        "Feet wide, hold one dumbbell in both hands above one shoulder.",
+        "Chop it diagonally across your body down to the outside of the opposite knee.",
+        "Turn from your ribs and pivot your back foot. Do all reps, then switch sides."
+      ],
+      "watchOut": "Bending only your arms. The turn should come from your waist and hips.",
+      "images": {
+        "start": "assets/exercises/home-9wk/woodchop-start.webp",
+        "end": "assets/exercises/home-9wk/woodchop-end.webp",
+        "loop": "assets/exercises/home-9wk/woodchop-loop.webp"
+      },
+      "frameLabels": [
+        "Dumbbell high",
+        "Chop across low"
+      ],
+      "framesAreVariants": false,
+      "load": "dumbbell",
+      "logAs": "weight-reps",
+      "equipment": [
+        "5 kg dumbbell"
+      ],
+      "progression": {
+        "type": "reps-then-harder",
+        "options": [
+          "Slower, controlled chop",
+          "Add 2 reps each side"
+        ]
+      }
+    }
+  },
+  "guideSections": [
+    {
+      "title": "Warm-up & walking",
+      "exerciseIds": [
+        "skipping",
+        "walking_pad"
+      ]
+    },
+    {
+      "title": "Strength · Workout A",
+      "exerciseIds": [
+        "kb_goblet_squat",
+        "db_bent_over_row",
+        "db_reverse_lunge",
+        "knee_push_up",
+        "kb_glute_bridge",
+        "hammer_curl"
+      ]
+    },
+    {
+      "title": "Strength · Workout B",
+      "exerciseIds": [
+        "kb_swing",
+        "db_floor_press",
+        "kb_rdl",
+        "db_shoulder_press",
+        "side_lying_leg_raise",
+        "overhead_triceps_ext"
+      ]
+    },
+    {
+      "title": "Strength · Workout C (new move)",
+      "exerciseIds": [
+        "glute_kickback"
+      ]
+    },
+    {
+      "title": "Waist circuit moves",
+      "exerciseIds": [
+        "dead_bug",
+        "plank",
+        "side_plank",
+        "reverse_crunch",
+        "bird_dog",
+        "mountain_climber",
+        "woodchop"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "id": "how-it-works",
+      "title": "How this program works",
+      "kicker": "Start here",
+      "sections": [
+        {
+          "type": "text",
+          "body": "Three home workouts a week, a walk every day, and the calorie counting you're already doing. Strength work keeps your muscle while you lose fat, the waist circuit trains the muscles that hold your middle in, and the walking undoes the effect of long days sitting at work."
+        },
+        {
+          "type": "weekStrip",
+          "title": "Your week",
+          "note": "Missed a workout? Do it the next day and carry on in order. Every workout ends with a walk on the walking pad, so the walking happens on workout days too."
+        },
+        {
+          "type": "callout",
+          "tone": "accent",
+          "title": "Why a steady 1 kg a week",
+          "items": [
+            "At about **1 kg a week**, {startKg} kg to {goalKg} kg takes about **{weeksToGoal} weeks**. Trying to go faster means eating so little that you'd lose muscle, feel drained and be far more likely to put it back on.",
+            "**The plan: about {checkpointKg} kg at the week-{checkpointWeek} checkpoint.** If the pace settles at 0.5–0.8 kg a week, that's still excellent. You'll simply reach your goal a few weeks later and be much more likely to stay there."
+          ]
+        },
+        {
+          "type": "text",
+          "title": "How power sets work",
+          "body": "Each workout is built from **pairs** (A1 + A2, B1 + B2, C1 + C2). The two exercises work different muscles, so one rests while the other works. More work in less time, and your heart rate stays up the whole way through."
+        },
+        {
+          "type": "powerSets",
+          "boxes": [
+            [
+              "A1",
+              "First exercise",
+              "e.g. Goblet Squat"
+            ],
+            [
+              "A2",
+              "Straight into the second",
+              "≤ 15 s to switch"
+            ],
+            [
+              "REST",
+              "45–60 s",
+              "depends on phase"
+            ],
+            [
+              "REPEAT",
+              "3–4 sets",
+              "then move to pair B"
+            ]
+          ]
+        },
+        {
+          "type": "sessionFlow",
+          "title": "Every workout, in order",
+          "steps": [
+            [
+              "Warm-up",
+              "rope, 4–6 min"
+            ],
+            [
+              "Mobility",
+              "2–3 min"
+            ],
+            [
+              "Power sets",
+              "20–25 min"
+            ],
+            [
+              "Waist circuit",
+              "6–8 min"
+            ],
+            [
+              "Walking pad",
+              "25–40 min"
+            ],
+            [
+              "Stretch",
+              "3 min"
+            ]
+          ],
+          "highlight": [
+            3,
+            4
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "items": [
+            "**Mobility:** 10 arm circles each way · 10 hip circles each way · 10 bodyweight squats · 10 glute bridges · 5 slow cat-cows.",
+            "**Stretch:** 30 s each for hip flexors, hamstrings, chest and a child's pose. Hip-flexor stretches matter most for anyone who sits all day."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phases",
+      "title": "Your 9 weeks: three phases",
+      "kicker": "The plan",
+      "sections": [
+        {
+          "type": "text",
+          "body": "Same exercises all the way through. Every 3 weeks you add sets, rest a little less and walk a little longer. Check this at the start of each phase."
+        },
+        {
+          "type": "phaseTable",
+          "rows": [
+            "sets",
+            "effort",
+            "rest",
+            "warmup",
+            "waistCircuit",
+            "walkAfter"
+          ],
+          "rowLabels": [
+            "Sets",
+            "Effort",
+            "Rest",
+            "Rope warm-up",
+            "Waist circuit",
+            "Walk after"
+          ],
+          "note": "In the workout tables, sets are written as **Phase 1 / Phase 2 / Phase 3**. So “3 / 4 / 4” means 3 sets in weeks 1–3, then 4 sets from week 4."
+        },
+        {
+          "type": "steps",
+          "title": "Getting stronger with light weights",
+          "items": [
+            "Every exercise has a rep range, like 12–15. Start at the bottom of it with perfect form.",
+            "Add 1–2 reps a week until you hit the **top** of the range on **every** set.",
+            "Then make it harder, one change at a time: lower for a slow count of 3 · pause 2 s at the hardest point · add ankle weights (bridges, kickbacks, leg raises) · move up a version (knee push-up to full push-up, two-leg bridge to single-leg).",
+            "Waist moves: add 5–10 s to holds or 2 reps each week.",
+            "When 5 kg feels easy on rows, presses and lunges (often around weeks 4–6), a pair of 8 kg dumbbells is a worthwhile buy."
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "info",
+          "title": "Your waistline: the honest version",
+          "items": [
+            "No exercise can choose where fat comes off. Your waist gets smaller as your overall body fat drops, which is what the calorie counting and walking do. This plan helps your waistline in more ways:",
+            "**The waist circuit** trains the deep “corset” muscles that hold your middle in.",
+            "**Back and glute work** improves posture. Standing tall alone changes how your waist looks.",
+            "**Less bloating** from the food and water tips on the fuel page.",
+            "Measure your waist **every week**. It often moves even when the scale doesn't."
+          ]
+        },
+        {
+          "type": "callout",
+          "tone": "accent",
+          "title": "Start safely",
+          "items": [
+            "Week 1: go easy and learn the movements, especially the kettlebell swing. Soreness for 2–3 days is normal; sharp or joint pain is not, so stop that exercise. If you've had a baby in the last year, have back pain, or have any medical condition, check with your doctor or a physiotherapist before starting the core work."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "walking",
+      "title": "Walking & desk days",
+      "kicker": "Every day",
+      "sections": [
+        {
+          "type": "text",
+          "body": "You already walk every day, which is a big advantage. Walking burns calories without making you much hungrier, helps you recover between workouts and counters long hours at a desk. Here's how to get the most from it."
+        },
+        {
+          "type": "table",
+          "columns": [
+            "Phase",
+            "After each workout",
+            "Walk days (Tue · Thu · Sat)",
+            "Daily steps"
+          ],
+          "rows": [
+            [
+              "Weeks 1–3",
+              "25 min brisk",
+              "45 min (Sat 60 min)",
+              "8,000+"
+            ],
+            [
+              "Weeks 4–6",
+              "30 min brisk",
+              "50 min incl. intervals (Sat 60 min)",
+              "9,000+"
+            ],
+            [
+              "Weeks 7–9",
+              "35–40 min brisk",
+              "60 min incl. intervals (Sat 60–75 min)",
+              "10,000+"
+            ]
+          ],
+          "note": "Walk-day minutes can be split up, for example 25 min before work and 25 min in the evening. It all counts."
+        },
+        {
+          "type": "cards",
+          "cards": [
+            {
+              "title": "On the walking pad",
+              "color": "walk",
+              "items": [
+                "Stand tall, eyes forward, arms swinging. Prop your phone or TV at eye level so you don't hunch.",
+                "Brisk means you can talk in short sentences but not sing (effort 5–6 out of 10).",
+                "Never wear ankle weights while walking. They strain knees and hips.",
+                "Comfortable trainers, not socks or slippers."
+              ]
+            },
+            {
+              "title": "Sitting all day? Break it up",
+              "color": "#8752d4",
+              "items": [
+                "Every 45–60 min of sitting, stand up and move for 2–3 min: refill water, take the stairs, stretch.",
+                "Take phone calls standing or walking.",
+                "Set a quiet reminder on your phone or watch.",
+                "Sit tall, feet flat, screen at eye level. Slouching pushes your belly out."
+              ]
+            },
+            {
+              "title": "Walking intervals (from week 4)",
+              "color": "accent",
+              "items": [
+                "On walk days, add 6–8 rounds of 3 min brisk / 1 min as fast as you can walk.",
+                "This burns more than a steady walk without the impact of running.",
+                "Warm up and cool down with 5 easy minutes."
+              ]
+            },
+            {
+              "title": "5-minute evening reset",
+              "color": "primary",
+              "items": [
+                "Hip-flexor stretch, 30 s each side (kneeling lunge, tuck your hips under).",
+                "10 glute bridges to wake up your glutes after sitting.",
+                "8 slow cat-cows for your back.",
+                "Chest opener in a doorway, 30 s, then child's pose, 30 s."
+              ]
+            }
+          ]
+        },
+        {
+          "type": "sampleDay",
+          "title": "A sample walk day",
+          "intro": "Split it up so it fits around work. Every minute counts the same.",
+          "rows": [
+            [
+              "Before work",
+              "20 min brisk on the pad while you catch up on news or messages"
+            ],
+            [
+              "Lunch break",
+              "10 min walk outside, even just around the block"
+            ],
+            [
+              "Evening",
+              "20 min on the pad during a TV show: 4 rounds of 3 min brisk / 1 min fast from week 4"
+            ],
+            [
+              "Total",
+              "50 min and roughly 5,000–6,000 steps, before counting the rest of your day"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fuel",
+      "title": "Fuel & recovery",
+      "kicker": "Outside the workouts",
+      "sections": [
+        {
+          "type": "text",
+          "body": "Counting your calories every day is the single most important habit for your goal, and you're already doing it. These tips keep the loss steady, protect your muscle and help your waist look its flattest."
+        },
+        {
+          "type": "cards",
+          "cards": [
+            {
+              "title": "Keep doing what's working",
+              "color": "accent",
+              "items": [
+                "Log everything honestly, including cooking oil, sauces, drinks and weekend meals.",
+                "Losing about 1 kg a week takes a gap of roughly 1,000 kcal a day between what you eat and what you burn. Daily walking and the workouts do part of that work.",
+                "Part of week one's loss is usually water. From here, **0.5–1 kg a week is a win**, and it naturally slows as you get lighter."
+              ]
+            },
+            {
+              "title": "For a flatter waist",
+              "color": "#8752d4",
+              "items": [
+                "Fill half your plate with vegetables. Fibre keeps digestion moving and you feeling full.",
+                "Drink 2–2.5 litres of water a day. It reduces water retention rather than adding to it.",
+                "Fizzy drinks, alcohol and very salty or processed food all cause bloating. Keep them occasional.",
+                "Sleep 7–8 hours. Short sleep raises hunger and cravings the next day."
+              ]
+            },
+            {
+              "title": "Know your floor",
+              "color": "primary",
+              "items": [
+                "Don't go below about **1,200 kcal a day** without a doctor or dietitian.",
+                "Eating too little costs muscle, slows your progress and makes it harder to keep the weight off.",
+                "Scale stuck for 2 weeks? First check your logging, then add 1,000–2,000 steps a day, then trim 100–150 kcal. Never below the floor."
+              ]
+            },
+            {
+              "title": "Weighing in the smart way",
+              "color": "#2d6cdf",
+              "items": [
+                "Weigh in every morning or 3–4 times a week, after the toilet, before eating.",
+                "Log the **weekly average**. Daily numbers jump 1–2 kg with water and salt.",
+                "In the days before your period, water weight can add 1–2 kg. Compare with the same week last month.",
+                "Measure your waist every week, same time of day, relaxed, at your belly button."
+              ]
+            },
+            {
+              "title": "Protein: 100–120 g a day",
+              "color": "#12a07c",
+              "items": [
+                "Protein protects your muscle and keeps you full on fewer calories.",
+                "Aim for 25–35 g at every meal.",
+                "Easy sources: chicken, eggs, fish or tinned tuna, Greek yoghurt, cottage cheese, lean mince, beans and lentils, lean biltong, a protein shake."
+              ]
+            }
+          ]
+        },
+        {
+          "type": "sampleDay",
+          "title": "A sample day",
+          "intro": "Roughly 1,400 kcal and 110+ g protein. Adjust portions to match the number that's working for you in your app.",
+          "rows": [
+            [
+              "Breakfast",
+              "2 eggs, 1 slice wholegrain toast, tomato and spinach"
+            ],
+            [
+              "Lunch",
+              "120 g chicken breast, big salad, ½ cup cooked rice or a small wrap"
+            ],
+            [
+              "Snack",
+              "170 g plain Greek yoghurt with berries"
+            ],
+            [
+              "Snack",
+              "30 g lean biltong or a protein shake"
+            ],
+            [
+              "Dinner",
+              "150 g fish or lean mince, a plate of vegetables, a small potato"
+            ]
+          ]
+        },
+        {
+          "type": "disclaimer",
+          "body": "These are general guidelines, not a medical or dietitian's plan. If you have a medical condition, are pregnant or breastfeeding, or take medication that affects appetite or blood sugar, check with your doctor first."
+        }
+      ]
+    }
+  ],
+  "walkingIntervals": {
+    "fromWeek": 4,
+    "warmupMin": 5,
+    "cooldownMin": 5,
+    "roundsRange": [
+      6,
+      8
+    ],
+    "briskSec": 180,
+    "fastSec": 60
+  },
+  "tracking": {
+    "weighIn": {
+      "text": "Weigh in every morning or 3–4 times a week, after the toilet, before eating. The app averages each week for you.",
+      "suggestedDays": [
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri",
+        "sat",
+        "sun"
+      ]
+    },
+    "measurements": {
+      "everyWeeks": 1,
+      "fields": [
+        {
+          "id": "waistNavel",
+          "label": "Waist at navel",
+          "unit": "cm",
+          "hint": "Tape level at your belly button, relaxed, after breathing out."
+        },
+        {
+          "id": "waistNarrowest",
+          "label": "Waist, narrowest",
+          "unit": "cm",
+          "hint": "The narrowest point between ribs and hips."
+        },
+        {
+          "id": "hips",
+          "label": "Hips",
+          "unit": "cm",
+          "hint": "Around the widest part of your bottom, feet together."
+        },
+        {
+          "id": "thigh",
+          "label": "Thigh",
+          "unit": "cm",
+          "hint": "Around the biggest part of the thigh, standing."
+        },
+        {
+          "id": "energy",
+          "label": "Energy",
+          "unit": "1–10",
+          "hint": "How you've felt this week overall."
+        }
+      ]
+    },
+    "strengthCheckins": null,
+    "fitnessTests": {
+      "weeks": [
+        1,
+        5,
+        9
+      ],
+      "text": "Test yourself in weeks 1, 5 and 9. These numbers show progress the scale can't.",
+      "tests": [
+        {
+          "id": "plank",
+          "label": "Forearm plank",
+          "unit": "seconds",
+          "method": "stopwatch",
+          "exerciseId": "plank"
+        },
+        {
+          "id": "sidePlank",
+          "label": "Side plank, each side",
+          "unit": "seconds",
+          "method": "stopwatch",
+          "exerciseId": "side_plank"
+        },
+        {
+          "id": "pushUps",
+          "label": "Push-ups in a row (knee or full)",
+          "unit": "reps",
+          "method": "count",
+          "exerciseId": "knee_push_up"
+        },
+        {
+          "id": "gobletSquats60",
+          "label": "Goblet squats in 60 s",
+          "unit": "reps",
+          "method": "timed-count",
+          "durationSec": 60,
+          "exerciseId": "kb_goblet_squat"
+        },
+        {
+          "id": "kbSwings60",
+          "label": "Kettlebell swings in 60 s",
+          "unit": "reps",
+          "method": "timed-count",
+          "durationSec": 60,
+          "exerciseId": "kb_swing"
+        },
+        {
+          "id": "padDistance30",
+          "label": "Walking pad: distance in 30 min",
+          "unit": "km",
+          "method": "entry",
+          "exerciseId": "walking_pad"
+        }
+      ]
+    },
+    "steps": {
+      "dailyTargetByWeek": [
+        8000,
+        8000,
+        8000,
+        9000,
+        9000,
+        9000,
+        10000,
+        10000,
+        10000
+      ],
+      "text": "Write your step count each day, or walking-pad minutes if you don't track steps."
+    },
+    "wins": [
+      "Clothes feel looser around the waist",
+      "Waist down 3 cm from the start",
+      "First full push-up (not from the knees)",
+      "60-second forearm plank",
+      "A full week of hitting the daily step target",
+      "Kettlebell swings feel easy at 15 reps"
+    ],
+    "daily": {
+      "calories": true,
+      "protein": true,
+      "water": true
+    },
+    "sitBreaks": {
+      "everyMinutes": [
+        45,
+        60
+      ],
+      "moveMinutes": [
+        2,
+        3
+      ],
+      "text": "Every 45–60 min of sitting, stand up and move for 2–3 min."
+    }
+  },
+  "coaching": {
+    "reviewEveryWeeks": 1,
+    "minWeeksOfData": 2,
+    "bands": [
+      {
+        "maxKgPerWeek": 0.3,
+        "status": "stalled",
+        "message": "Scale stuck for 2 weeks? First check your logging, then add **1,000–2,000 steps** a day, then trim **100–150 kcal**. Never below 1,200 kcal."
+      },
+      {
+        "minKgPerWeek": 0.3,
+        "maxKgPerWeek": 0.5,
+        "status": "slow",
+        "message": "Still healthy progress. Keep logging honestly and keep your walks up. Check your waist: it often moves when the scale doesn't."
+      },
+      {
+        "minKgPerWeek": 0.5,
+        "maxKgPerWeek": 1.0,
+        "status": "on-track",
+        "message": "Right on track. **0.5–1 kg a week is a win.**"
+      },
+      {
+        "minKgPerWeek": 1.0,
+        "maxKgPerWeek": 1.3,
+        "status": "on-track",
+        "message": "Great week. Make sure you're getting 100–120 g protein so the loss stays fat, not muscle."
+      },
+      {
+        "minKgPerWeek": 1.3,
+        "status": "fast",
+        "message": "Faster than planned. Make sure you're eating at least **1,200 kcal** and 100 g protein a day. Losing too fast costs muscle."
+      }
+    ],
+    "notes": [
+      "In the days before your period, water weight can add 1–2 kg. Compare with the same week last month.",
+      "Part of week one's loss is usually water, so expect the pace to settle after that."
+    ]
+  }
+}

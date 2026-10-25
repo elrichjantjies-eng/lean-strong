@@ -1,0 +1,12 @@
+node_modules
+dist
+coverage
+android
+public/assets
+fitness-app-kit
+test-results
+playwright-report
+e2e/screenshots
+package-lock.json
+src/content/programs
+src/content/types.ts

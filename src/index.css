@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/*
+ * Colours come from CSS variables so the active profile's program theme (and dark mode) can be
+ * swapped at runtime; see src/theme/theme.ts. The defaults below are the gym-12wk theme.
+ */
+:root {
+  --app-primary: #1c2a4a;
+  --app-on-primary: #ffffff;
+  --app-accent: #f0642d;
+  --app-accent-ink: #b8461a;
+  --app-accent-strong: #c4441a;
+  --app-accent-soft: #fde8df;
+  --app-on-accent: #ffffff;
+  --app-bg: #f6f7fb;
+  --app-surface: #ffffff;
+  --app-surface-2: #eef1f7;
+  --app-ink: #2a3349;
+  --app-muted: #5f6880;
+  --app-line: #e1e6ef;
+  --app-panel: #f3f5f9;
+  --app-info-soft: #eaf0fb;
+  --app-phase-1: #f6a77f;
+  --app-phase-2: #f0642d;
+  --app-phase-3: #c4441a;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+@theme inline {
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --color-primary: var(--app-primary);
+  --color-on-primary: var(--app-on-primary);
+  --color-accent: var(--app-accent);
+  --color-accent-ink: var(--app-accent-ink);
+  --color-accent-strong: var(--app-accent-strong);
+  --color-accent-soft: var(--app-accent-soft);
+  --color-on-accent: var(--app-on-accent);
+  --color-bg: var(--app-bg);
+  --color-surface: var(--app-surface);
+  --color-surface-2: var(--app-surface-2);
+  --color-ink: var(--app-ink);
+  --color-muted: var(--app-muted);
+  --color-line: var(--app-line);
+  --color-panel: var(--app-panel);
+  --color-info-soft: var(--app-info-soft);
+  --color-phase-1: var(--app-phase-1);
+  --color-phase-2: var(--app-phase-2);
+  --color-phase-3: var(--app-phase-3);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  background: var(--app-bg);
+  color: var(--app-ink);
+  font-family: var(--font-sans);
+  overscroll-behavior-y: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--app-accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

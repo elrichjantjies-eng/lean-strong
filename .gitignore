@@ -1,0 +1,28 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.vite/
+
+# Playwright
+test-results/
+playwright-report/
+e2e/screenshots/
+
+# The original kit and PDFs stay local (PDFs contain personal numbers)
+fitness-app-kit/
+*.pdf
+
+# Android build output and signing material — never commit keys
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+*.keystore
+*.jks
+keystore.properties
+
+.DS_Store
+Thumbs.db
+.env
+.env.*
