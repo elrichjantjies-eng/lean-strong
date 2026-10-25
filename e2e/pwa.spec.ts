@@ -64,7 +64,7 @@ test("works offline after the first load", async ({ page, context, browserName }
   await expect(page.getByRole("button", { name: "Start", exact: true })).toBeVisible();
   await page.goto("./#/progress?tab=weight");
   await expect(page.getByRole("heading", { name: "Progress" })).toBeVisible();
-  await shot(page, testInfoPlaceholder(), "m8-offline");
+  await shot(page, test.info(), "m8-offline");
   await context.setOffline(false);
 });
 
@@ -97,8 +97,3 @@ test("iPhone Safari shows the Add to Home Screen steps", async ({
   await page.getByRole("button", { name: "Not now" }).click();
   await expect(page.getByRole("complementary", { name: "Install the app" })).toHaveCount(0);
 });
-
-// Screenshots need a TestInfo; the offline test only runs in one project.
-function testInfoPlaceholder() {
-  return test.info();
-}
