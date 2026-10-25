@@ -13,6 +13,14 @@ export function dayColor(program: Program, day: DayPlan): string {
   return program.theme.dayColors[day.kind] ?? program.theme.muted;
 }
 
+/** A card colour from the content: a hex value or a theme key (accent, primary, walk). */
+export function themeColor(program: Program, color: string): string {
+  if (color.startsWith("#")) return color;
+  if (color === "accent") return program.theme.accent;
+  if (color === "primary") return program.theme.primary;
+  return program.theme.dayColors[color] ?? program.theme.accent;
+}
+
 /** One line describing walking intervals, built from `walkingIntervals`. */
 export function walkIntervalsText(walk: WalkPlan): string | null {
   const iv = walk.intervals;

@@ -8,6 +8,12 @@ import { TodayScreen } from "./features/today/Today";
 import { LogPastScreen } from "./features/player/LogPast";
 import { WorkoutScreen } from "./features/player/Player";
 import { WalkScreen } from "./features/player/WalkScreen";
+import { GuidePageScreen } from "./features/guide/GuidePage";
+import { ExerciseDetailScreen } from "./features/library/ExerciseDetail";
+import { LibraryScreen } from "./features/library/Library";
+import { MoreScreen } from "./features/more/More";
+import { PlanScreen } from "./features/plan/Plan";
+import { SessionPageScreen } from "./features/plan/SessionPage";
 
 function TabsLayout() {
   return (
@@ -45,10 +51,14 @@ function Gate() {
       <Routes>
         <Route element={<TabsLayout />}>
           <Route index element={<TodayScreen />} />
-          <Route path="plan/*" element={<Placeholder title="Plan" />} />
-          <Route path="exercises/*" element={<Placeholder title="Exercises" />} />
+          <Route path="plan" element={<PlanScreen />} />
+          <Route path="plan/session/:sessionId" element={<SessionPageScreen />} />
+          <Route path="exercises" element={<LibraryScreen />} />
+          <Route path="exercises/:exerciseId" element={<ExerciseDetailScreen />} />
           <Route path="progress/*" element={<Placeholder title="Progress" />} />
-          <Route path="more/*" element={<Placeholder title="More" />} />
+          <Route path="more" element={<MoreScreen />} />
+          <Route path="more/guide/:pageId" element={<GuidePageScreen />} />
+          <Route path="more/*" element={<Placeholder title="Settings" />} />
           <Route path="log-past" element={<LogPastScreen />} />
           <Route path="complete" element={<Placeholder title="Program complete" />} />
         </Route>
