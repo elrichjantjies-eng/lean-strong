@@ -29,6 +29,10 @@ export interface Profile {
   equipment: { dumbbellKg?: number; kettlebellKg?: number };
   reminders: ReminderPrefs;
   createdAt: number;
+  /** Set when this profile is a new run started from a finished one (history carries over). */
+  previousProfileId?: string;
+  /** A finished run kept for its history. */
+  archived?: boolean;
 }
 
 export type SessionStatus = "in-progress" | "completed" | "skipped";

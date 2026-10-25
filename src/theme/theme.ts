@@ -44,6 +44,27 @@ export function ensureContrast(
   return out;
 }
 
+/** Mix two #rrggbb colours: t = 0 gives `a`, t = 1 gives `b`. */
+export function blend(a: string, b: string, t: number): string {
+  const pa = parseInt(a.slice(1), 16);
+  const pb = parseInt(b.slice(1), 16);
+  const ch = (n: number, s: number) => (n >> s) & 255;
+  return `#${[16, 8, 0]
+    .map((s) =>
+      Math.round(ch(pa, s) + (ch(pb, s) - ch(pa, s)) * t)
+        .toString(16)
+        .padStart(2, "0"),
+    )
+    .join("")}`;
+}
+
+/** A shade of `hex` readable as text on the app's cards and tinted rows in this mode. */
+export const readableOn = (hex: string, mode: ColorMode) =>
+  mode === "dark" ? ensureContrast(hex, "#1f2a46", 4.5, 1) : ensureContrast(hex, "#eaf0fb", 4.5);
+
+/** A banner background based on `hex` that keeps white text at AA contrast. */
+export const bannerColor = (hex: string) => ensureContrast(hex, "#ffffff", 4.5);
+
 /** Turn a program theme into the CSS variables the stylesheet reads. */
 export function themeVariables(theme: Theme, mode: ColorMode): Record<string, string> {
   const shared = {
@@ -61,7 +82,7 @@ export function themeVariables(theme: Theme, mode: ColorMode): Record<string, st
       ...shared,
       "--app-primary": theme.primary,
       "--app-on-primary": "#ffffff",
-      "--app-accent-ink": ensureContrast(theme.accent, theme.accentSoft),
+      "--app-accent-ink": ensureContrast(ensureContrast(theme.accent, theme.accentSoft), "#ffffff"),
       "--app-accent-soft": theme.accentSoft,
       "--app-bg": "#f6f7fb",
       "--app-surface": "#ffffff",
@@ -72,12 +93,19 @@ export function themeVariables(theme: Theme, mode: ColorMode): Record<string, st
       "--app-info-soft": "#eaf0fb",
     };
   }
+  const darkSoft = blend("#141c30", theme.accent, 0.18);
   return {
     ...shared,
     "--app-primary": "#22325a",
     "--app-on-primary": "#ffffff",
-    "--app-accent-ink": ensureContrast(theme.accent, "#1f2a46", 4.5, 1),
-    "--app-accent-soft": `color-mix(in srgb, ${theme.accent} 18%, #141c30)`,
+    // Readable on the tinted callouts and on raised surfaces alike.
+    "--app-accent-ink": ensureContrast(
+      ensureContrast(theme.accent, darkSoft, 4.5, 1),
+      "#1f2a46",
+      4.5,
+      1,
+    ),
+    "--app-accent-soft": darkSoft,
     "--app-bg": "#0e1424",
     "--app-surface": "#172038",
     "--app-surface-2": "#1f2a46",

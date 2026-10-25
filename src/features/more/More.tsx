@@ -61,6 +61,7 @@ export function MoreScreen() {
                   <span className="block font-semibold text-ink">{p.name}</span>
                   <span className="block text-sm text-muted">
                     {programs[p.programId]?.subtitle}
+                    {p.archived ? ` · finished run from ${p.startDate}` : ""}
                   </span>
                 </span>
                 {active && <Icon name="check" className="size-5 text-accent-ink" />}

@@ -9,8 +9,11 @@ import { LocalNotifications } from "@capacitor/local-notifications";
 
 export const isNative = Capacitor.isNativePlatform();
 
-/** Fired when Android's back button is pressed during a workout; the player asks before leaving. */
-export const REQUEST_EXIT_EVENT = "ls:request-exit";
+/**
+ * Fired (cancelable) when Android's back button is pressed. A screen that handles back itself
+ * (onboarding steps, the workout player) calls preventDefault().
+ */
+export const BACK_EVENT = "ls:back";
 export const platform = Capacitor.getPlatform() as "web" | "android" | "ios";
 
 export function isIosBrowser(): boolean {

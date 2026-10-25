@@ -11,7 +11,7 @@ import {
   isIosBrowser,
   isNative,
   keepAwake,
-  REQUEST_EXIT_EVENT,
+  BACK_EVENT,
   scheduleTimerAlert,
   wakeLockSupported,
 } from "@/platform";
@@ -38,6 +38,7 @@ import { SetStep } from "./SetStep";
 import { usePlayer } from "./store";
 import { buildSteps, indexOfKey, type Step } from "./steps";
 import { Summary } from "./Summary";
+import { bannerColor, readableOn } from "@/theme/theme";
 
 export function WorkoutScreen() {
   const { sessionId = "" } = useParams();
@@ -185,9 +186,12 @@ function ActivePlayer({ ctx, step, progress }: { ctx: PlayerCtx; step: Step; pro
 
   // Android back button: ask before leaving the workout.
   useEffect(() => {
-    const ask = () => setSheet("exit");
-    window.addEventListener(REQUEST_EXIT_EVENT, ask);
-    return () => window.removeEventListener(REQUEST_EXIT_EVENT, ask);
+    const ask = (e: Event) => {
+      e.preventDefault();
+      setSheet("exit");
+    };
+    window.addEventListener(BACK_EVENT, ask);
+    return () => window.removeEventListener(BACK_EVENT, ask);
   }, []);
 
   return (
@@ -360,12 +364,19 @@ function Overview({
   const { program } = useActive();
   const s = resolved.session;
   const color = program.theme.dayColors[s.id] ?? s.color;
+  const ink = readableOn(
+    color,
+    document.documentElement.dataset.theme === "dark" ? "dark" : "light",
+  );
   const [starting, setStarting] = useState(false);
   return (
     <PlayerFrame title="Overview" onExit={onExit}>
       <div className="space-y-4">
-        <div className="-mx-4 -mt-4 px-4 pt-4 pb-5 text-white" style={{ background: color }}>
-          <p className="text-xs font-bold tracking-wide uppercase opacity-90">
+        <div
+          className="-mx-4 -mt-4 px-4 pt-4 pb-5 text-white"
+          style={{ background: bannerColor(color) }}
+        >
+          <p className="text-xs font-bold tracking-wide uppercase">
             Week {resolved.week} · Phase {resolved.p + 1}
           </p>
           <h1 className="text-3xl font-bold">{s.title}</h1>
@@ -387,7 +398,7 @@ function Overview({
                     key={item.code}
                     className="flex items-center gap-3 border-b border-line py-2.5 last:border-0"
                   >
-                    <span className="w-8 font-bold" style={{ color }}>
+                    <span className="w-8 font-bold" style={{ color: ink }}>
                       {item.code}
                     </span>
                     <span className="flex-1">

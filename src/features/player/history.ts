@@ -5,9 +5,23 @@ import type { SessionLog, SetLog } from "@/domain/model";
 import { lastPerformance, type LastPerformance } from "@/domain/progression";
 import { resolveSession } from "@/domain/session";
 
-/** All set logs for an exercise plus their session logs (completed ones only matter). */
+/** This profile and the earlier runs it was started from (so "last time" carries over). */
+export async function profileLineage(profileId: string): Promise<string[]> {
+  const ids: string[] = [];
+  let id: string | undefined = profileId;
+  while (id && !ids.includes(id)) {
+    ids.push(id);
+    id = (await db.profiles.get(id))?.previousProfileId;
+  }
+  return ids;
+}
+
+/** All set logs for an exercise (across runs) plus their session logs. */
 export async function exerciseHistory(profileId: string, exerciseId: string) {
-  const sets = await db.setLogs.where({ profileId, exerciseId }).toArray();
+  const lineage = await profileLineage(profileId);
+  const sets = (
+    await Promise.all(lineage.map((p) => db.setLogs.where({ profileId: p, exerciseId }).toArray()))
+  ).flat();
   const ids = [...new Set(sets.map((s) => s.sessionLogId))];
   const logs = (await db.sessionLogs.bulkGet(ids)).filter((l): l is SessionLog => !!l);
   return { sets, logs };

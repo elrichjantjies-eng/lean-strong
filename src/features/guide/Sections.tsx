@@ -4,6 +4,7 @@ import { weekdayName } from "@/domain/dates";
 import { RichText } from "@/components/RichText";
 import { Callout, Card } from "@/components/ui";
 import { dayColor, themeColor } from "@/features/today/labels";
+import { bannerColor } from "@/theme/theme";
 
 const PHASE_ROW_LABELS: Record<keyof Phase["summary"], string> = {
   sets: "Sets",
@@ -45,7 +46,7 @@ export function PhaseTable({
           >
             <div
               className="flex items-baseline justify-between gap-2 px-4 py-2"
-              style={{ background: color }}
+              style={{ background: bannerColor(color) }}
             >
               <p className="font-bold text-white">
                 Phase {phase.number} · {phase.name}

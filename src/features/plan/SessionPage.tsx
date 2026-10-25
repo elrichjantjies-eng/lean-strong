@@ -6,6 +6,7 @@ import { resolveCircuit } from "@/domain/session";
 import { RichText } from "@/components/RichText";
 import { Screen } from "@/components/Screen";
 import { Button, Callout, Card } from "@/components/ui";
+import { bannerColor, readableOn } from "@/theme/theme";
 
 const phaseWeeks = (program: Program) =>
   program.phases.map((p) => `${p.weeks[0]}–${p.weeks[1]}`).join(" / ");
@@ -32,11 +33,15 @@ export function SessionPageScreen() {
   const pos = programPosition(program, profile.startDate, today);
   const p = pos.status === "active" ? pos.p : 0;
   const color = program.theme.dayColors[s.id] ?? s.color;
+  const ink = readableOn(
+    color,
+    document.documentElement.dataset.theme === "dark" ? "dark" : "light",
+  );
   const exLink = (id: string) => (
     <Link
       to={`/exercises/${id}`}
       className="font-bold underline-offset-2 hover:underline"
-      style={{ color }}
+      style={{ color: ink }}
     >
       {program.exercises[id]?.name ?? id}
     </Link>
@@ -45,8 +50,8 @@ export function SessionPageScreen() {
   return (
     <Screen title={s.title} kicker={s.weekdayLabel} back="/plan" hideTitle>
       <div className="space-y-5">
-        <div className="-mx-4 px-4 py-4 text-white" style={{ background: color }}>
-          <p className="text-xs font-bold tracking-wide uppercase opacity-90">{s.weekdayLabel}</p>
+        <div className="-mx-4 px-4 py-4 text-white" style={{ background: bannerColor(color) }}>
+          <p className="text-xs font-bold tracking-wide uppercase">{s.weekdayLabel}</p>
           <div className="flex items-baseline justify-between gap-3">
             <p className="text-3xl font-bold">{s.title}</p>
             <p className="text-right text-lg font-bold">{s.focus}</p>
@@ -80,9 +85,7 @@ export function SessionPageScreen() {
         <div className="overflow-hidden rounded-2xl ring-1 ring-line">
           <div className="flex items-baseline justify-between gap-2 bg-primary px-3 py-2 text-xs font-bold text-white uppercase">
             <span>Pairs</span>
-            <span className="font-semibold normal-case opacity-90">
-              Sets for weeks {phaseWeeks(program)}
-            </span>
+            <span className="font-semibold normal-case">Sets for weeks {phaseWeeks(program)}</span>
           </div>
           {s.pairs.flatMap((pair, pi) =>
             pair.items.map((item) => {
@@ -94,7 +97,7 @@ export function SessionPageScreen() {
                     pi % 2 === 0 ? "bg-info-soft" : "bg-surface"
                   }`}
                 >
-                  <span className="text-lg font-bold" style={{ color }}>
+                  <span className="text-lg font-bold" style={{ color: ink }}>
                     {item.code}
                   </span>
                   <span>
@@ -182,7 +185,7 @@ export function SessionPageScreen() {
 
         {s.notes.length > 0 && (
           <Card>
-            <p className="mb-2 text-sm font-bold tracking-wide uppercase" style={{ color }}>
+            <p className="mb-2 text-sm font-bold tracking-wide uppercase" style={{ color: ink }}>
               Coach's notes
             </p>
             <ul className="list-disc space-y-1 pl-5 text-ink">

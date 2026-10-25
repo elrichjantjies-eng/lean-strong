@@ -2,7 +2,6 @@ import { lazy, Suspense } from "react";
 import { HashRouter, Navigate, Outlet, Route, Routes, useNavigate } from "react-router";
 import { useActiveState, useAppTheme } from "./app/active";
 import { ActiveProvider } from "./app/ActiveProvider";
-import { Screen } from "./components/Screen";
 import { TabBar } from "./components/TabBar";
 import { Onboarding } from "./features/onboarding/Onboarding";
 import { TodayScreen } from "./features/today/Today";
@@ -26,6 +25,7 @@ const ProgressScreen = named(() => import("./features/progress/Progress"), "Prog
 const GuidePageScreen = named(() => import("./features/guide/GuidePage"), "GuidePageScreen");
 const SettingsScreen = named(() => import("./features/settings/Settings"), "SettingsScreen");
 const BackupScreen = named(() => import("./features/settings/Backup"), "BackupScreen");
+const CompleteScreen = named(() => import("./features/complete/Complete"), "CompleteScreen");
 import { InstallBanner, UpdatePrompt } from "./features/pwa/WebApp";
 import { isNative } from "./platform";
 import { NativeBridge } from "./platform/NativeBridge";
@@ -39,14 +39,6 @@ function TabsLayout() {
       </Suspense>
       <TabBar />
     </>
-  );
-}
-
-function Placeholder({ title }: { title: string }) {
-  return (
-    <Screen title={title}>
-      <p className="text-muted">Coming in a later milestone.</p>
-    </Screen>
   );
 }
 
@@ -84,7 +76,7 @@ function Gate() {
             <Route path="more/settings" element={<SettingsScreen />} />
             <Route path="more/backup" element={<BackupScreen />} />
             <Route path="log-past" element={<LogPastScreen />} />
-            <Route path="complete" element={<Placeholder title="Program complete" />} />
+            <Route path="complete" element={<CompleteScreen />} />
           </Route>
           <Route path="workout/:sessionId" element={<WorkoutScreen />} />
           <Route path="walk" element={<WalkScreen />} />

@@ -35,6 +35,8 @@ const profile = z.object({
   equipment: z.object({ dumbbellKg: num.optional(), kettlebellKg: num.optional() }),
   reminders,
   createdAt: num,
+  previousProfileId: z.string().optional(),
+  archived: z.boolean().optional(),
 });
 
 const sessionLog = z.object({

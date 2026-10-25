@@ -22,6 +22,7 @@ import { Stepper } from "@/components/Stepper";
 import { Button } from "@/components/ui";
 import { PhaseTable } from "@/features/guide/Sections";
 import { dayColor } from "@/features/today/labels";
+import { bannerColor } from "@/theme/theme";
 
 export function PlanScreen() {
   const { profile, program } = useActive();
@@ -77,7 +78,9 @@ export function PlanScreen() {
                 <span
                   className={`rounded-md py-1 text-center text-xs font-bold ${isNow ? "text-white" : "text-ink"}`}
                   style={{
-                    background: isNow ? program.theme.phaseColors[phase.number - 1] : "transparent",
+                    background: isNow
+                      ? bannerColor(program.theme.phaseColors[phase.number - 1]!)
+                      : "transparent",
                     borderLeft: `4px solid ${program.theme.phaseColors[phase.number - 1]}`,
                   }}
                   aria-label={`Week ${week}, phase ${phase.number}`}
@@ -116,11 +119,9 @@ export function PlanScreen() {
                 key={id}
                 to={`/plan/session/${id}`}
                 className="rounded-2xl p-3 text-white shadow-sm"
-                style={{ background: color }}
+                style={{ background: bannerColor(color) }}
               >
-                <p className="text-xs font-bold tracking-wide uppercase opacity-90">
-                  {s.weekdayLabel}
-                </p>
+                <p className="text-xs font-bold tracking-wide uppercase">{s.weekdayLabel}</p>
                 <p className="text-lg font-bold">{s.title}</p>
                 <p className="text-sm font-medium">{s.focus}</p>
               </Link>
@@ -179,7 +180,7 @@ function DayCell({
       }`}
       style={
         done
-          ? { background: color, color: "#fff" }
+          ? { background: bannerColor(color), color: "#fff" }
           : day.status === "missed"
             ? {
                 background: "var(--app-surface-2)",

@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { BACK_EVENT } from "@/platform";
 import { useNavigate } from "react-router";
 import { findCallout, findCard } from "@/content/find";
 import { programList } from "@/content/loader";
@@ -111,6 +112,18 @@ export function Onboarding({ onCancel }: { onCancel?: () => void }) {
   const next = () => (step === "done" ? void finish() : setStepIndex((i) => i + 1));
   const back = () => (stepIndex === 0 ? onCancel?.() : setStepIndex((i) => i - 1));
 
+  // Android back button goes to the previous step.
+  useEffect(() => {
+    const onBack = (e: Event) => {
+      if (stepIndex === 0 && !onCancel) return;
+      e.preventDefault();
+      if (stepIndex === 0) onCancel?.();
+      else setStepIndex((i) => i - 1);
+    };
+    window.addEventListener(BACK_EVENT, onBack);
+    return () => window.removeEventListener(BACK_EVENT, onBack);
+  }, [stepIndex, onCancel]);
+
   return (
     <div
       className="mx-auto flex min-h-dvh max-w-xl flex-col px-4"
@@ -132,7 +145,11 @@ export function Onboarding({ onCancel }: { onCancel?: () => void }) {
         ) : (
           <span />
         )}
-        <div className="flex gap-1.5" aria-label={`Step ${stepIndex + 1} of ${steps.length}`}>
+        <div
+          className="flex gap-1.5"
+          role="img"
+          aria-label={`Step ${stepIndex + 1} of ${steps.length}`}
+        >
           {steps.map((s, i) => (
             <span
               key={s}

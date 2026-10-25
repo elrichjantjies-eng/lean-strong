@@ -27,6 +27,7 @@ import { Button, Callout, Card, ProgressBar } from "@/components/ui";
 import { QuickAdd } from "./QuickAdd";
 import { dayColor, walkIntervalsText } from "./labels";
 import { WeekStrip } from "./WeekStrip";
+import { bannerColor } from "@/theme/theme";
 
 const BACKUP_EVERY_DAYS = 14;
 
@@ -234,8 +235,8 @@ function SessionCard({
   const color = program.theme.dayColors[s.id] ?? s.color;
   return (
     <Card flush>
-      <div className="px-4 pt-3 pb-4 text-white" style={{ background: color }}>
-        <p className="text-xs font-bold tracking-wide uppercase opacity-90">{kicker}</p>
+      <div className="px-4 pt-3 pb-4 text-white" style={{ background: bannerColor(color) }}>
+        <p className="text-xs font-bold tracking-wide uppercase">{kicker}</p>
         <div className="flex items-baseline justify-between gap-3">
           <h2 className="text-2xl font-bold">{s.title}</h2>
           <p className="text-right font-semibold">{s.focus}</p>

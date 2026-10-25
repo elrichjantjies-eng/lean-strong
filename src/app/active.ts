@@ -46,11 +46,16 @@ function useSystemDark(): boolean {
   return dark;
 }
 
-/** Applies the active program's theme (or the first program's) in the chosen colour mode. */
-export function useAppTheme(program: Program | undefined) {
+/** The colour mode in effect (the user's choice, or the system's). */
+export function useColorMode(): ColorMode {
   const mode = useSetting("themeMode") ?? "system";
   const systemDark = useSystemDark();
-  const resolved: ColorMode = mode === "system" ? (systemDark ? "dark" : "light") : mode;
+  return mode === "system" ? (systemDark ? "dark" : "light") : mode;
+}
+
+/** Applies the active program's theme (or the first program's) in the chosen colour mode. */
+export function useAppTheme(program: Program | undefined) {
+  const resolved = useColorMode();
   const theme = (program ?? Object.values(programs)[0]!).theme;
   useEffect(() => applyTheme(theme, resolved), [theme, resolved]);
 }

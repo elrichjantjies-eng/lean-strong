@@ -3,6 +3,7 @@ import type { Program } from "@/content/types";
 import { weekdayName, weekdayOf } from "@/domain/dates";
 import type { WeekDay } from "@/domain/schedule";
 import { dayColor } from "./labels";
+import { bannerColor } from "@/theme/theme";
 
 const statusLabel = {
   done: "done",
@@ -22,19 +23,22 @@ export function WeekStrip({ program, days }: { program: Program; days: WeekDay[]
           <li key={date}>
             <Link
               to={`/plan?date=${date}`}
-              aria-label={`${weekdayName(weekdayOf(date))}: ${day.title}, ${statusLabel[status]}`}
               className={`flex min-h-16 flex-col items-center justify-center gap-1 rounded-xl py-1.5 ${
                 status === "today" ? "bg-surface shadow-sm ring-2 ring-[var(--app-accent)]" : ""
               }`}
             >
-              <span className="text-xs font-medium text-muted uppercase">
+              <span className="sr-only">
+                {weekdayName(weekdayOf(date))}: {day.title}, {statusLabel[status]}
+              </span>
+              <span aria-hidden="true" className="text-xs font-medium text-muted uppercase">
                 {weekdayOf(date).slice(0, 2)}
               </span>
               <span
+                aria-hidden="true"
                 className="flex size-8 items-center justify-center rounded-full text-sm font-bold"
                 style={
                   status === "done"
-                    ? { background: color, color: "#fff" }
+                    ? { background: bannerColor(color), color: "#fff" }
                     : { boxShadow: `inset 0 0 0 2px ${color}`, color: "var(--app-ink)" }
                 }
               >

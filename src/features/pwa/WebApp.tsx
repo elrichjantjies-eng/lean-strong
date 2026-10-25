@@ -52,9 +52,9 @@ function ShareGlyph() {
   return (
     <svg
       viewBox="0 0 24 24"
-      className="size-6"
       fill="none"
-      stroke="#0a84ff"
+      stroke="currentColor"
+      className="size-6 text-[#0062cc] dark:text-[#6cb4ff]"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -106,7 +106,7 @@ export function InstallBanner() {
       ),
     },
     {
-      icon: <span className="text-lg font-bold text-[#0a84ff]">Add</span>,
+      icon: <span className="text-lg font-bold text-[#0062cc] dark:text-[#6cb4ff]">Add</span>,
       text: (
         <>
           Tap <strong>Add</strong>, then open the app from its new icon
