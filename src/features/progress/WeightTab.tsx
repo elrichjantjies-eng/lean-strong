@@ -38,7 +38,7 @@ export function WeightTab() {
           <div>
             <p className="text-sm font-semibold text-muted">Lost so far</p>
             <p className="text-3xl font-bold text-ink tabular-nums">
-              {data.lostSoFar === null ? "–" : `${fmt(data.lostSoFar)} kg`}
+              {data.lostSoFar === null ? "Nothing yet" : `${fmt(data.lostSoFar)} kg`}
             </p>
             <p className="text-sm text-muted">
               From {profile.startKg} kg · goal {profile.goalKg} kg

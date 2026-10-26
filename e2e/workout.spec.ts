@@ -108,9 +108,11 @@ test("home: complete Workout A with waist circuit and walk", async ({ page }, te
   // Dumbbells prefill from the equipment weight.
   await expect(page.getByRole("textbox", { name: "Weight", exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Done", exact: true }).click();
+  await expect(page.getByRole("timer", { name: "Switch time left" })).toBeVisible();
   await page.clock.fastForward(16_000);
   await expect(page.getByRole("textbox", { name: "Weight", exact: true })).toHaveValue("5");
   await page.getByRole("button", { name: "Done", exact: true }).click();
+  await expect(page.getByRole("timer", { name: "Rest time left" })).toBeVisible();
   await page.clock.fastForward(61_000);
   await powerSets(page, testInfo, 16, 60);
 
@@ -166,6 +168,7 @@ test("resume a workout after a reload", async ({ page }, testInfo) => {
   // Now in the 15 s switch to A2. Reload mid-timer.
   await expect(page.getByText("I'm ready")).toBeVisible();
   await page.reload();
+  await expect(page.getByRole("timer", { name: "Switch time left" })).toBeVisible();
   await page.clock.fastForward(16_000);
   await expect(page.getByRole("heading", { name: /A2\s*Lat Pulldown/ })).toBeVisible();
 

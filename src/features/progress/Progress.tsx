@@ -40,7 +40,9 @@ export function ProgressScreen() {
             }
             onClick={() => setParams({ tab: t.id }, { replace: true })}
             className={`min-h-11 shrink-0 rounded-full px-4 text-sm font-semibold whitespace-nowrap ${
-              tab === t.id ? "bg-primary text-on-primary" : "bg-surface text-ink ring-1 ring-line"
+              tab === t.id
+                ? "bg-accent-strong text-on-accent"
+                : "bg-surface text-ink ring-1 ring-line"
             }`}
           >
             {t.label}
