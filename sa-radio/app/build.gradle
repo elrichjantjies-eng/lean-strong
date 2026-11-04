@@ -1,0 +1,75 @@
+plugins {
+    id 'com.android.application'
+}
+
+// Release signing is read from sa-radio/keystore.properties (never committed):
+//   storeFile=/absolute/path/to/saradio.jks
+//   storePassword=...
+//   keyAlias=saradio
+//   keyPassword=...
+def keystorePropsFile = rootProject.file('keystore.properties')
+def keystoreProps = new Properties()
+if (keystorePropsFile.exists()) {
+    keystorePropsFile.withInputStream { keystoreProps.load(it) }
+}
+
+android {
+    namespace 'za.saradio.app'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'za.saradio.app'
+        minSdk 26
+        targetSdk 35
+        versionCode 3
+        versionName '3.0'
+    }
+
+    signingConfigs {
+        release {
+            if (keystorePropsFile.exists()) {
+                storeFile file(keystoreProps['storeFile'])
+                storePassword keystoreProps['storePassword']
+                keyAlias keystoreProps['keyAlias']
+                keyPassword keystoreProps['keyPassword']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (keystorePropsFile.exists()) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            all {
+                maxHeapSize = '2g'
+                systemProperty 'robolectric.graphicsMode', 'NATIVE'
+                systemProperty 'live', (project.findProperty('live') ?: 'false')
+                systemProperty 'screenshots.dir', rootProject.file('build/screenshots').absolutePath
+            }
+        }
+    }
+
+    lint {
+        abortOnError false
+    }
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.17'
+}
