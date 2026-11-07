@@ -1,0 +1,12 @@
+node_modules
+dist
+dev-dist
+coverage
+android
+test-results
+playwright-report
+e2e/screenshots
+package-lock.json
+public/data
+e2e/fixtures
+src/data/saws-stations.json

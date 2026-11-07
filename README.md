@@ -10,6 +10,12 @@ target path, weekly check-ins, reminders, and backup and restore. All data stays
 
 How to install, update and back up: [docs/INSTALL.md](docs/INSTALL.md).
 
+## Also in this repository: Skyglass Weather
+
+A separate weather app in [`weather/`](weather/README.md): iPhone-style forecast with glass cards,
+official SAWS forecasts and warnings, radar, air quality and Samsung-style home-screen widgets on
+Android. iPhone: https://elrichjantjies-eng.github.io/lean-strong/weather/
+
 ## Development
 
 Vite + React + TypeScript, Tailwind, Dexie (IndexedDB), Zustand, zod, vite-plugin-pwa, and

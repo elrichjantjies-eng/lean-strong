@@ -1,0 +1,57 @@
+# Checks the weather app on every change to weather/: lint, types, unit tests, end-to-end tests
+# at iPhone and Android sizes, and an Android debug build (which compiles the widgets).
+name: Weather checks
+
+on:
+  push:
+    branches: [main]
+    paths: ["weather/**", ".github/workflows/weather-ci.yml"]
+  pull_request:
+    paths: ["weather/**", ".github/workflows/weather-ci.yml"]
+  workflow_dispatch:
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: weather
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: weather/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run e2e -- --trace off
+
+  android:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: weather
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: weather/package-lock.json
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+      - run: npm ci
+      - run: npm run build
+      - run: npx cap sync android
+      - name: Build debug APK
+        working-directory: weather/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon

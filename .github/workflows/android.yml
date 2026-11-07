@@ -65,7 +65,7 @@ jobs:
       - name: Write the changelog
         if: startsWith(github.ref, 'refs/tags/')
         run: |
-          PREV=$(git describe --tags --abbrev=0 "${GITHUB_REF_NAME}^" 2>/dev/null || true)
+          PREV=$(git describe --tags --abbrev=0 --match 'v*' "${GITHUB_REF_NAME}^" 2>/dev/null || true)
           {
             echo "## Lean & Strong ${{ steps.apk.outputs.version }}"
             echo

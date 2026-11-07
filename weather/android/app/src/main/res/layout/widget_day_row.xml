@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/d_day"
+        style="@style/WidgetText.Title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Mon"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/d_pop"
+        style="@style/WidgetText"
+        android:layout_width="38dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:text=""
+        android:textColor="#FF8FD8FF"
+        android:textSize="11sp" />
+
+    <ImageView
+        android:id="@+id/d_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="6dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/wx_clear_day" />
+
+    <TextView
+        android:id="@+id/d_min"
+        style="@style/WidgetText.Dim"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:text="14°"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/d_max"
+        style="@style/WidgetText.Title"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:text="25°"
+        android:textSize="13sp" />
+</LinearLayout>
