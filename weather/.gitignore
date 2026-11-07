@@ -1,0 +1,22 @@
+node_modules/
+dist/
+dev-dist/
+coverage/
+*.tsbuildinfo
+.vite/
+test-results/
+playwright-report/
+e2e/screenshots/
+public/saws/
+
+# Android build output and signing material — never commit keys
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+*.keystore
+*.jks
+keystore.properties
+.DS_Store
+.env
+.env.*

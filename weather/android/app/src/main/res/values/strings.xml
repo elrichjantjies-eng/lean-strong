@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Skyglass</string>
+    <string name="title_activity_main">Skyglass</string>
+    <string name="package_name">com.skyglass.weather</string>
+    <string name="custom_url_scheme">com.skyglass.weather</string>
+
+    <string name="widget_name_small">Weather · small</string>
+    <string name="widget_name_wide">Weather · wide</string>
+    <string name="widget_name_medium">Weather · hourly</string>
+    <string name="widget_name_large">Weather · forecast</string>
+    <string name="widget_name_clock">Clock &amp; weather</string>
+    <string name="widget_desc_small">Temperature and conditions at a glance</string>
+    <string name="widget_desc_wide">A slim bar with the current weather</string>
+    <string name="widget_desc_medium">Current weather and the next hours</string>
+    <string name="widget_desc_large">Current weather, the next hours and the next days</string>
+    <string name="widget_desc_clock">A big clock and date with the current weather</string>
+
+    <string name="channel_warnings">Weather warnings</string>
+    <string name="channel_warnings_desc">Official SAWS warnings for your location</string>
+    <string name="channel_rain">Rain alerts</string>
+    <string name="channel_rain_desc">When rain is about to start</string>
+    <string name="channel_daily">Daily forecast</string>
+    <string name="channel_daily_desc">A morning summary of the day</string>
+</resources>

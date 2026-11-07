@@ -1,9 +1,15 @@
-# Builds the iPhone web app and publishes it to GitHub Pages on every push to main.
+# Builds both web apps and publishes them to GitHub Pages on every push to main:
+#   Lean & Strong      https://<user>.github.io/<repo>/
+#   Skyglass Weather   https://<user>.github.io/<repo>/weather/
+# Every two hours it also refreshes the weather app's copy of the South African Weather
+# Service data (SAWS doesn't let browsers read its API directly; see weather/scripts/saws-snapshot.mjs).
 name: Deploy web app
 
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: "17 */2 * * *"
   workflow_dispatch:
 
 permissions:
@@ -24,6 +30,9 @@ jobs:
         with:
           node-version: 24
           cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            weather/package-lock.json
       - run: npm ci
       - run: npm run typecheck
       - run: npm test
@@ -32,6 +41,21 @@ jobs:
         env:
           # The site lives at https://<user>.github.io/<repo>/
           BASE_PATH: /${{ github.event.repository.name }}/
+
+      - name: Build the weather app
+        working-directory: weather
+        run: |
+          npm ci
+          npm run typecheck
+          npm test
+          npx vite build
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/weather/
+      - name: Snapshot SAWS forecasts and warnings
+        working-directory: weather
+        run: npm run saws-snapshot -- dist/saws
+      - run: cp -r weather/dist dist/weather
+
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:

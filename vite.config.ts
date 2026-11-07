@@ -53,6 +53,8 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,woff2,png,svg,webp,ico,json}"],
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         navigateFallback: "index.html",
+        // The weather app lives at /weather/ on the same site with its own service worker.
+        navigateFallbackDenylist: [/\/weather\//],
         // Take control on the very first visit so it's offline-ready straight away. Updates
         // still wait for the user to tap Reload (no skipWaiting).
         clientsClaim: true,

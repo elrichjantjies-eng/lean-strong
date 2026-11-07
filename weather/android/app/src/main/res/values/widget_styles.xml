@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="WidgetText">
+        <item name="android:textColor">@color/widget_text</item>
+        <item name="android:shadowColor">#33000000</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">3</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+    <style name="WidgetText.Dim">
+        <item name="android:textColor">@color/widget_text_dim</item>
+    </style>
+    <style name="WidgetText.Faint">
+        <item name="android:textColor">@color/widget_text_faint</item>
+    </style>
+    <style name="WidgetText.Big">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:letterSpacing">-0.03</item>
+    </style>
+    <style name="WidgetText.Title">
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+</resources>
