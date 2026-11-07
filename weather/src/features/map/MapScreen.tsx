@@ -2,15 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import {
+  Cloud,
   CloudLightning,
+  CloudRain,
   Layers,
   LocateFixed,
   Pause,
   Play,
   TriangleAlert,
-  Umbrella,
+  Radar,
   X,
   Thermometer,
+  Zap,
 } from "lucide-react";
 import type { Place, SawsCity, SawsWarning } from "@/data/types";
 import { useCached } from "@/data/cache";
@@ -20,6 +23,14 @@ import { useStore } from "@/state/store";
 import { formatter } from "@/lib/units";
 import { getJson } from "@/data/http";
 import { useNow } from "@/lib/useNow";
+import {
+  EUMETSAT_WMS,
+  SAT,
+  fetchSatelliteTimes,
+  inSatelliteView,
+  isoTime,
+  type SatLayer,
+} from "@/data/satellite";
 
 type RadarFrames = { host: string; frames: { time: number; path: string }[] };
 
@@ -40,14 +51,48 @@ const WARN_COLOR: Record<SawsWarning["color"], string> = {
 
 const STORM_COLOR = { current: "#ef4444", forecast30: "#fb923c", forecast60: "#facc15" } as const;
 
+type LayerKey = "rain" | "lightning" | "clouds" | "radar" | "storms" | "warnings" | "cities";
+
+/** A EUMETSAT image layer for one time. Extra options (time) become WMS parameters. */
+function satTileLayer(l: SatLayer, time: number | null, zIndex: number): L.TileLayer.WMS {
+  const opts = {
+    layers: l.name,
+    styles: l.style,
+    format: "image/png",
+    transparent: true,
+    version: "1.3.0",
+    opacity: 0,
+    zIndex,
+    // 512-pixel images: a quarter of the requests of 256-pixel tiles.
+    tileSize: 512,
+    zoomOffset: -1,
+    ...(time ? { time: isoTime(time) } : {}),
+  };
+  return L.tileLayer.wms(EUMETSAT_WMS, opts as L.WMSOptions);
+}
+
 export default function MapScreen({ place, onClose }: { place?: Place; onClose: () => void }) {
   const el = useRef<HTMLDivElement>(null);
   const map = useRef<L.Map | null>(null);
   const radarLayers = useRef<L.TileLayer[]>([]);
+  const satLayers = useRef(new Map<string, L.TileLayer.WMS>());
   const overlay = useRef<L.LayerGroup | null>(null);
-  const [frame, setFrame] = useState(0);
+  const [frame, setFrame] = useState(-1);
   const [playing, setPlaying] = useState(true);
-  const [layers, setLayers] = useState({ radar: true, warnings: true, storms: true, cities: true });
+  // In South Africa (no radar coverage) start with satellite rain and lightning; elsewhere radar.
+  const [layers, setLayers] = useState<Record<LayerKey, boolean>>(() => {
+    const sa = !place || inSouthAfrica(place.lat, place.lon);
+    const sat = !place || inSatelliteView(place.lat, place.lon);
+    return {
+      rain: sat,
+      lightning: sat,
+      clouds: false,
+      radar: !sa,
+      storms: true,
+      warnings: true,
+      cities: true,
+    };
+  });
   const [showLayers, setShowLayers] = useState(false);
   const [info, setInfo] = useState<string | null>(null);
   const settings = useStore((s) => s.settings);
@@ -55,8 +100,13 @@ export default function MapScreen({ place, onClose }: { place?: Place; onClose: 
   const radar = useCached("radar", fetchRadar, 5 * 60_000, false);
   const bundle = useSawsBundle(true);
   const cities = useCached<SawsCity[]>("saws:cities", fetchSawsCities, 60 * 60_000);
-  const frames = radar.data?.frames ?? [];
+  const satTimes = useCached("sat-times", fetchSatelliteTimes, 5 * 60_000, false);
+  const radarFrames = radar.data?.frames ?? [];
   const nowS = useNow(30_000);
+  // One timeline for every animated layer: satellite images (15 min) when one is on, else radar.
+  const useSat = layers.rain || layers.lightning;
+  const frames: number[] = useSat ? (satTimes.data ?? []) : radarFrames.map((f) => f.time);
+  const current = frame >= 0 && frame < frames.length ? frame : frames.length - 1;
 
   useEffect(() => {
     const onBack = (e: Event) => {
@@ -79,10 +129,22 @@ export default function MapScreen({ place, onClose }: { place?: Place; onClose: 
       minZoom: 3,
       maxZoom: 12,
     });
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+    // Esri's dark grey canvas: free without a key (CARTO's basemaps now need one). Place names
+    // come as a separate transparent layer drawn above the rain so they stay readable.
+    const esri = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas";
+    L.tileLayer(`${esri}/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}`, {
       attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a> · Radar <a href="https://www.rainviewer.com/">RainViewer</a> · <a href="https://www.weathersa.co.za">SAWS</a>',
-      subdomains: "abcd",
+        'Map &copy; <a href="https://www.esri.com/">Esri</a>, HERE, Garmin, &copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> · Satellite &copy; <a href="https://www.eumetsat.int/">EUMETSAT</a> · Radar <a href="https://www.rainviewer.com/">RainViewer</a> · <a href="https://www.weathersa.co.za">SAWS</a>',
+      maxNativeZoom: 16,
+      maxZoom: 19,
+    }).addTo(m);
+    m.createPane("labels");
+    const labels = m.getPane("labels")!;
+    labels.style.zIndex = "450";
+    labels.style.pointerEvents = "none";
+    L.tileLayer(`${esri}/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}`, {
+      pane: "labels",
+      maxNativeZoom: 16,
       maxZoom: 19,
     }).addTo(m);
     overlay.current = L.layerGroup().addTo(m);
@@ -116,17 +178,70 @@ export default function MapScreen({ place, onClose }: { place?: Place; onClose: 
         maxZoom: 12,
       }).addTo(m),
     );
-    setFrame(radar.data.frames.length - 1);
     return () => radarLayers.current.forEach((l) => l.remove());
   }, [radar.data]);
 
+  const time = frames[current];
+
+  // Radar: show the frame nearest the timeline's time.
   useEffect(() => {
-    radarLayers.current.forEach((l, i) => l.setOpacity(layers.radar && i === frame ? 0.75 : 0));
-  }, [frame, layers.radar, radar.data]);
+    const list = radar.data?.frames ?? [];
+    let best = -1;
+    if (time != null) {
+      for (let i = 0; i < list.length; i++) {
+        if (
+          Math.abs(list[i].time - time) <= 600 &&
+          (best < 0 || Math.abs(list[i].time - time) < Math.abs(list[best].time - time))
+        )
+          best = i;
+      }
+    }
+    radarLayers.current.forEach((l, i) => l.setOpacity(layers.radar && i === best ? 0.75 : 0));
+  }, [time, layers.radar, radar.data]);
+
+  // Satellite rain and lightning: one layer per image time (loaded once, then cross-faded).
+  const showRain = layers.rain;
+  const showLightning = layers.lightning;
+  useEffect(() => {
+    const m = map.current;
+    if (!m || !satTimes.data) return;
+    const cache = satLayers.current;
+    for (const [key, sat, z, on, opacity] of [
+      ["rain", SAT.rain, 4, showRain, 0.8],
+      ["lightning", SAT.lightning, 6, showLightning, 0.95],
+    ] as const) {
+      for (const t of satTimes.data) {
+        const id = `${key}@${t}`;
+        if (on && !cache.has(id)) cache.set(id, satTileLayer(sat, t, z).addTo(m));
+        cache.get(id)?.setOpacity(on && t === time ? opacity : 0);
+      }
+    }
+  }, [satTimes.data, time, showRain, showLightning]);
+
+  // Clouds: just the latest image (they're large), under everything else.
+  useEffect(() => {
+    const m = map.current;
+    if (!m) return;
+    const cache = satLayers.current;
+    if (layers.clouds && !cache.has("clouds"))
+      cache.set("clouds", satTileLayer(SAT.clouds, null, 2).addTo(m));
+    cache.get("clouds")?.setOpacity(layers.clouds ? 0.85 : 0);
+  }, [layers.clouds]);
+
+  useEffect(() => {
+    const cache = satLayers.current;
+    return () => {
+      cache.forEach((l) => l.remove());
+      cache.clear();
+    };
+  }, []);
 
   useEffect(() => {
     if (!playing || frames.length < 2) return;
-    const t = setInterval(() => setFrame((f) => (f + 1) % frames.length), 700);
+    const t = setInterval(
+      () => setFrame((f) => ((f < 0 ? frames.length - 1 : f) + 1) % frames.length),
+      800,
+    );
     return () => clearInterval(t);
   }, [playing, frames.length]);
 
@@ -181,8 +296,15 @@ export default function MapScreen({ place, onClose }: { place?: Place; onClose: 
     }
   }, [bundle.data, cities.data, layers, fmt]);
 
-  const time = frames[frame]?.time;
   const isFuture = time != null && time > nowS;
+  const timeLabel =
+    time != null
+      ? new Date(time * 1000).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: !settings.h24,
+        })
+      : "";
   const stormCount = bundle.data?.storms.filter((s) => s.instance === "current").length ?? 0;
 
   return (
@@ -233,7 +355,10 @@ export default function MapScreen({ place, onClose }: { place?: Place; onClose: 
         >
           {(
             [
-              ["radar", "Rain radar", Umbrella],
+              ["rain", "Rain (satellite)", CloudRain],
+              ["lightning", "Lightning", Zap],
+              ["clouds", "Clouds (satellite)", Cloud],
+              ["radar", "Rain radar (not in SA)", Radar],
               ["storms", "Thunderstorm cells (SAWS)", CloudLightning],
               ["warnings", "Warnings (SAWS)", TriangleAlert],
               ["cities", "Today's highs (SAWS)", Thermometer],
@@ -265,18 +390,18 @@ export default function MapScreen({ place, onClose }: { place?: Place; onClose: 
 
       <div
         className="absolute inset-x-3 z-[1000]"
-        style={{ bottom: "calc(var(--safe-bottom) + 14px)" }}
+        style={{ bottom: "calc(var(--safe-bottom) + 26px)" }}
       >
         <div className="glass-strong rounded-2xl p-3">
           <div className="mb-2 flex items-center justify-between text-xs">
             <span className="font-semibold">
-              {layers.radar
-                ? time
-                  ? `${isFuture ? "Forecast" : "Radar"} ${new Date(time * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: !settings.h24 })}`
-                  : radar.error
-                    ? "Radar unavailable"
-                    : "Loading radar…"
-                : "Radar off"}
+              {useSat || layers.radar
+                ? time != null
+                  ? `${useSat ? "Satellite" : isFuture ? "Forecast" : "Radar"} ${timeLabel}`
+                  : (useSat ? satTimes.error : radar.error)
+                    ? "Rain map unavailable"
+                    : "Loading rain map…"
+                : "Rain layers off"}
             </span>
             <span className="text-dim">
               {stormCount > 0
@@ -303,8 +428,8 @@ export default function MapScreen({ place, onClose }: { place?: Place; onClose: 
               type="range"
               min={0}
               max={Math.max(0, frames.length - 1)}
-              value={frame}
-              aria-label="Radar time"
+              value={Math.max(0, current)}
+              aria-label="Rain map time"
               onChange={(e) => {
                 setPlaying(false);
                 setFrame(Number(e.target.value));
@@ -312,11 +437,24 @@ export default function MapScreen({ place, onClose }: { place?: Place; onClose: 
               className="flex-1"
             />
           </div>
-          <div className="text-faint mt-2 flex items-center gap-3 text-[10px]">
+          <div className="text-faint mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px]">
+            <span className="flex items-center gap-1">
+              Rain
+              <span
+                className="inline-block h-2 w-10 rounded-full"
+                style={{ background: "linear-gradient(90deg,#e6f5a3,#62b8d8,#1d4fb0)" }}
+              />
+            </span>
+            <span className="flex items-center gap-1">
+              Lightning
+              <span
+                className="inline-block h-2 w-8 rounded-full"
+                style={{ background: "linear-gradient(90deg,#ffe28a,#f0603a,#c4122f)" }}
+              />
+            </span>
             <Legend color="#ef4444" label="Storm now" />
             <Legend color="#fb923c" label="+30 min" dashed />
             <Legend color="#facc15" label="Warning" />
-            <span className="ml-auto">Radar: light → heavy</span>
           </div>
         </div>
       </div>

@@ -105,6 +105,10 @@ test("opens the radar map", async ({ page }) => {
     "aria-pressed",
     "true",
   );
+  await expect(page.getByRole("button", { name: "Rain (satellite)" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
   await page.getByRole("button", { name: "Close map" }).click();
   await expect(page.getByTestId("place-name").first()).toBeVisible();
 });

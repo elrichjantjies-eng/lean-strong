@@ -67,8 +67,10 @@ shows SAWS warnings, and opens the app on that place when tapped.
 
 **Map**
 
-- Animated rain radar, SAWS warning areas, storm cells (now and in 30 minutes) and today's highs
-  for the main towns.
+- Animated rain from the Meteosat satellites (every 15 minutes, covers all of South Africa),
+  lightning, true-colour clouds, SAWS warning areas, storm cells (now and in 30 minutes) and
+  today's highs for the main towns. Outside South Africa, RainViewer radar where it has coverage.
+  (RainViewer has no radar over southern Africa, as SAWS doesn't share its radar feed.)
 
 **App**
 
@@ -86,7 +88,8 @@ shows SAWS warnings, and opens the app on that place when tapped.
 | Official forecasts, warnings, storms, fire danger   | [SAWS](https://www.weathersa.co.za)                        |
 | Place names for My Location                         | BigDataCloud                                               |
 | Radar                                               | [RainViewer](https://www.rainviewer.com)                   |
-| Map                                                 | OpenStreetMap, CARTO                                       |
+| Satellite rain, lightning and clouds                | [EUMETSAT](https://view.eumetsat.int) (Meteosat, MTG)      |
+| Map                                                 | Esri, OpenStreetMap                                        |
 
 SAWS's API doesn't allow other websites to read it from a browser. The Android app reads it live
 through the phone's native networking. For the web app, the GitHub Pages workflow saves a copy

@@ -49,8 +49,17 @@ export async function mockNetwork(page: Page, opts: { warnings?: boolean } = {})
       ),
     ),
   );
+  await page.route("https://view.eumetsat.int/**", (r) =>
+    r.request().url().includes("GetCapabilities")
+      ? r.fulfill({
+          status: 200,
+          contentType: "text/xml",
+          body: '<Dimension name="time" units="ISO8601">2022-12-09T00:45:00.000Z/2026-11-07T10:45:00.000Z/PT15M</Dimension>',
+        })
+      : r.fulfill({ status: 204, body: "" }),
+  );
   // Map tiles and radar images: an empty response is enough.
-  await page.route(/basemaps\.cartocdn\.com|tilecache\.rainviewer\.com/, (r) =>
+  await page.route(/server\.arcgisonline\.com|tilecache\.rainviewer\.com/, (r) =>
     r.fulfill({ status: 204, body: "" }),
   );
 }

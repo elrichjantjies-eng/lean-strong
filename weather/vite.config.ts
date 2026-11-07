@@ -59,7 +59,7 @@ export default defineConfig({
         runtimeCaching: [
           {
             // Map tiles: keep recently viewed ones for offline use.
-            urlPattern: /^https:\/\/[a-d]\.basemaps\.cartocdn\.com\//,
+            urlPattern: /^https:\/\/server\.arcgisonline\.com\/ArcGIS\/rest\/services\/Canvas\//,
             handler: "CacheFirst",
             options: {
               cacheName: "map-tiles",

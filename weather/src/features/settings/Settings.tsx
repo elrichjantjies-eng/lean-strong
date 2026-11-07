@@ -326,7 +326,7 @@ export function Settings({ onClose }: { onClose: () => void }) {
             >
               RainViewer
             </a>{" "}
-            · Maps: OpenStreetMap, CARTO
+            · Satellite: EUMETSAT · Maps: Esri, OpenStreetMap
           </li>
         </ul>
       </Section>
