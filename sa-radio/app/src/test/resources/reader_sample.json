@@ -1,0 +1,33 @@
+{
+  "item": {
+    "source": "Sample News",
+    "link": "https://example.invalid/2026/11/08/taxi-rank-upgrade",
+    "title": "Taxi rank upgrade promises shade, water and safer crossings for commuters"
+  },
+  "article": {
+    "ok": true,
+    "title": "Taxi rank upgrade promises shade, water and safer crossings for commuters | Sample News",
+    "byline": "Thandi Mokoena",
+    "site": "Sample News",
+    "excerpt": "Work starts in January on a rank used by 40,000 people a day.",
+    "published": "2026-11-08T09:00:00+02:00",
+    "lead": {"src": "https://example.invalid/images/rank-lead.jpg", "caption": "Commuters queue in the midday heat. (Sample photo)"},
+    "words": 236,
+    "paywalled": false,
+    "blocks": [
+      {"t": "p", "html": "Commuters at the city's busiest taxi rank will get <b>covered walkways</b>, drinking-water points and two raised pedestrian crossings when construction starts in January, the council said on Sunday.", "text": "Commuters at the city's busiest taxi rank will get covered walkways, drinking-water points and two raised pedestrian crossings when construction starts in January, the council said on Sunday."},
+      {"t": "p", "html": "The rank handles about 40,000 people on a weekday. A <a href=\"https://example.invalid/survey\">survey published last year</a> found that most waited more than 20 minutes in full sun during summer.", "text": "The rank handles about 40,000 people on a weekday. A survey published last year found that most waited more than 20 minutes in full sun during summer."},
+      {"t": "quote", "html": "We are not asking for luxury. We are asking for shade and a safe way across the road.", "text": "We are not asking for luxury. We are asking for shade and a safe way across the road."},
+      {"t": "h", "text": "What changes"},
+      {"t": "list", "ordered": false, "items": [
+        {"html": "Roofed walkways along both loading lanes", "text": "Roofed walkways along both loading lanes"},
+        {"html": "Six drinking-water points and new public toilets", "text": "Six drinking-water points and new public toilets"},
+        {"html": "Two raised crossings with traffic lights", "text": "Two raised crossings with traffic lights"}
+      ]},
+      {"t": "img", "src": "https://example.invalid/images/rank-plan.jpg", "caption": "An artist's impression of the new walkways. (Sample image)", "alt": "", "w": 1200, "h": 800},
+      {"t": "p", "html": "The project is budgeted at R48 million and should take 14 months. Taxis will keep running during the work, with loading moved to the eastern lanes in stages.", "text": "The project is budgeted at R48 million and should take 14 months. Taxis will keep running during the work, with loading moved to the eastern lanes in stages."},
+      {"t": "embed", "url": "https://www.youtube.com/watch?v=sample", "text": "Video"},
+      {"t": "p", "html": "Residents can comment on the plans at the ward office until 30 November.", "text": "Residents can comment on the plans at the ward office until 30 November."}
+    ]
+  }
+}

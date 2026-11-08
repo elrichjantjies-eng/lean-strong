@@ -110,3 +110,47 @@ can't do:
 The original signing key wasn't available, so 3.0 is signed with a new key. Uninstall 2.0 before
 installing 3.0. Favourites from 2.0 can't be carried over. Keep the new key: future updates must
 use it.
+
+## 3.1: ad-free news reader
+
+In 2.0 and 3.0, tapping a headline loaded the publisher's whole web page: ads, pop-ups, cookie
+banners and dozens of trackers.
+
+Now the app downloads only the page's HTML. It pulls the story out with Mozilla Readability, the
+engine behind Firefox's Reader View, inside a hidden WebView with network access switched off, so
+none of the page's scripts or ads run. The app then draws the story itself:
+
+- headline, byline and read time
+- the lead picture, then paragraphs, sub-headings, quotes, lists, tables and pictures with captions
+- links to embedded videos and posts
+
+**Tested on 28 live stories from 14 publishers.** Moneyweb blocked my test server, and News24 and
+MyBroadband blocked their feeds. All 26 stories that loaded came out cleanly in under 0.1 s each.
+I tuned the clean-up rules on those stories so they drop:
+
+- "Story audio is generated using AI" notices
+- "Also read" link lists
+- "Share your thoughts in the comments" prompts
+- AI-summary widgets
+- site names glued onto headlines
+
+Run together with names, bylines are separated again ("Thando Maeko, Political Correspondent").
+
+**Data:** for 8 of those stories, the full web pages used **36 MB**. TimesLIVE alone made 993
+requests and used 12.8 MB for one story, 3 MB of it from ad and tracker networks. The reader used
+**2 MB** with pictures (6%), or **0.6 MB** as text only (2%). In Data saver, pictures load only
+when tapped.
+
+**What it doesn't do:**
+
+- It doesn't get around paywalls. When a publisher marks a story as subscriber-only and serves
+  only the opening, the reader shows that opening and a "Continue on [publisher]" button.
+- When a page isn't a normal article (a video, live blog or gallery), the reader says so and offers
+  the original page. On the original page, about 90 ad, recommendation and tracker networks are
+  blocked and empty ad slots are hidden.
+- Every story ends with a note that it belongs to the publisher, and a button to open the original.
+  Ads pay for much of this journalism.
+
+Not yet checked on a real phone: the hidden-WebView step. The extraction itself was tested in
+Chromium, which is the engine Android's WebView uses, and the reader screens were rendered from
+real stories.

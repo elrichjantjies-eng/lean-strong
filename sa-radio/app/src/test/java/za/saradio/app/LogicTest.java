@@ -119,6 +119,57 @@ public class LogicTest {
         assertEquals(1, NewsRepo.tidy(items).size());
     }
 
+    // ---- Reader ------------------------------------------------------------------------------
+
+    static Article sample() throws Exception {
+        org.json.JSONObject doc = new org.json.JSONObject(fixture("reader_sample.json"));
+        return Article.fromJson(doc.getJSONObject("item").getString("link"), doc.getJSONObject("article").toString());
+    }
+
+    @Test
+    public void readerArticleParses() throws Exception {
+        Article a = sample();
+        assertTrue(a.ok);
+        assertEquals("Thandi Mokoena", a.byline);
+        assertEquals(9, a.blocks.size());
+        assertEquals("quote", a.blocks.get(2).type);
+        assertEquals(3, a.blocks.get(4).items.size());
+        assertEquals(1200, a.blocks.get(5).width);
+        assertTrue(a.leadSrc.endsWith("rank-lead.jpg"));
+        assertEquals(1, a.minutes());
+        assertFalse(a.teaserOnly());
+    }
+
+    @Test
+    public void paywalledTeasersAreRecognised() throws Exception {
+        Article a = sample();
+        a.paywalled = true;
+        assertTrue("a short subscriber story is a teaser", a.teaserOnly());
+        a.words = 900;
+        assertFalse("a full story behind a metered wall is still readable", a.teaserOnly());
+        assertFalse(Article.fromJson("u", "not json").ok);
+    }
+
+    @Test
+    public void adBlockMatchesAdHostsOnly() {
+        assertTrue(AdBlock.blocked("securepubads.g.doubleclick.net"));
+        assertTrue(AdBlock.blocked("doubleclick.net"));
+        assertTrue(AdBlock.blocked("cdn.taboola.com"));
+        assertTrue(AdBlock.blocked("C.AMAZON-ADSYSTEM.COM"));
+        assertFalse("look-alike domains are not blocked", AdBlock.blocked("notdoubleclick.net"));
+        assertFalse(AdBlock.blocked("www.dailymaverick.co.za"));
+        assertFalse(AdBlock.blocked("media.netflix.com"));
+        assertFalse(AdBlock.blocked(null));
+    }
+
+    @Test
+    public void pageCharsetFromHeaderOrMeta() {
+        byte[] latin = "<html><head><meta charset=\"iso-8859-1\"></head>".getBytes(StandardCharsets.US_ASCII);
+        assertEquals("ISO-8859-1", Extractor.charset(null, latin).name());
+        assertEquals("UTF-8", Extractor.charset("text/html; charset=utf-8", latin).name());
+        assertEquals("UTF-8", Extractor.charset(null, new byte[0]).name());
+    }
+
     // ---- Equalizer --------------------------------------------------------------------------
 
     @Test

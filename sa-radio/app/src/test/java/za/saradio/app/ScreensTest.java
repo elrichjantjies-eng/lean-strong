@@ -211,6 +211,81 @@ public class ScreensTest {
         shot(a, "09_add_station");
     }
 
+    private static NewsRepo.Item item(org.json.JSONObject j) throws Exception {
+        NewsRepo.Item it = new NewsRepo.Item();
+        it.source = j.getString("source");
+        it.link = j.getString("link");
+        it.title = j.getString("title");
+        it.time = System.currentTimeMillis() - 40 * 60_000L;
+        return it;
+    }
+
+    private void reader(MainActivity a, String json, String name, boolean extras) throws Exception {
+        org.json.JSONObject doc = new org.json.JSONObject(json);
+        NewsRepo.Item it = item(doc.getJSONObject("item"));
+        Article art = Article.fromJson(it.link, doc.getJSONObject("article").toString());
+        a.setTab(MainActivity.TAB_NEWS);
+        a.openArticleWith(it, art);
+        settle(a, 6000);
+        shot(a, name);
+        if (!extras) return;
+        a.articleView().scrollToFraction(0.45f);
+        settle(a, 3000);
+        shot(a, name + "_middle");
+        a.articleView().scrollToFraction(1f);
+        settle(a, 1500);
+        shot(a, name + "_end");
+    }
+
+    @Test
+    public void readerView() throws Exception {
+        playing(RuntimeEnvironment.getApplication());
+        MainActivity a = launch();
+        reader(a, LogicTest.fixture("reader_sample.json"), "12_reader_sample", false);
+        // Real stories (kept out of the repo) when -PreaderFixtures=<dir> is given.
+        File dir = new File(System.getProperty("reader.fixtures", ""));
+        File[] real = dir.isDirectory() ? dir.listFiles((d, n) -> n.endsWith(".json")) : null;
+        if (real == null) return;
+        java.util.Arrays.sort(real);
+        for (File f : real) {
+            String json = new String(java.nio.file.Files.readAllBytes(f.toPath()), StandardCharsets.UTF_8);
+            reader(a, json, "13_reader_" + f.getName().replace(".json", "").replace("reader_", ""), true);
+        }
+    }
+
+    @Test
+    public void readerStates() throws Exception {
+        playing(RuntimeEnvironment.getApplication());
+        Context c = RuntimeEnvironment.getApplication();
+        MainActivity a = launch();
+        org.json.JSONObject doc = new org.json.JSONObject(LogicTest.fixture("reader_sample.json"));
+        NewsRepo.Item it = item(doc.getJSONObject("item"));
+        a.setTab(MainActivity.TAB_NEWS);
+        Article teaser = Article.fromJson(it.link, doc.getJSONObject("article").toString());
+        teaser.paywalled = true;
+        while (teaser.blocks.size() > 2) teaser.blocks.remove(teaser.blocks.size() - 1);
+        teaser.words = 70;
+        it.source = "Business Day";
+        a.openArticleWith(it, teaser);
+        settle(a, 1500);
+        a.articleView().scrollToFraction(1f);
+        settle(a, 1500);
+        shot(a, "14_reader_paywall");
+        it.source = "SABC News";
+        a.openArticleWith(it, Article.failed(it.link, "too-short"));
+        settle(a, 1500);
+        shot(a, "15_reader_not_an_article");
+        Prefs.setDataMode(c, DataMode.SAVER);
+        Prefs.get(c).edit().putInt("readerSize", 3).apply();
+        it.source = "Sample News";
+        a.openArticleWith(it, Article.fromJson(it.link, doc.getJSONObject("article").toString()));
+        settle(a, 1500);
+        a.articleView().scrollToFraction(0.5f);
+        settle(a, 1500);
+        shot(a, "16_reader_saver_xl");
+        Prefs.get(c).edit().putInt("readerSize", 1).apply();
+    }
+
     @Test
     @Config(qualifiers = "w360dp-h640dp-xhdpi")
     public void smallPhone() throws Exception {

@@ -21,8 +21,8 @@ android {
         applicationId 'za.saradio.app'
         minSdk 26
         targetSdk 35
-        versionCode 3
-        versionName '3.0'
+        versionCode 4
+        versionName '3.1'
     }
 
     signingConfigs {
@@ -59,6 +59,7 @@ android {
                 maxHeapSize = '2g'
                 systemProperty 'robolectric.graphicsMode', 'NATIVE'
                 systemProperty 'live', (project.findProperty('live') ?: 'false')
+                systemProperty 'reader.fixtures', (project.findProperty('readerFixtures') ?: '')
                 systemProperty 'screenshots.dir', rootProject.file('build/screenshots').absolutePath
             }
         }

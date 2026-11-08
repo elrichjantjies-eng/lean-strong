@@ -28,6 +28,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -102,7 +103,16 @@ public class MainActivity extends Activity implements RadioService.Listener {
     private TextView articleSource;
     private ProgressBar webProgress;
     private WebView web;
-    private String articleUrl;
+    private FrameLayout articleBody;
+    private ArticleView articleView;
+    private ImageView sizeBtn;
+    private ImageView modeBtn;
+    private NewsRepo.Item articleItem;
+    private boolean originalMode;
+    private boolean toldBlocked;
+    private final java.util.concurrent.atomic.AtomicInteger blockedCount = new java.util.concurrent.atomic.AtomicInteger();
+    private Extractor extractor;
+    private View headerView;
 
     // Mini player
     private LinearLayout mini;
@@ -151,6 +161,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
         favs = Prefs.favourites(this);
         if (RadioService.current == null) RadioService.current = Prefs.lastStation(this);
         setContentView(buildUi());
+        extractor = new Extractor(this);
         String cache = StationRepo.loadCache(this);
         if (cache != null) all = StationRepo.parse(cache);
         news = NewsRepo.load(this);
@@ -211,7 +222,8 @@ public class MainActivity extends Activity implements RadioService.Listener {
         } else if (nowPlaying != null && nowPlaying.isOpen()) {
             nowPlaying.close();
         } else if (tab == TAB_NEWS && articlePage.getVisibility() == View.VISIBLE) {
-            if (web != null && web.canGoBack()) web.goBack();
+            if (originalMode && web != null && web.canGoBack()) web.goBack();
+            else if (originalMode) showReader();
             else closeArticle();
         } else if (search.getText().length() > 0) {
             search.setText("");
@@ -665,6 +677,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
 
     private View buildHeader() {
         LinearLayout h = Ui.row(this);
+        headerView = h;
         boolean tight = shortScreen();
         h.setPadding(Ui.dp(this, 22), Ui.dp(this, tight ? 8 : 14), Ui.dp(this, 14), Ui.dp(this, tight ? 8 : 12));
         LinearLayout titles = Ui.column(this);
@@ -1136,87 +1149,212 @@ public class MainActivity extends Activity implements RadioService.Listener {
         articleSource.setEllipsize(TextUtils.TruncateAt.END);
         articleSource.setPadding(Ui.dp(this, 12), 0, Ui.dp(this, 8), 0);
         bar.addView(articleSource, Ui.weight(1));
+        sizeBtn = Ui.iconButton(this, R.drawable.ic_text_size, Ui.TEXT, Ui.SURFACE2, 44, "Text size");
+        sizeBtn.setOnClickListener(v -> {
+            int next = (ArticleView.textSize(this) + 1) % ArticleView.SIZES.length;
+            Prefs.get(this).edit().putInt("readerSize", next).apply();
+            articleView.restyle();
+            snack("Text size: " + ArticleView.SIZE_NAMES[next]);
+        });
+        bar.addView(sizeBtn, Ui.lp(Ui.dp(this, 44), Ui.dp(this, 44), Ui.dp(this, 8), 0, 0, 0));
         ImageView share = Ui.iconButton(this, R.drawable.ic_share, Ui.TEXT, Ui.SURFACE2, 44, "Share article");
-        share.setOnClickListener(v -> {
-            if (articleUrl != null) {
-                startActivity(Intent.createChooser(new Intent(Intent.ACTION_SEND).setType("text/plain")
-                        .putExtra(Intent.EXTRA_TEXT, articleUrl), "Share article"));
-            }
-        });
+        share.setOnClickListener(v -> shareArticle());
         bar.addView(share, Ui.lp(Ui.dp(this, 44), Ui.dp(this, 44), Ui.dp(this, 8), 0, 0, 0));
-        ImageView open = Ui.iconButton(this, R.drawable.ic_open, Ui.TEXT, Ui.SURFACE2, 44, "Open in browser");
-        open.setOnClickListener(v -> {
-            String u = web != null && web.getUrl() != null && web.getUrl().startsWith("http") ? web.getUrl() : articleUrl;
-            if (u != null) {
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(u)));
-                } catch (Exception ignored) {
-                }
-            }
+        modeBtn = Ui.iconButton(this, R.drawable.ic_globe, Ui.TEXT, Ui.SURFACE2, 44, "Show original page");
+        modeBtn.setOnClickListener(v -> {
+            if (originalMode) showReader();
+            else showOriginal();
         });
-        bar.addView(open, Ui.lp(Ui.dp(this, 44), Ui.dp(this, 44), Ui.dp(this, 8), 0, 0, 0));
+        bar.addView(modeBtn, Ui.lp(Ui.dp(this, 44), Ui.dp(this, 44), Ui.dp(this, 8), 0, 0, 0));
         articlePage.addView(bar);
         webProgress = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
         webProgress.setMax(100);
         webProgress.setProgressTintList(ColorStateList.valueOf(Ui.GOLD));
         webProgress.setProgressBackgroundTintList(ColorStateList.valueOf(Ui.SURFACE2));
+        webProgress.setVisibility(View.GONE);
         articlePage.addView(webProgress, Ui.lp(-1, Ui.dp(this, 3)));
+        articleBody = new FrameLayout(this);
+        articleView = new ArticleView(this, new ArticleView.Host() {
+            @Override
+            public void openOriginal() {
+                showOriginal();
+            }
+
+            @Override
+            public void openExternal(String url) {
+                openInBrowser(url);
+            }
+
+            @Override
+            public void shareArticle() {
+                MainActivity.this.shareArticle();
+            }
+        });
+        articleBody.addView(articleView, new FrameLayout.LayoutParams(-1, -1));
+        articlePage.addView(articleBody, new LinearLayout.LayoutParams(-1, 0, 1f));
         articlePage.setVisibility(View.GONE);
         return articlePage;
     }
 
-    private void openArticle(NewsRepo.Item it) {
-        if (web == null) {
-            web = new WebView(this);
-            WebSettings ws = web.getSettings();
-            ws.setJavaScriptEnabled(true);
-            ws.setDomStorageEnabled(true);
-            ws.setLoadWithOverviewMode(true);
-            ws.setUseWideViewPort(true);
-            ws.setMediaPlaybackRequiresUserGesture(true);
-            web.setBackgroundColor(0xFFFFFFFF);
-            web.setWebViewClient(new WebViewClient() {
-                @Override
-                public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest r) {
-                    String scheme = r.getUrl().getScheme();
-                    if ("http".equals(scheme) || "https".equals(scheme)) return false;
-                    try {
-                        startActivity(new Intent(Intent.ACTION_VIEW, r.getUrl()));
-                    } catch (Exception ignored) {
-                    }
-                    return true;
-                }
-            });
-            web.setWebChromeClient(new WebChromeClient() {
-                @Override
-                public void onProgressChanged(WebView v, int p) {
-                    webProgress.setProgress(p);
-                    webProgress.setVisibility(p >= 100 ? View.GONE : View.VISIBLE);
-                }
-            });
-            articlePage.addView(web, new LinearLayout.LayoutParams(-1, 0, 1f));
+    /** Opens a story in the reader: just the words and pictures, drawn by the app. */
+    private void openArticle(final NewsRepo.Item it) {
+        enterArticle(it);
+        Article known = extractor.cached(it.link);
+        if (known != null) {
+            articleView.show(it, known);
+            return;
         }
-        // Data saver: no pictures inside articles.
-        web.getSettings().setLoadsImagesAutomatically(DataMode.effective(this) != DataMode.SAVER);
-        articleUrl = it.link;
+        articleView.loading(it);
+        int eff = DataMode.effective(this);
+        int want = eff == DataMode.BEST ? 1080 : eff == DataMode.SAVER ? 540 : 800;
+        extractor.extract(it.link, want, art -> {
+            if (articleItem != it || originalMode) return;
+            if (art.ok) articleView.show(it, art);
+            else articleView.failed(it, art);
+        });
+    }
+
+    ArticleView articleView() {
+        return articleView;
+    }
+
+    /** Tests: show an already-extracted story. */
+    void openArticleWith(NewsRepo.Item it, Article art) {
+        enterArticle(it);
+        if (art.ok) articleView.show(it, art);
+        else articleView.failed(it, art);
+    }
+
+    private void enterArticle(NewsRepo.Item it) {
+        articleItem = it;
         articleSource.setText(it.source);
-        web.loadUrl(it.link);
+        headerView.setVisibility(View.GONE); // more room for the story
+        showReader();
         newsPage.setVisibility(View.GONE);
         articlePage.setVisibility(View.VISIBLE);
         articlePage.setAlpha(0f);
         articlePage.setTranslationX(Ui.dp(this, 40));
         articlePage.animate().alpha(1f).translationX(0).setDuration(220).setInterpolator(new DecelerateInterpolator()).start();
-        // Leave room for the player and nav at the bottom of the article.
-        articlePage.setPadding(0, 0, 0, bottomArea.getHeight() + insetNav);
+        // The story scrolls under the player and nav; keep its end clear of them.
+        articleView.setBottomPadding(bottomArea.getHeight() + insetNav + Ui.dp(this, 8));
+    }
+
+    private void showReader() {
+        originalMode = false;
+        if (web != null) {
+            web.stopLoading();
+            web.setVisibility(View.GONE);
+        }
+        webProgress.setVisibility(View.GONE);
+        articleView.setVisibility(View.VISIBLE);
+        modeBtn.setImageResource(R.drawable.ic_globe);
+        modeBtn.setContentDescription("Show original page");
+        modeBtn.setTooltipText("Show original page");
+        sizeBtn.setVisibility(View.VISIBLE);
+    }
+
+    /** The publisher's own page, with ad networks and trackers blocked. */
+    private void showOriginal() {
+        if (articleItem == null) return;
+        originalMode = true;
+        ensureWeb();
+        web.getSettings().setLoadsImagesAutomatically(DataMode.effective(this) != DataMode.SAVER);
+        blockedCount.set(0);
+        toldBlocked = false;
+        web.loadUrl(articleItem.link);
+        web.setVisibility(View.VISIBLE);
+        articleView.setVisibility(View.GONE);
+        modeBtn.setImageResource(R.drawable.ic_nav_news);
+        modeBtn.setContentDescription("Back to reader view");
+        modeBtn.setTooltipText("Back to reader view");
+        sizeBtn.setVisibility(View.GONE);
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) web.getLayoutParams();
+        lp.bottomMargin = bottomArea.getHeight() + insetNav;
+        web.setLayoutParams(lp);
+    }
+
+    private void ensureWeb() {
+        if (web != null) return;
+        web = new WebView(this);
+        WebSettings ws = web.getSettings();
+        ws.setJavaScriptEnabled(true);
+        ws.setDomStorageEnabled(true);
+        ws.setLoadWithOverviewMode(true);
+        ws.setUseWideViewPort(true);
+        ws.setMediaPlaybackRequiresUserGesture(true);
+        web.setBackgroundColor(0xFFFFFFFF);
+        web.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest r) {
+                String scheme = r.getUrl().getScheme();
+                if ("http".equals(scheme) || "https".equals(scheme)) return false;
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, r.getUrl()));
+                } catch (Exception ignored) {
+                }
+                return true;
+            }
+
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView v, WebResourceRequest r) {
+                if (AdBlock.blocked(r.getUrl().getHost())) {
+                    blockedCount.incrementAndGet();
+                    return AdBlock.empty();
+                }
+                return null;
+            }
+
+            @Override
+            public void onPageCommitVisible(WebView v, String url) {
+                v.evaluateJavascript(AdBlock.injectScript(), null);
+            }
+
+            @Override
+            public void onPageFinished(WebView v, String url) {
+                v.evaluateJavascript(AdBlock.injectScript(), null);
+                int n = blockedCount.get();
+                if (originalMode && !toldBlocked && n > 0) {
+                    toldBlocked = true;
+                    snack(n + (n == 1 ? " ad or tracker blocked" : " ads and trackers blocked"));
+                }
+            }
+        });
+        web.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView v, int p) {
+                webProgress.setProgress(p);
+                webProgress.setVisibility(originalMode && p < 100 ? View.VISIBLE : View.GONE);
+            }
+        });
+        articleBody.addView(web, new FrameLayout.LayoutParams(-1, -1));
+    }
+
+    private void shareArticle() {
+        if (articleItem == null) return;
+        String text = articleItem.title.isEmpty() ? articleItem.link : articleItem.title + "\n" + articleItem.link;
+        startActivity(Intent.createChooser(new Intent(Intent.ACTION_SEND).setType("text/plain")
+                .putExtra(Intent.EXTRA_TEXT, text), "Share article"));
+    }
+
+    private void openInBrowser(String url) {
+        if (url == null) return;
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        } catch (Exception ignored) {
+        }
     }
 
     private void closeArticle() {
         articlePage.setVisibility(View.GONE);
+        headerView.setVisibility(View.VISIBLE);
         if (tab == TAB_NEWS) newsPage.setVisibility(View.VISIBLE);
+        articleItem = null;
+        originalMode = false;
         if (web != null) {
             web.stopLoading();
             web.loadUrl("about:blank");
             web.clearHistory();
+            web.setVisibility(View.GONE);
         }
     }
 
