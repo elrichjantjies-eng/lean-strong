@@ -286,6 +286,56 @@ public class ScreensTest {
         Prefs.get(c).edit().putInt("readerSize", 1).apply();
     }
 
+    private static void waitForSport(MainActivity a) {
+        for (int i = 0; i < 120 && (a.sportView().isLoading() || a.sportView().matches().isEmpty()); i++) settle(a, 300);
+        settle(a, 4000); // logos
+    }
+
+    private static Sports.Match find(MainActivity a, String sport, int state, String text) {
+        Sports.Match best = null;
+        for (Sports.Match m : a.sportView().matches()) {
+            if (!m.sport.equals(sport) || (state >= 0 && m.state != state)) continue;
+            String all = m.isEvent() ? m.title : m.home.name + " " + m.away.name;
+            if (text != null && !all.contains(text)) continue;
+            if (best == null || m.time > best.time) best = m;
+        }
+        return best;
+    }
+
+    @Test
+    public void sport() throws Exception {
+        playing(RuntimeEnvironment.getApplication());
+        MainActivity a = launch();
+        a.setTab(MainActivity.TAB_NEWS);
+        a.showSport(true);
+        waitForSport(a);
+        shot(a, "17_sport_sa_results");
+        a.sportView().showFor("sa", false);
+        settle(a, 3000);
+        shot(a, "18_sport_sa_fixtures");
+        a.sportView().showFor(Sports.RUGBY, true);
+        settle(a, 3000);
+        shot(a, "19_sport_rugby");
+        a.sportView().showFor(Sports.SOCCER, true);
+        waitForSport(a);
+        shot(a, "20_sport_soccer");
+        a.sportView().showFor(Sports.CRICKET, true);
+        settle(a, 3000);
+        shot(a, "21_sport_cricket");
+        String[][] sheets = {{Sports.RUGBY, "South Africa", "22_match_rugby"}, {Sports.SOCCER, null, "23_match_soccer"},
+            {Sports.CRICKET, null, "24_match_cricket"}, {Sports.F1, null, "25_match_f1"}, {Sports.GOLF, null, "26_match_golf"}};
+        for (String[] sh : sheets) {
+            Sports.Match m = find(a, sh[0], Sports.POST, sh[1]);
+            if (Sports.SOCCER.equals(sh[0])) m = find(a, sh[0], Sports.POST, "Arsenal") != null ? find(a, sh[0], Sports.POST, "Arsenal") : m;
+            if (m == null) continue;
+            MatchSheet.show(a, m);
+            settle(a, 9000);
+            shot(a, sh[2]);
+            a.onBackPressed();
+            settle(a, 800);
+        }
+    }
+
     @Test
     @Config(qualifiers = "w360dp-h640dp-xhdpi")
     public void smallPhone() throws Exception {

@@ -113,6 +113,10 @@ public class MainActivity extends Activity implements RadioService.Listener {
     private final java.util.concurrent.atomic.AtomicInteger blockedCount = new java.util.concurrent.atomic.AtomicInteger();
     private Extractor extractor;
     private View headerView;
+    private SportView sportView;
+    private LinearLayout newsContent;
+    private Segmented newsMode;
+    private boolean sportMode;
 
     // Mini player
     private LinearLayout mini;
@@ -181,6 +185,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
         main.post(ticker);
         if (web != null) web.onResume();
         rebuildRecents();
+        if (tab == TAB_NEWS && sportMode) sportView.shown();
     }
 
     @Override
@@ -188,6 +193,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
         RadioService.setListener(null);
         main.removeCallbacks(ticker);
         if (web != null) web.onPause();
+        sportView.hidden();
         super.onPause();
     }
 
@@ -566,8 +572,9 @@ public class MainActivity extends Activity implements RadioService.Listener {
         if (stations) articlePage.setVisibility(View.GONE);
         provinceScroll.setVisibility(t == TAB_RADIO ? View.VISIBLE : View.GONE);
         search.setHint(t == TAB_FAV ? "Search your favourites" : "Search stations, genres, cities");
-        title.setText(t == TAB_RADIO ? "SA Radio" : t == TAB_FAV ? "Favourites" : "News");
-        greeting.setText(t == TAB_NEWS ? "Read while you listen" : t == TAB_FAV ? "Your stations" : greetingText());
+        title.setText(t == TAB_RADIO ? "SA Radio" : t == TAB_FAV ? "Favourites" : sportMode ? "Sport" : "News");
+        greeting.setText(t == TAB_NEWS ? (sportMode ? "Scores, fixtures and line-ups" : "Read while you listen")
+                : t == TAB_FAV ? "Your stations" : greetingText());
         if (t == TAB_FAV) {
             actionBtn.setImageResource(R.drawable.ic_plus);
             actionBtn.setContentDescription("Add a station");
@@ -575,8 +582,8 @@ public class MainActivity extends Activity implements RadioService.Listener {
             actionBtn.setVisibility(View.VISIBLE);
         } else if (t == TAB_NEWS) {
             actionBtn.setImageResource(R.drawable.ic_refresh);
-            actionBtn.setContentDescription("Refresh headlines");
-            actionBtn.setTooltipText("Refresh headlines");
+            actionBtn.setContentDescription(sportMode ? "Refresh scores" : "Refresh headlines");
+            actionBtn.setTooltipText(sportMode ? "Refresh scores" : "Refresh headlines");
             actionBtn.setVisibility(View.VISIBLE);
         } else {
             actionBtn.setVisibility(View.GONE);
@@ -586,7 +593,11 @@ public class MainActivity extends Activity implements RadioService.Listener {
             applyFilter();
             grid.setSelection(0);
         }
-        if (t == TAB_NEWS && (news.isEmpty() || System.currentTimeMillis() - newsLoadedAt > 15 * 60_000L)) refreshNews(false);
+        if (t == TAB_NEWS && sportMode) sportView.shown();
+        else sportView.hidden();
+        if (t == TAB_NEWS && !sportMode && (news.isEmpty() || System.currentTimeMillis() - newsLoadedAt > 15 * 60_000L)) {
+            refreshNews(false);
+        }
         updateHeaderSpinner();
     }
 
@@ -595,8 +606,8 @@ public class MainActivity extends Activity implements RadioService.Listener {
         return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
     }
 
-    private void updateHeaderSpinner() {
-        boolean busy = tab == TAB_NEWS ? newsLoading : loading;
+    void updateHeaderSpinner() {
+        boolean busy = tab == TAB_NEWS ? (sportMode ? sportView.isLoading() : newsLoading) : loading;
         topSpinner.setVisibility(busy ? View.VISIBLE : View.GONE);
     }
 
@@ -664,6 +675,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
         int h = bottomArea.getHeight() + insetNav + Ui.dp(this, 8);
         grid.setPadding(grid.getPaddingLeft(), grid.getPaddingTop(), grid.getPaddingRight(), h);
         newsList.setPadding(newsList.getPaddingLeft(), newsList.getPaddingTop(), newsList.getPaddingRight(), h);
+        sportView.setBottomPadding(h);
         ViewGroup.LayoutParams fl = bottomFade.getLayoutParams();
         fl.height = h + Ui.dp(this, 24);
         bottomFade.setLayoutParams(fl);
@@ -702,7 +714,8 @@ public class MainActivity extends Activity implements RadioService.Listener {
         actionBtn.setOnClickListener(v -> {
             if (tab == TAB_NEWS) {
                 v.animate().rotationBy(360).setDuration(500).start();
-                refreshNews(true);
+                if (sportMode) sportView.refresh(true);
+                else refreshNews(true);
             } else {
                 Panels.addStation(this);
             }
@@ -1110,16 +1123,26 @@ public class MainActivity extends Activity implements RadioService.Listener {
 
     private View buildNewsPage() {
         newsPage = Ui.column(this);
+        // Headlines or Sport. Sport is an extra for the News tab; it never touches the radio.
+        sportMode = Prefs.get(this).getBoolean("newsSport", false);
+        newsMode = new Segmented(this, new String[] {"Headlines", "Sport"});
+        newsMode.select(sportMode ? 1 : 0, false);
+        newsMode.setListener(i -> applyNewsMode(i == 1));
+        newsPage.addView(newsMode, Ui.lp(-1, -2, Ui.dp(this, 16), 0, Ui.dp(this, 16), Ui.dp(this, 12)));
+        newsContent = Ui.column(this);
+        newsPage.addView(newsContent, new LinearLayout.LayoutParams(-1, 0, 1f));
+        sportView = new SportView(this);
+        newsPage.addView(sportView, new LinearLayout.LayoutParams(-1, 0, 1f));
         HorizontalScrollView hs = new HorizontalScrollView(this);
         hs.setHorizontalScrollBarEnabled(false);
         hs.setOverScrollMode(View.OVER_SCROLL_NEVER);
         newsChipRow = Ui.row(this);
         newsChipRow.setPadding(Ui.dp(this, 16), 0, Ui.dp(this, 8), 0);
         hs.addView(newsChipRow);
-        newsPage.addView(hs);
+        newsContent.addView(hs);
         newsStatus = Ui.text(this, "", 12.5f, Ui.MUTED, Ui.W_MEDIUM);
         newsStatus.setPadding(Ui.dp(this, 22), Ui.dp(this, 12), Ui.dp(this, 22), Ui.dp(this, 6));
-        newsPage.addView(newsStatus);
+        newsContent.addView(newsStatus);
         newsList = new ListView(this);
         newsList.setDivider(null);
         newsList.setDividerHeight(0);
@@ -1132,9 +1155,19 @@ public class MainActivity extends Activity implements RadioService.Listener {
         newsList.setOnItemClickListener((p, v, i, id) -> {
             if (i < newsShown.size()) openArticle(newsShown.get(i));
         });
-        newsPage.addView(newsList, new LinearLayout.LayoutParams(-1, 0, 1f));
+        newsContent.addView(newsList, new LinearLayout.LayoutParams(-1, 0, 1f));
+        newsContent.setVisibility(sportMode ? View.GONE : View.VISIBLE);
+        sportView.setVisibility(sportMode ? View.VISIBLE : View.GONE);
         newsPage.setVisibility(View.GONE);
         return newsPage;
+    }
+
+    private void applyNewsMode(boolean sport) {
+        sportMode = sport;
+        Prefs.get(this).edit().putBoolean("newsSport", sport).apply();
+        newsContent.setVisibility(sport ? View.GONE : View.VISIBLE);
+        sportView.setVisibility(sport ? View.VISIBLE : View.GONE);
+        if (tab == TAB_NEWS) setTab(TAB_NEWS);
     }
 
     private View buildArticlePage() {
@@ -1212,6 +1245,15 @@ public class MainActivity extends Activity implements RadioService.Listener {
             if (art.ok) articleView.show(it, art);
             else articleView.failed(it, art);
         });
+    }
+
+    SportView sportView() {
+        return sportView;
+    }
+
+    void showSport(boolean sport) {
+        newsMode.select(sport ? 1 : 0, false);
+        applyNewsMode(sport);
     }
 
     ArticleView articleView() {

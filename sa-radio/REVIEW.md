@@ -154,3 +154,67 @@ when tapped.
 Not yet checked on a real phone: the hidden-WebView step. The extraction itself was tested in
 Chromium, which is the engine Android's WebView uses, and the reader screens were rendered from
 real stories.
+
+## 3.2: Sport
+
+The News tab now has a **Headlines | Sport** switch. Sport stays inside the News tab and never
+touches the radio.
+
+**What it shows:**
+
+- **Results** from the past week and **fixtures** for the next two, grouped by day and competition.
+  Live matches sit at the top and refresh every minute while the screen is open.
+- **Filters:** SA focus, Rugby, Soccer, Cricket, F1, Golf and UFC. SA focus shows matches with South
+  African teams or players, plus F1. South African sides are marked in gold.
+- **Details when you tap a match:**
+  - **Soccer:** goals and cards with minutes, line-ups by formation with substitutes, and match
+    stats (possession, shots, corners and more)
+  - **Rugby:** the scoring timeline (tries, conversions and penalties, with the running score), the
+    starting XV and replacements
+  - **Cricket:** full batting and bowling scorecards and both XIs
+  - **F1:** the race classification, qualifying and the drivers' championship; for upcoming races,
+    the weekend's session times in your time zone
+  - **Golf:** the leaderboard with round scores, South Africans listed first
+  - **UFC:** the full fight card with results
+
+**Competitions:**
+
+- **Rugby:** Nations Championship and other Springbok tests, URC, Currie Cup, Champions and
+  Challenge Cup, the Rugby Championship, Six Nations, Premiership and Top 14.
+- **Soccer:** Betway Premiership, Nedbank Cup, MTN8, Motsepe Foundation Championship, Bafana Bafana
+  (qualifiers, AFCON and friendlies), CAF Champions League and Confederation Cup. The Premier
+  League, Champions League, La Liga, Serie A, Bundesliga and Europa League are fetched only when
+  you open the Soccer filter, to save data.
+- **Cricket:** the Proteas (men and women), South African domestic competitions, SA20, and
+  internationals between the major nations.
+- **F1, golf and UFC:** F1, the DP World Tour and PGA Tour, and UFC events with South African
+  fighters highlighted. American sports are left out, as asked.
+
+**Where the data comes from:**
+
+- **ESPN:** rugby, soccer, cricket, golf and UFC come from ESPN's public score feeds, the ones its
+  website uses. They need no key, but they're unofficial and undocumented, so ESPN could change
+  them; if that happens, Sport shows an error and the rest of the app is unaffected.
+- **Jolpica:** F1 comes from Jolpica, the open-data successor to the Ergast F1 database.
+- **Not SuperSport:** SuperSport has no public data feed. Its site uses a private internal API, and
+  building on that would break its terms and could stop working without notice.
+
+**Data use:** a full refresh is about 30 small requests, fetched only when Sport is opened and
+cached for 15 minutes. Live updates refresh only the competitions with live matches. Team logos
+are fetched at 80 px, about 12 times smaller than ESPN's full-size files.
+
+**Checked against live data on 9 November 2026:**
+
+- 67 fixtures and results came back from 29 requests, with none failing.
+- Italy 7–66 South Africa with its full scoring timeline, and Arsenal's line-up in its 4-2-3-1.
+- Western Province v Lions with the full scorecard.
+- The Brazilian Grand Prix classification. Cars a lap down now read "+1 lap": the feed's raw
+  "+4.427" for those cars wasn't a gap to the winner.
+- The Abu Dhabi leaderboard with all nine South Africans.
+
+Two feed quirks are handled:
+
+- ESPN's cricket "end dates" are placeholders, so cricket results are filed under the day they
+  were played.
+- Its "starts at 13:00 local time" notes give the venue's time, so they're dropped in favour of
+  the app's own times.

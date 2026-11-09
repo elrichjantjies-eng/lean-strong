@@ -1,4 +1,4 @@
-# SA Radio 3.1
+# SA Radio 3.2
 
 South African radio and news for Android. This is the source of the SA Radio app, rebuilt from the
 2.0 APK and redesigned. See [REVIEW.md](REVIEW.md) for what was wrong with 2.0 and what changed.
@@ -26,13 +26,19 @@ South African radio and news for Android. This is the source of the SA Radio app
   ad-free reader that downloads only the article's text and pictures and draws them in the app's
   own design, with adjustable text size. If a page isn't a normal article, the original page opens
   with ad networks and trackers blocked.
+- **Sport** (News tab → Sport): results from the past week and fixtures for the next two, with live
+  scores. Covers rugby (Springbok tests, URC, Currie Cup and European competitions), soccer
+  (Betway Premiership, cups, Bafana Bafana, CAF and, on request, the big European leagues),
+  cricket (Proteas and South African domestic), F1, golf and UFC. "SA focus" shows South African
+  teams and players. Tap a match for line-ups, scorers, scorecards, race classifications or
+  leaderboards. Data comes from ESPN's public score feeds and Jolpica (F1).
 - **Visualiser** driven by the actual audio, a sleep timer that fades out, and lock-screen and
   notification controls.
 
 ## Install
 
 Download the latest `SA-Radio-3.x.apk`, open it on the phone and allow installing from that source.
-3.1 installs over 3.0 directly.
+3.1 and later install over 3.0 directly.
 
 The app is signed with a new key, so **uninstall SA Radio 2.0 first** (Android refuses to install
 an app over one signed with a different key). Favourites from 2.0 can't be carried over.
@@ -72,6 +78,7 @@ users will have to uninstall again.
 | `StationRepo`, `NewsRepo` | Station directory and news feeds |
 | `Extractor`, `Article`, `ArticleView`, `assets/reader/` | The ad-free reader: download a story's HTML, extract it with Readability, draw it |
 | `AdBlock` | Ad and tracker blocking for the original-page fallback |
+| `Sports`, `SportView`, `MatchSheet` | Fixtures, results and live scores; the Sport list; match details |
 | `MainActivity`, `NowPlaying`, `Panels`, `Sheet` | Screens and bottom sheets |
 | `Ui`, `LogoView`, `NavBar`, `Segmented`, `EqCurveView`, `BackdropView` | Design system and custom views |
 
