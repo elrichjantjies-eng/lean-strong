@@ -8,6 +8,7 @@ import android.graphics.Outline;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -18,31 +19,46 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import java.util.Locale;
 
-/** Design tokens and small view factories. The whole UI is built in code, like the original. */
+/**
+ * Design tokens and small view factories for the "Number Plate" look: taxi-rank yellow, black
+ * outlines, hard offset shadows, plates and painted signs. The whole UI is built in code.
+ */
 final class Ui {
     private Ui() {}
 
-    // Surfaces: a near-black with a blue cast, lifted in steps.
-    static final int BG = 0xFF0B0D12;
-    static final int SURFACE = 0xFF141821;
-    static final int SURFACE2 = 0xFF1B202B;
-    static final int SURFACE3 = 0xFF252B38;
-    static final int STROKE = 0x14FFFFFF;
-    static final int STROKE2 = 0x24FFFFFF;
+    // The palette: taxi livery colours on a yellow ground.
+    static final int INK = 0xFF111111;
+    static final int PAPER = 0xFFFFFFFF;
+    static final int YELLOW = 0xFFFFD21F;
+    static final int PINK = 0xFFFF4F8B;
+    static final int COBALT = 0xFF2340FF;
+    static final int LIVERY_GREEN = 0xFF00A86B;
+    static final int SIGN_RED = 0xFFD7263D;
+    static final int ROAD = 0xFF222222;
+
+    // Surfaces.
+    static final int BG = YELLOW;
+    static final int SURFACE = PAPER;
+    static final int SURFACE2 = PAPER;
+    static final int SURFACE3 = 0xFFF2EFE8;
+    static final int STROKE = INK;
+    static final int STROKE2 = INK;
     // Text.
-    static final int TEXT = 0xFFF5F6F8;
-    static final int TEXT2 = 0xFFC8CDD6;
-    static final int MUTED = 0xFF8F98A9;
-    // Accent: the gold of the South African flag, plus status colours.
-    static final int GOLD = 0xFFFFB81C;
-    static final int GOLD_DEEP = 0xFFF28C0F;
-    static final int ON_GOLD = 0xFF1C1400;
-    static final int LIVE = 0xFFFF4D4D;
-    static final int GREEN = 0xFF34D399;
-    static final int RED = 0xFFFF6B5E;
-    // Flag colours, used sparingly for atmosphere.
+    static final int TEXT = INK;
+    static final int TEXT2 = 0xFF2B2B2B;
+    static final int MUTED = 0xFF555555;
+    // Accent for links, small highlights and tints; readable on yellow and on white.
+    static final int ACCENT = COBALT;
+    static final int ACCENT_DEEP = 0xFF1A2FCC;
+    static final int ON_ACCENT = PAPER;
+    static final int LIVE = SIGN_RED;
+    static final int GREEN = 0xFF00875A;
+    static final int RED = SIGN_RED;
+    // Flag colours.
     static final int SA_GREEN = 0xFF007A4D;
+    static final int SA_GOLD = 0xFFFFB612;
     static final int SA_RED = 0xFFDE3831;
     static final int SA_BLUE = 0xFF002395;
 
@@ -50,7 +66,17 @@ final class Ui {
     static Typeface medium = Typeface.DEFAULT;
     static Typeface bold = Typeface.DEFAULT_BOLD;
     static Typeface heavy = Typeface.DEFAULT_BOLD;
+    /** Anton: tall condensed headlines. */
+    static Typeface display = Typeface.DEFAULT_BOLD;
+    /** Bungee: signwriter lettering for station names. */
+    static Typeface sign = Typeface.DEFAULT_BOLD;
+    /** Caveat Brush: hand-painted asides. */
+    static Typeface brush = Typeface.DEFAULT;
     private static boolean loaded;
+    /** Largest corner radius: plates and signs are nearly square. */
+    private static float rMax = 36;
+    /** Outline width for ink strokes. */
+    private static int line = 6;
 
     static final int W_REGULAR = 0;
     static final int W_MEDIUM = 1;
@@ -58,18 +84,26 @@ final class Ui {
     static final int W_HEAVY = 3;
 
     static void init(Context c) {
+        rMax = dp(c, 12);
+        line = Math.max(2, dp(c, 2.5f));
         if (loaded) return;
         loaded = true;
         try {
-            regular = c.getResources().getFont(R.font.jakarta_regular);
-            medium = c.getResources().getFont(R.font.jakarta_medium);
-            bold = c.getResources().getFont(R.font.jakarta_bold);
-            heavy = c.getResources().getFont(R.font.jakarta_extrabold);
+            regular = c.getResources().getFont(R.font.grotesk_regular);
+            medium = c.getResources().getFont(R.font.grotesk_medium);
+            bold = c.getResources().getFont(R.font.grotesk_bold);
+            heavy = bold;
+            display = c.getResources().getFont(R.font.anton);
+            sign = c.getResources().getFont(R.font.bungee);
+            brush = c.getResources().getFont(R.font.caveat_brush);
         } catch (Exception e) {
             regular = Typeface.create("sans-serif", Typeface.NORMAL);
             medium = Typeface.create("sans-serif-medium", Typeface.NORMAL);
             bold = Typeface.create("sans-serif-medium", Typeface.BOLD);
             heavy = Typeface.create("sans-serif-black", Typeface.BOLD);
+            display = Typeface.create("sans-serif-condensed", Typeface.BOLD);
+            sign = heavy;
+            brush = Typeface.create("casual", Typeface.NORMAL);
         }
     }
 
@@ -86,6 +120,10 @@ final class Ui {
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v, c.getResources().getDisplayMetrics()));
     }
 
+    static int line() {
+        return line;
+    }
+
     static TextView text(Context c, CharSequence s, float sp, int color, int weight) {
         TextView t = new TextView(c);
         t.setText(s);
@@ -97,27 +135,72 @@ final class Ui {
         return t;
     }
 
+    /** A headline in Anton, upper case. */
+    static TextView display(Context c, CharSequence s, float sp, int color) {
+        TextView t = text(c, s == null ? "" : s.toString().toUpperCase(Locale.ROOT), sp, color, W_HEAVY);
+        t.setTypeface(display);
+        t.setLineSpacing(0, 0.98f);
+        t.setAllCaps(true);
+        return t;
+    }
+
+    /** Signwriter lettering in Bungee. */
+    static TextView sign(Context c, CharSequence s, float sp, int color) {
+        TextView t = text(c, s, sp, color, W_HEAVY);
+        t.setTypeface(sign);
+        t.setAllCaps(true);
+        t.setLineSpacing(0, 1.0f);
+        return t;
+    }
+
+    /** A painted drop shadow under lettering (hard, no blur). */
+    static void paintedShadow(TextView t, float dx, float dy, int color) {
+        t.setShadowLayer(0.01f, dx, dy, color);
+    }
+
     static GradientDrawable round(int color, float radiusPx) {
         GradientDrawable g = new GradientDrawable();
         g.setColor(color);
-        g.setCornerRadius(radiusPx);
+        g.setCornerRadius(Math.min(radiusPx, rMax));
+        return g;
+    }
+
+    static GradientDrawable oval(int color) {
+        GradientDrawable g = new GradientDrawable();
+        g.setShape(GradientDrawable.OVAL);
+        g.setColor(color);
         return g;
     }
 
     static GradientDrawable roundStroke(int color, float radiusPx, int stroke, int strokePx) {
         GradientDrawable g = round(color, radiusPx);
+        // Ink outlines are the look: never hairlines.
+        if (stroke == INK) strokePx = Math.max(strokePx, line);
         g.setStroke(strokePx, stroke);
         return g;
     }
 
+    /**
+     * A plate: fill with an ink outline and a hard ink shadow offset down and right. Views using
+     * it should leave {@code shadowPx} of padding on the right and bottom.
+     */
+    static LayerDrawable plate(int fill, float radiusPx, int shadowPx, int shadowColor) {
+        GradientDrawable shadow = round(shadowColor, radiusPx);
+        GradientDrawable face = roundStroke(fill, radiusPx, INK, line);
+        LayerDrawable ld = new LayerDrawable(new Drawable[] {shadow, face});
+        ld.setLayerInset(0, shadowPx, shadowPx, 0, 0);
+        ld.setLayerInset(1, 0, 0, shadowPx, shadowPx);
+        return ld;
+    }
+
     static GradientDrawable gradient(GradientDrawable.Orientation o, float radiusPx, int... colors) {
         GradientDrawable g = new GradientDrawable(o, colors);
-        g.setCornerRadius(radiusPx);
+        g.setCornerRadius(Math.min(radiusPx, rMax));
         return g;
     }
 
     static Drawable ripple(Drawable content, float radiusPx) {
-        return new RippleDrawable(ColorStateList.valueOf(0x33FFFFFF), content, round(0xFFFFFFFF, radiusPx));
+        return new RippleDrawable(ColorStateList.valueOf(0x22000000), content, round(0xFFFFFFFF, radiusPx));
     }
 
     static int alpha(int color, float a) {
@@ -141,6 +224,27 @@ final class Ui {
                 Math.round(Color.blue(c) + (255 - Color.blue(c)) * f));
     }
 
+    /** Relative luminance (WCAG), 0 for black to 1 for white. */
+    static double luminance(int c) {
+        double r = chan(Color.red(c)), g = chan(Color.green(c)), b = chan(Color.blue(c));
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    }
+
+    private static double chan(int v) {
+        double s = v / 255.0;
+        return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+    }
+
+    static double contrast(int a, int b) {
+        double la = luminance(a), lb = luminance(b);
+        return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+    }
+
+    /** Ink or white, whichever reads better on this colour. */
+    static int onColor(int bg) {
+        return contrast(bg, INK) >= contrast(bg, PAPER) ? INK : PAPER;
+    }
+
     /** Pulls a logo colour into a range that reads well as a dark, rich background tint. */
     static int moodColor(int c) {
         float[] hsv = new float[3];
@@ -151,73 +255,75 @@ final class Ui {
         return Color.HSVToColor(hsv);
     }
 
-    /** A round icon button with a 48dp touch target and an accessible label. */
+    /** A square plate button with a 48dp touch target and an accessible label. */
     static ImageView iconButton(Context c, int icon, int tint, int bg, int sizeDp, String label) {
         ImageView v = new ImageView(c);
         v.setImageResource(icon);
         v.setColorFilter(tint);
         v.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        int pad = Math.round(sizeDp * 0.27f);
+        int pad = Math.round(sizeDp * 0.26f);
         v.setPadding(dp(c, pad), dp(c, pad), dp(c, pad), dp(c, pad));
-        GradientDrawable shape = new GradientDrawable();
-        shape.setShape(GradientDrawable.OVAL);
-        shape.setColor(bg);
-        if (Color.alpha(bg) < 0xF0) shape.setStroke(dp(c, 1), STROKE);
-        v.setBackground(new RippleDrawable(ColorStateList.valueOf(0x33FFFFFF), shape, null));
+        float r = dp(c, 10);
+        GradientDrawable shape = Color.alpha(bg) == 0 ? round(0, r) : roundStroke(bg, r, INK, line);
+        v.setBackground(new RippleDrawable(ColorStateList.valueOf(0x22000000), shape, round(0xFFFFFFFF, r)));
         v.setContentDescription(label);
         v.setTooltipText(label);
         v.setLayoutParams(new LinearLayout.LayoutParams(dp(c, sizeDp), dp(c, sizeDp)));
         return v;
     }
 
-    /** Pill-shaped chip. */
+    /** A painted tag chip in signwriter lettering. */
     static TextView chip(Context c, String label, boolean selected) {
-        TextView t = text(c, label, 13.5f, selected ? ON_GOLD : TEXT2, W_BOLD);
+        TextView t = sign(c, label, 12, selected ? PAPER : INK);
         t.setGravity(Gravity.CENTER);
-        t.setMinHeight(dp(c, 38));
-        t.setPadding(dp(c, 16), 0, dp(c, 16), 0);
+        t.setSingleLine(true);
+        t.setMinHeight(dp(c, 40));
+        t.setPadding(dp(c, 13), 0, dp(c, 13), 0);
         styleChip(t, selected);
         return t;
     }
 
     static void styleChip(TextView t, boolean selected) {
         Context c = t.getContext();
-        float r = dp(c, 19);
-        t.setTextColor(selected ? ON_GOLD : TEXT2);
-        t.setBackground(ripple(selected
-                ? gradient(GradientDrawable.Orientation.TL_BR, r, 0xFFFFC94A, GOLD)
-                : roundStroke(SURFACE2, r, STROKE, dp(c, 1)), r));
+        float r = dp(c, 5);
+        t.setTextColor(selected ? PAPER : INK);
+        t.setBackground(ripple(roundStroke(selected ? INK : PAPER, r, INK, line), r));
         t.setSelected(selected);
     }
 
-    /** Big gold pill button. */
+    /** The main call to action: an ink plate with yellow lettering. */
     static TextView primaryButton(Context c, String label) {
-        TextView t = text(c, label, 15, ON_GOLD, W_HEAVY);
+        TextView t = text(c, label, 15, YELLOW, W_BOLD);
+        t.setAllCaps(true);
+        t.setLetterSpacing(0.06f);
         t.setGravity(Gravity.CENTER);
         t.setMinHeight(dp(c, 52));
         t.setPadding(dp(c, 22), 0, dp(c, 22), 0);
-        float r = dp(c, 26);
-        t.setBackground(ripple(gradient(GradientDrawable.Orientation.TL_BR, r, 0xFFFFCF5A, GOLD, GOLD_DEEP), r));
+        float r = dp(c, 10);
+        t.setBackground(ripple(roundStroke(INK, r, INK, line), r));
         press(t);
         return t;
     }
 
     static TextView secondaryButton(Context c, String label) {
-        TextView t = text(c, label, 15, TEXT, W_BOLD);
+        TextView t = text(c, label, 15, INK, W_BOLD);
+        t.setAllCaps(true);
+        t.setLetterSpacing(0.06f);
         t.setGravity(Gravity.CENTER);
         t.setMinHeight(dp(c, 52));
         t.setPadding(dp(c, 22), 0, dp(c, 22), 0);
-        float r = dp(c, 26);
-        t.setBackground(ripple(roundStroke(SURFACE2, r, STROKE2, dp(c, 1)), r));
+        float r = dp(c, 10);
+        t.setBackground(ripple(roundStroke(PAPER, r, INK, line), r));
         press(t);
         return t;
     }
 
     static void roundClip(View v, final float radiusPx) {
+        final float r = Math.min(radiusPx, rMax);
         v.setOutlineProvider(new ViewOutlineProvider() {
             @Override
             public void getOutline(View view, Outline o) {
-                o.setRoundRect(0, 0, view.getWidth(), view.getHeight(), radiusPx);
+                o.setRoundRect(0, 0, view.getWidth(), view.getHeight(), r);
             }
         });
         v.setClipToOutline(true);

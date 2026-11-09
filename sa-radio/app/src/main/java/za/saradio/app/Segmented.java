@@ -3,16 +3,14 @@ package za.saradio.app;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.Shader;
 import android.view.Gravity;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-/** A segmented switch (e.g. Auto · Saver · Balanced · Best) with a sliding gold thumb. */
+/** A segmented switch, like a gear gate (e.g. Auto · Saver · Balanced · Best), with a sliding yellow thumb. */
 public class Segmented extends LinearLayout {
 
     public interface Listener {
@@ -21,6 +19,7 @@ public class Segmented extends LinearLayout {
 
     private final TextView[] items;
     private final Paint thumb = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint ink = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final RectF r = new RectF();
     private float pos;
     private int selected = -1;
@@ -31,16 +30,18 @@ public class Segmented extends LinearLayout {
         super(c);
         setOrientation(HORIZONTAL);
         setWillNotDraw(false);
-        int p = Ui.dp(c, 4);
+        int p = Ui.line();
         setPadding(p, p, p, p);
-        setBackground(Ui.roundStroke(Ui.SURFACE2, Ui.dp(c, 16), Ui.STROKE, Ui.dp(c, 1)));
+        setBackground(Ui.roundStroke(Ui.PAPER, Ui.dp(c, 10), Ui.INK, Ui.line()));
+        ink.setColor(Ui.INK);
         items = new TextView[labels.length];
         for (int i = 0; i < labels.length; i++) {
             final int idx = i;
-            TextView t = Ui.text(c, labels[i], 13.5f, Ui.TEXT2, Ui.W_BOLD);
+            TextView t = Ui.text(c, labels[i], 13.5f, Ui.INK, Ui.W_BOLD);
             t.setGravity(Gravity.CENTER);
-            t.setMinHeight(Ui.dp(c, 40));
+            // setSingleLine resets the minimum height, so it has to come first.
             t.setSingleLine(true);
+            t.setMinHeight(Ui.dp(c, 44));
             t.setOnClickListener(v -> {
                 if (idx != selected) {
                     v.performHapticFeedback(android.view.HapticFeedbackConstants.CLOCK_TICK);
@@ -61,7 +62,7 @@ public class Segmented extends LinearLayout {
         if (index == selected && !animate) return;
         selected = index;
         for (int i = 0; i < items.length; i++) {
-            items[i].setTextColor(i == index ? Ui.ON_GOLD : Ui.TEXT2);
+            items[i].setTextColor(Ui.INK);
             items[i].setSelected(i == index);
         }
         if (anim != null) anim.cancel();
@@ -87,8 +88,18 @@ public class Segmented extends LinearLayout {
         float w = inner / items.length;
         float left = getPaddingLeft() + w * pos;
         r.set(left, getPaddingTop(), left + w, getHeight() - getPaddingBottom());
-        float rad = Ui.dp(getContext(), 12);
-        thumb.setShader(new LinearGradient(r.left, r.top, r.right, r.bottom, 0xFFFFCF5A, Ui.GOLD, Shader.TileMode.CLAMP));
+        float rad = Ui.dp(getContext(), 7);
+        // Gate lines between the gears.
+        float lw = Ui.dp(getContext(), 1.5f);
+        for (int i = 1; i < items.length; i++) {
+            float x = getPaddingLeft() + w * i;
+            c.drawRect(x - lw / 2, getPaddingTop(), x + lw / 2, getHeight() - getPaddingBottom(), ink);
+        }
+        thumb.setColor(Ui.INK);
         c.drawRoundRect(r, rad, rad, thumb);
+        float in = Ui.line();
+        r.inset(in, in);
+        thumb.setColor(Ui.YELLOW);
+        c.drawRoundRect(r, Math.max(0, rad - in), Math.max(0, rad - in), thumb);
     }
 }

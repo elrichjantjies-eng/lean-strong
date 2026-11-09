@@ -49,7 +49,7 @@ final class Panels {
         s.section("Sound");
         EqPresets.Preset p = EqPresets.find(Prefs.eqPreset(a));
         String soundSub = !Prefs.eqEnabled(a) ? "Effects off" : p != null ? p.name + " · " + p.blurb : "Custom curve";
-        s.row(R.drawable.ic_eq, "Equalizer & effects", soundSub, v -> {
+        s.row(R.drawable.ic_eq, "Equaliser & effects", soundSub, v -> {
             s.dismiss();
             sound(a);
         });
@@ -67,7 +67,7 @@ final class Panels {
         });
 
         s.section("About");
-        s.note("SA Radio 3.0. Stations come from radio-browser.info, a free community directory, so a few may be "
+        s.note("SA Radio " + BuildConfig.VERSION_NAME + ". Stations come from radio-browser.info, a free community directory, so a few may be "
                 + "off air at times. Headlines come from " + NewsRepo.FEEDS.length + " South African publishers' public "
                 + "feeds, and stories open on the publisher's own site.");
         s.show();
@@ -96,8 +96,8 @@ final class Panels {
 
         final Switch power = new Switch(c);
         power.setChecked(Prefs.eqEnabled(a));
-        power.setThumbTintList(new ColorStateList(new int[][] {{android.R.attr.state_checked}, {}}, new int[] {Ui.GOLD, 0xFFB8BEC9}));
-        power.setTrackTintList(new ColorStateList(new int[][] {{android.R.attr.state_checked}, {}}, new int[] {Ui.alpha(Ui.GOLD, 0.45f), 0x40FFFFFF}));
+        power.setThumbTintList(new ColorStateList(new int[][] {{android.R.attr.state_checked}, {}}, new int[] {Ui.ACCENT, 0xFFB8BEC9}));
+        power.setTrackTintList(new ColorStateList(new int[][] {{android.R.attr.state_checked}, {}}, new int[] {Ui.alpha(Ui.ACCENT, 0.45f), 0x33000000}));
         power.setContentDescription("Sound effects on or off");
         s.addAction(power);
 
@@ -111,7 +111,7 @@ final class Panels {
         Ui.roundClip(curveCard, Ui.dp(c, 22));
         s.body.addView(curveCard, Ui.lp(-1, -2, 0, Ui.dp(c, 4), 0, 0));
         final TextView hint = s.note(eqOk ? "Pick a preset or drag the points to make your own."
-                : "This phone doesn't let apps change the sound, so the equalizer can't be used here. "
+                : "This phone doesn't let apps change the sound, so the equaliser can't be used here. "
                         + "(Some phones reserve it for their own sound settings.)");
         hint.setTextSize(12.5f);
 
@@ -234,20 +234,19 @@ final class Panels {
     private static View presetCard(Context c, String name, String blurb, boolean on) {
         LinearLayout k = Ui.column(c);
         k.setPadding(Ui.dp(c, 14), Ui.dp(c, 12), Ui.dp(c, 12), Ui.dp(c, 12));
-        float r = Ui.dp(c, 18);
-        k.setBackground(Ui.ripple(on ? Ui.roundStroke(Ui.alpha(Ui.GOLD, 0.14f), r, Ui.GOLD, Ui.dp(c, 2))
-                : Ui.roundStroke(Ui.SURFACE2, r, Ui.STROKE, Ui.dp(c, 1)), r));
+        float r = Ui.dp(c, 10);
+        k.setBackground(Ui.ripple(Ui.roundStroke(on ? Ui.YELLOW : Ui.PAPER, r, Ui.INK, Ui.line()), r));
         LinearLayout top = Ui.row(c);
-        TextView t = Ui.text(c, name, 15, on ? Ui.GOLD : Ui.TEXT, Ui.W_HEAVY);
+        TextView t = Ui.text(c, name, 15, Ui.INK, Ui.W_HEAVY);
         top.addView(t, Ui.weight(1));
         if (on) {
             ImageView tick = new ImageView(c);
             tick.setImageResource(R.drawable.ic_check);
-            tick.setColorFilter(Ui.GOLD);
+            tick.setColorFilter(Ui.INK);
             top.addView(tick, Ui.lp(Ui.dp(c, 18), Ui.dp(c, 18)));
         }
         k.addView(top);
-        TextView b = Ui.text(c, blurb, 12.5f, Ui.MUTED, Ui.W_MEDIUM);
+        TextView b = Ui.text(c, blurb, 12.5f, Ui.TEXT2, Ui.W_MEDIUM);
         b.setPadding(0, Ui.dp(c, 4), 0, 0);
         b.setMinLines(2);
         k.addView(b);
@@ -268,7 +267,7 @@ final class Panels {
         s.setPadding(0, Ui.dp(c, 3), 0, 0);
         txt.addView(s);
         top.addView(txt, Ui.weight(1));
-        final TextView val = Ui.text(c, "", 14, Ui.GOLD, Ui.W_HEAVY);
+        final TextView val = Ui.text(c, "", 14, Ui.ACCENT, Ui.W_HEAVY);
         top.addView(val);
         box.addView(top);
         SeekBar bar = new SeekBar(c);
@@ -276,9 +275,9 @@ final class Panels {
         int cur = Prefs.effect(a, key);
         bar.setProgress(cur);
         val.setText(cur == 0 ? "Off" : cur + "%");
-        bar.setProgressTintList(ColorStateList.valueOf(Ui.GOLD));
-        bar.setThumbTintList(ColorStateList.valueOf(Ui.GOLD));
-        bar.setProgressBackgroundTintList(ColorStateList.valueOf(0x40FFFFFF));
+        bar.setProgressTintList(ColorStateList.valueOf(Ui.ACCENT));
+        bar.setThumbTintList(ColorStateList.valueOf(Ui.ACCENT));
+        bar.setProgressBackgroundTintList(ColorStateList.valueOf(0x33000000));
         bar.setContentDescription(title);
         bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -326,15 +325,14 @@ final class Panels {
             boolean on = (at == 0 && i == 0) || i == curIdx;
             LinearLayout row = Ui.row(c);
             row.setPadding(Ui.dp(c, 16), 0, Ui.dp(c, 14), 0);
-            float r = Ui.dp(c, 16);
-            row.setBackground(Ui.ripple(on ? Ui.roundStroke(Ui.alpha(Ui.GOLD, 0.12f), r, Ui.alpha(Ui.GOLD, 0.6f), Ui.dp(c, 1))
-                    : Ui.round(Ui.SURFACE2, r), r));
-            TextView t = Ui.text(c, labels[i], 15.5f, on ? Ui.GOLD : Ui.TEXT, Ui.W_BOLD);
+            float r = Ui.dp(c, 10);
+            row.setBackground(Ui.ripple(Ui.roundStroke(on ? Ui.YELLOW : Ui.PAPER, r, Ui.INK, Ui.line()), r));
+            TextView t = Ui.text(c, labels[i], 15.5f, Ui.INK, Ui.W_BOLD);
             row.addView(t, Ui.weight(1));
             if (on) {
                 ImageView tick = new ImageView(c);
                 tick.setImageResource(R.drawable.ic_check);
-                tick.setColorFilter(Ui.GOLD);
+                tick.setColorFilter(Ui.INK);
                 row.addView(tick, Ui.lp(Ui.dp(c, 20), Ui.dp(c, 20)));
             }
             row.setOnClickListener(v -> {

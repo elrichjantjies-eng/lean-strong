@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
@@ -22,16 +25,25 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-/** The full-screen player. Swipe down or press back to close. */
+/**
+ * The full-screen player, styled as a taxi destination board: the station's sign in its own
+ * colour with livery stripes, then the controls, sound presets and the data "gears".
+ * Swipe down or press back to close.
+ */
 final class NowPlaying {
     private final MainActivity a;
     private final DragFrame view;
-    private final BackdropView backdrop;
+    private final View statusBand;
     private final ScrollView scroll;
     private final LinearLayout col;
+    private final FrameLayout board;
+    private final Livery.Board boardBg;
+    private final LinearLayout boardCol;
     private final LogoView art;
+    private final TextView tag;
     private final TextView where;
     private final TextView name;
+    private final TextView plate;
     private final TextView sub;
     private final TextView song;
     private final BarsView bars;
@@ -40,8 +52,10 @@ final class NowPlaying {
     private final ProgressBar spinner;
     private final TextView status;
     private final ImageView play;
+    private final LinearLayout favBtn;
     private final ImageView fav;
     private final TextView favLabel;
+    private final LinearLayout sleepBtn;
     private final TextView sleepLabel;
     private final LinearLayout presetRow;
     private final TextView soundLink;
@@ -50,6 +64,8 @@ final class NowPlaying {
     private final TextView qualityStats;
     private boolean open;
     private String boundKey;
+    /** Keeps the station name clear of the livery stripes. */
+    private static final int NAME_GAP_DP = 80;
 
     @SuppressLint("ClickableViewAccessibility")
     NowPlaying(MainActivity act) {
@@ -57,124 +73,147 @@ final class NowPlaying {
         Context c = act;
         view = new DragFrame(c);
         view.setClickable(true);
-        backdrop = new BackdropView(c);
-        view.addView(backdrop, new FrameLayout.LayoutParams(-1, -1));
+        view.setBackgroundColor(Ui.PAPER);
 
         scroll = new ScrollView(c);
         scroll.setVerticalScrollBarEnabled(false);
         scroll.setOverScrollMode(View.OVER_SCROLL_NEVER);
         scroll.setClipToPadding(false);
         col = Ui.column(c);
-        col.setGravity(Gravity.CENTER_HORIZONTAL);
         col.setPadding(Ui.dp(c, 20), Ui.dp(c, 8), Ui.dp(c, 20), Ui.dp(c, 28));
         scroll.addView(col, new FrameLayout.LayoutParams(-1, -2));
         view.addView(scroll, new FrameLayout.LayoutParams(-1, -1));
 
+        // An ink band behind the status bar, then a run of yellow livery stripes.
+        LinearLayout top = Ui.column(c);
+        statusBand = new View(c);
+        statusBand.setBackgroundColor(Ui.INK);
+        top.addView(statusBand, Ui.lp(-1, 0));
+        top.addView(new Livery.Band(c, Ui.YELLOW), Ui.lp(-1, Ui.dp(c, 12)));
+        view.addView(top, new FrameLayout.LayoutParams(-1, -2, Gravity.TOP));
+
         // Top bar
-        LinearLayout top = Ui.row(c);
-        ImageView down = Ui.iconButton(c, R.drawable.ic_down, Ui.TEXT, Ui.alpha(0xFF000000, 0.25f), 46, "Close player");
+        LinearLayout bar = Ui.row(c);
+        ImageView down = Ui.iconButton(c, R.drawable.ic_down, Ui.INK, Ui.PAPER, 48, "Close player");
         down.setOnClickListener(v -> close());
-        top.addView(down);
+        bar.addView(down);
         LinearLayout mid = Ui.column(c);
         mid.setGravity(Gravity.CENTER_HORIZONTAL);
-        TextView np = Ui.text(c, "NOW PLAYING", 11, Ui.alpha(Ui.TEXT, 0.7f), Ui.W_HEAVY);
+        TextView np = Ui.text(c, "NOW PLAYING", 12, Ui.INK, Ui.W_BOLD);
         np.setLetterSpacing(0.18f);
         np.setGravity(Gravity.CENTER);
         mid.addView(np);
-        where = Ui.text(c, "", 13.5f, Ui.TEXT, Ui.W_BOLD);
+        where = Ui.text(c, "", 13, Ui.TEXT2, Ui.W_MEDIUM);
         where.setSingleLine(true);
-        where.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        where.setEllipsize(TextUtils.TruncateAt.END);
         where.setPadding(Ui.dp(c, 8), Ui.dp(c, 4), Ui.dp(c, 8), 0);
         where.setGravity(Gravity.CENTER);
         mid.addView(where);
-        top.addView(mid, Ui.weight(1));
-        ImageView share = Ui.iconButton(c, R.drawable.ic_share, Ui.TEXT, Ui.alpha(0xFF000000, 0.25f), 46, "Share station");
+        bar.addView(mid, Ui.weight(1));
+        ImageView share = Ui.iconButton(c, R.drawable.ic_share, Ui.INK, Ui.PAPER, 48, "Share station");
         share.setOnClickListener(v -> share());
-        top.addView(share);
-        col.addView(top, Ui.lp(-1, -2, 0, 0, 0, Ui.dp(c, 10)));
+        bar.addView(share);
+        col.addView(bar, Ui.lp(-1, -2, 0, 0, 0, Ui.dp(c, 16)));
 
+        // The destination board.
+        board = new FrameLayout(c);
+        boardBg = new Livery.Board(c, Ui.YELLOW, new int[] {Ui.INK, Ui.PAPER}, 110);
+        boardBg.setShadow(4, Ui.INK);
+        board.setBackground(boardBg);
+        boardCol = Ui.column(c);
+        boardCol.setPadding(Ui.dp(c, 16), Ui.dp(c, 16), Ui.dp(c, 16), Ui.dp(c, 18));
+        LinearLayout head = Ui.row(c);
         art = new LogoView(c);
-        art.setGlow(true);
-        art.setCornerFraction(0.14f);
-        col.addView(art, Ui.lp(Ui.dp(c, 300), Ui.dp(c, 300)));
-
-        name = Ui.text(c, "", 27, Ui.TEXT, Ui.W_HEAVY);
-        name.setGravity(Gravity.CENTER);
+        art.setArtListener(v -> paintBoard());
+        head.addView(art, Ui.lp(Ui.dp(c, 96), Ui.dp(c, 96)));
+        LinearLayout labels = Ui.column(c);
+        tag = Ui.text(c, "", 11, Ui.PAPER, Ui.W_BOLD);
+        tag.setLetterSpacing(0.12f);
+        tag.setSingleLine(true);
+        tag.setEllipsize(TextUtils.TruncateAt.END);
+        tag.setPadding(Ui.dp(c, 9), Ui.dp(c, 5), Ui.dp(c, 9), Ui.dp(c, 5));
+        labels.addView(tag, Ui.lp(-2, -2));
+        plate = MainActivity.numberPlate(c, "");
+        labels.addView(plate, Ui.lp(-2, Ui.dp(c, 30), 0, Ui.dp(c, 8), 0, 0));
+        head.addView(labels, Ui.lp(-2, -2, Ui.dp(c, 10), 0, Ui.dp(c, 40), 0));
+        boardCol.addView(head);
+        boardCol.addView(new View(c), new LinearLayout.LayoutParams(-1, 0, 1f));
+        name = Ui.display(c, "", 40, Ui.INK);
         name.setMaxLines(2);
-        name.setEllipsize(android.text.TextUtils.TruncateAt.END);
-        name.setLetterSpacing(-0.01f);
+        name.setEllipsize(TextUtils.TruncateAt.END);
         Ui.heading(name);
-        col.addView(name, Ui.lp(-1, -2, 0, Ui.dp(c, 6), 0, 0));
-        sub = Ui.text(c, "", 14.5f, Ui.alpha(Ui.TEXT, 0.72f), Ui.W_MEDIUM);
-        sub.setGravity(Gravity.CENTER);
+        boardCol.addView(name, Ui.lp(-1, -2, 0, 0, Ui.dp(c, NAME_GAP_DP), 0));
+        // Leave room for the board's hard shadow on the right and bottom.
+        board.addView(boardCol, new FrameLayout.LayoutParams(-1, -1));
+        board.setPadding(0, 0, Ui.dp(c, 4), Ui.dp(c, 4));
+        col.addView(board, Ui.lp(-1, Ui.dp(c, 300)));
+
+        song = Ui.display(c, "", 26, Ui.INK);
+        song.setMaxLines(2);
+        song.setEllipsize(TextUtils.TruncateAt.END);
+        song.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
+        col.addView(song, Ui.lp(-1, -2, 0, Ui.dp(c, 18), 0, 0));
+        sub = Ui.text(c, "", 13.5f, Ui.TEXT2, Ui.W_MEDIUM);
         sub.setSingleLine(true);
-        sub.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        sub.setEllipsize(TextUtils.TruncateAt.END);
         col.addView(sub, Ui.lp(-1, -2, 0, Ui.dp(c, 6), 0, 0));
 
-        song = Ui.text(c, "", 14.5f, Ui.TEXT, Ui.W_BOLD);
-        song.setGravity(Gravity.CENTER);
-        song.setMaxLines(2);
-        song.setEllipsize(android.text.TextUtils.TruncateAt.END);
-        song.setBackground(Ui.roundStroke(0x26FFFFFF, Ui.dp(c, 16), Ui.STROKE2, Ui.dp(c, 1)));
-        song.setPadding(Ui.dp(c, 16), Ui.dp(c, 10), Ui.dp(c, 16), Ui.dp(c, 10));
-        song.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
-        col.addView(song, Ui.lp(-2, -2, 0, Ui.dp(c, 14), 0, 0));
-
-        bars = new BarsView(c, BarsView.WIDE, Ui.GOLD);
-        bars.setColors(0xFFFFD873, Ui.GOLD_DEEP);
-        col.addView(bars, Ui.lp(-1, Ui.dp(c, 44), Ui.dp(c, 6), Ui.dp(c, 18), Ui.dp(c, 6), 0));
+        bars = new BarsView(c, BarsView.WIDE, Ui.INK);
+        bars.setColors(Ui.INK, Ui.INK);
+        col.addView(bars, Ui.lp(-1, Ui.dp(c, 40), 0, Ui.dp(c, 14), 0, 0));
 
         statusRow = Ui.row(c);
-        statusRow.setGravity(Gravity.CENTER);
+        statusRow.setGravity(Gravity.CENTER_VERTICAL);
         statusRow.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
         liveDot = new View(c);
-        liveDot.setBackground(Ui.round(Ui.LIVE, Ui.dp(c, 4)));
-        statusRow.addView(liveDot, Ui.lp(Ui.dp(c, 8), Ui.dp(c, 8), 0, 0, Ui.dp(c, 8), 0));
+        liveDot.setBackground(Ui.oval(Ui.LIVE));
+        statusRow.addView(liveDot, Ui.lp(Ui.dp(c, 9), Ui.dp(c, 9), 0, 0, Ui.dp(c, 8), 0));
         spinner = new ProgressBar(c, null, android.R.attr.progressBarStyleSmall);
-        spinner.setIndeterminateTintList(ColorStateList.valueOf(Ui.GOLD));
+        spinner.setIndeterminateTintList(ColorStateList.valueOf(Ui.INK));
         statusRow.addView(spinner, Ui.lp(Ui.dp(c, 16), Ui.dp(c, 16), 0, 0, Ui.dp(c, 8), 0));
-        status = Ui.text(c, "", 13, Ui.TEXT, Ui.W_HEAVY);
-        status.setLetterSpacing(0.06f);
+        status = Ui.text(c, "", 13, Ui.INK, Ui.W_BOLD);
         statusRow.addView(status);
-        col.addView(statusRow, Ui.lp(-2, Ui.dp(c, 24), 0, Ui.dp(c, 10), 0, 0));
+        col.addView(statusRow, Ui.lp(-2, Ui.dp(c, 24), 0, Ui.dp(c, 8), 0, 0));
 
         // Controls
         LinearLayout controls = Ui.row(c);
-        controls.setGravity(Gravity.CENTER);
-        LinearLayout sleepCol = control(R.drawable.ic_moon, "Sleep timer", v -> Panels.sleep(a));
-        sleepLabel = (TextView) sleepCol.getChildAt(1);
-        controls.addView(sleepCol, Ui.lp(Ui.dp(c, 100), -2));
-        play = Ui.iconButton(c, R.drawable.ic_play, Ui.ON_GOLD, Ui.GOLD, 84, "Play");
-        play.setBackground(Ui.ripple(Ui.gradient(android.graphics.drawable.GradientDrawable.Orientation.TL_BR, Ui.dp(c, 42),
-                0xFFFFD465, Ui.GOLD, Ui.GOLD_DEEP), Ui.dp(c, 42)));
-        int pp = Ui.dp(c, 24);
+        controls.setGravity(Gravity.CENTER_VERTICAL);
+        sleepBtn = plateButton(R.drawable.ic_moon, "Sleep", "Sleep timer", v -> Panels.sleep(a));
+        sleepLabel = (TextView) sleepBtn.getChildAt(1);
+        controls.addView(sleepBtn, new LinearLayout.LayoutParams(0, Ui.dp(c, 54), 1f));
+        play = new ImageView(c);
+        play.setImageResource(R.drawable.ic_play);
+        play.setColorFilter(Ui.YELLOW);
+        play.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        int pp = Ui.dp(c, 30);
         play.setPadding(pp, pp, pp, pp);
-        play.setElevation(Ui.dp(c, 12));
+        play.setBackground(playDisc(c));
+        play.setContentDescription("Play");
         play.setOnClickListener(v -> {
             v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             a.togglePlay();
         });
         Ui.press(play, 0.9f);
-        controls.addView(play, Ui.lp(Ui.dp(c, 84), Ui.dp(c, 84)));
-        LinearLayout favCol = control(R.drawable.ic_star_outline, "Favourite", v -> {
+        controls.addView(play, Ui.lp(Ui.dp(c, 92), Ui.dp(c, 92), Ui.dp(c, 12), 0, Ui.dp(c, 12), 0));
+        favBtn = plateButton(R.drawable.ic_star_outline, "Save", "Save to favourites", v -> {
             if (RadioService.current != null) {
                 v.performHapticFeedback(HapticFeedbackConstants.CONFIRM);
                 a.toggleFav(RadioService.current);
             }
         });
-        fav = (ImageView) favCol.getChildAt(0);
-        favLabel = (TextView) favCol.getChildAt(1);
-        controls.addView(favCol, Ui.lp(Ui.dp(c, 100), -2));
+        fav = (ImageView) favBtn.getChildAt(0);
+        favLabel = (TextView) favBtn.getChildAt(1);
+        controls.addView(favBtn, new LinearLayout.LayoutParams(0, Ui.dp(c, 54), 1f));
         col.addView(controls, Ui.lp(-1, -2, 0, Ui.dp(c, 14), 0, Ui.dp(c, 8)));
 
         // Sound card: quick presets
         LinearLayout soundCard = card();
         LinearLayout sh = Ui.row(c);
         sh.addView(cardTitle(R.drawable.ic_eq, "Sound"), Ui.weight(1));
-        soundLink = Ui.text(c, "Equalizer", 13.5f, Ui.GOLD, Ui.W_BOLD);
-        soundLink.setPadding(Ui.dp(c, 10), Ui.dp(c, 8), Ui.dp(c, 4), Ui.dp(c, 8));
+        soundLink = Ui.text(c, "Equaliser ›", 14, Ui.ACCENT, Ui.W_BOLD);
+        soundLink.setPadding(Ui.dp(c, 10), Ui.dp(c, 10), Ui.dp(c, 4), Ui.dp(c, 10));
         soundLink.setOnClickListener(v -> Panels.sound(a));
-        soundLink.setContentDescription("Open the equalizer");
+        soundLink.setContentDescription("Open the equaliser");
         sh.addView(soundLink);
         soundCard.addView(sh);
         HorizontalScrollView hs = new HorizontalScrollView(c);
@@ -182,26 +221,26 @@ final class NowPlaying {
         hs.setOverScrollMode(View.OVER_SCROLL_NEVER);
         presetRow = Ui.row(c);
         hs.addView(presetRow);
-        soundCard.addView(hs, Ui.lp(-1, -2, 0, Ui.dp(c, 12), 0, 0));
+        soundCard.addView(hs, Ui.lp(-1, -2, 0, Ui.dp(c, 10), 0, 0));
         col.addView(soundCard, Ui.lp(-1, -2, 0, Ui.dp(c, 18), 0, 0));
 
-        // Data & quality card
+        // Data & quality card: the gears
         LinearLayout qCard = card();
-        qCard.addView(cardTitle(R.drawable.ic_data, "Data & quality"));
+        qCard.addView(cardTitle(R.drawable.ic_data, "Data gear"));
         quality = new Segmented(c, DataMode.SHORT);
         quality.setListener(i -> {
             Prefs.setDataMode(a, i);
             a.onDataModeChanged();
             refresh();
         });
-        qCard.addView(quality, Ui.lp(-1, -2, 0, Ui.dp(c, 14), 0, 0));
-        qualityNote = Ui.text(c, "", 13, Ui.TEXT2, Ui.W_MEDIUM);
+        qCard.addView(quality, Ui.lp(-1, -2, 0, Ui.dp(c, 12), 0, 0));
+        qualityNote = Ui.text(c, "", 13.5f, Ui.INK, Ui.W_MEDIUM);
         qualityNote.setLineSpacing(0, 1.3f);
         qCard.addView(qualityNote, Ui.lp(-1, -2, Ui.dp(c, 2), Ui.dp(c, 12), Ui.dp(c, 2), 0));
-        qualityStats = Ui.text(c, "", 12.5f, Ui.MUTED, Ui.W_MEDIUM);
+        qualityStats = Ui.text(c, "", 12.5f, Ui.TEXT2, Ui.W_MEDIUM);
         qualityStats.setLineSpacing(0, 1.3f);
         qCard.addView(qualityStats, Ui.lp(-1, -2, Ui.dp(c, 2), Ui.dp(c, 8), Ui.dp(c, 2), 0));
-        col.addView(qCard, Ui.lp(-1, -2, 0, Ui.dp(c, 12), 0, 0));
+        col.addView(qCard, Ui.lp(-1, -2, 0, Ui.dp(c, 14), 0, 0));
 
         view.setVisibility(View.GONE);
         view.setElevation(Ui.dp(c, 30));
@@ -210,25 +249,45 @@ final class NowPlaying {
         relayout();
     }
 
-    private LinearLayout control(int icon, String label, View.OnClickListener l) {
+    /** The big ink disc with a yellow ring, like a hubcap. */
+    private static LayerDrawable playDisc(Context c) {
+        GradientDrawable outer = Ui.oval(Ui.INK);
+        GradientDrawable ring = Ui.oval(Ui.YELLOW);
+        GradientDrawable face = Ui.oval(Ui.INK);
+        LayerDrawable ld = new LayerDrawable(new android.graphics.drawable.Drawable[] {outer, ring, face});
+        int r1 = Ui.line(), r2 = Ui.line() + Ui.dp(c, 5);
+        ld.setLayerInset(1, r1, r1, r1, r1);
+        ld.setLayerInset(2, r2, r2, r2, r2);
+        return ld;
+    }
+
+    /** A plate-shaped button with an icon and a short label. Child 0 is the icon, child 1 the label. */
+    private LinearLayout plateButton(int icon, String label, String spoken, View.OnClickListener l) {
         Context c = a;
-        LinearLayout v = Ui.column(c);
-        v.setGravity(Gravity.CENTER_HORIZONTAL);
-        ImageView b = Ui.iconButton(c, icon, Ui.TEXT, 0x30FFFFFF, 56, label);
-        b.setOnClickListener(l);
-        Ui.press(b, 0.9f);
-        v.addView(b);
-        TextView t = Ui.text(c, label, 12, Ui.alpha(Ui.TEXT, 0.75f), Ui.W_BOLD);
-        t.setGravity(Gravity.CENTER);
+        LinearLayout v = Ui.row(c);
+        v.setGravity(Gravity.CENTER);
+        v.setPadding(Ui.dp(c, 8), 0, Ui.dp(c, 8), 0);
+        ImageView i = new ImageView(c);
+        i.setImageResource(icon);
+        i.setColorFilter(Ui.INK);
+        v.addView(i, Ui.lp(Ui.dp(c, 20), Ui.dp(c, 20), 0, 0, Ui.dp(c, 7), 0));
+        TextView t = Ui.text(c, label.toUpperCase(Locale.ROOT), 13, Ui.INK, Ui.W_BOLD);
+        t.setLetterSpacing(0.06f);
+        t.setSingleLine(true);
         t.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
-        v.addView(t, Ui.lp(-2, -2, 0, Ui.dp(c, 8), 0, 0));
+        v.addView(t);
+        v.setBackground(Ui.ripple(Ui.roundStroke(Ui.PAPER, Ui.dp(c, 10), Ui.INK, Ui.line()), Ui.dp(c, 10)));
+        v.setContentDescription(spoken);
+        v.setOnClickListener(l);
+        Ui.press(v, 0.94f);
         return v;
     }
 
     private LinearLayout card() {
+        int sh = Ui.dp(a, 3);
         LinearLayout k = Ui.column(a);
-        k.setPadding(Ui.dp(a, 16), Ui.dp(a, 14), Ui.dp(a, 16), Ui.dp(a, 16));
-        k.setBackground(Ui.roundStroke(0x2E0B0D12, Ui.dp(a, 24), Ui.STROKE2, Ui.dp(a, 1)));
+        k.setPadding(Ui.dp(a, 16), Ui.dp(a, 12), Ui.dp(a, 16) + sh, Ui.dp(a, 16) + sh);
+        k.setBackground(Ui.plate(Ui.PAPER, Ui.dp(a, 12), sh, Ui.INK));
         return k;
     }
 
@@ -236,29 +295,74 @@ final class NowPlaying {
         LinearLayout r = Ui.row(a);
         ImageView i = new ImageView(a);
         i.setImageResource(icon);
-        i.setColorFilter(Ui.GOLD);
+        i.setColorFilter(Ui.INK);
         r.addView(i, Ui.lp(Ui.dp(a, 20), Ui.dp(a, 20), 0, 0, Ui.dp(a, 10), 0));
-        TextView tv = Ui.text(a, t, 16.5f, Ui.TEXT, Ui.W_HEAVY);
+        TextView tv = Ui.display(a, t, 21, Ui.INK);
         Ui.heading(tv);
         r.addView(tv);
         return r;
     }
 
-    /** Sizes the artwork to the screen so the controls stay visible without scrolling. */
+    /** Sizes the board to the screen so the play button stays visible without scrolling. */
     void relayout() {
         int w = a.getResources().getDisplayMetrics().widthPixels;
         int h = a.getResources().getDisplayMetrics().heightPixels;
-        // Everything from the top bar to the play button needs ~400dp besides the artwork.
-        int room = h - a.topInset() - a.navInset() - Ui.dp(a, 400);
-        int size = Math.max(Ui.dp(a, 150), Math.min(Math.min(w - Ui.dp(a, 40), Ui.dp(a, 380)), room));
-        ViewGroup.LayoutParams lp = art.getLayoutParams();
-        lp.width = size;
-        lp.height = size;
-        art.setLayoutParams(lp);
+        // The top bar, song, bars, status and controls need ~420dp besides the board.
+        int room = h - a.topInset() - a.navInset() - Ui.dp(a, 420);
+        int height = Math.max(Ui.dp(a, 210), Math.min(Math.min((int) ((w - Ui.dp(a, 40)) * 0.9f), Ui.dp(a, 340)), room));
+        ViewGroup.LayoutParams lp = board.getLayoutParams();
+        lp.height = height;
+        board.setLayoutParams(lp);
+        int roundel = Math.max(Ui.dp(a, 64), Math.min(Ui.dp(a, 112), (int) (height * 0.34f)));
+        LinearLayout.LayoutParams al = (LinearLayout.LayoutParams) art.getLayoutParams();
+        al.width = roundel;
+        al.height = roundel;
+        art.setLayoutParams(al);
+        fitName();
+    }
+
+    /** The largest size (up to the board's) at which the name fits in two lines without breaking a word. */
+    private void fitName() {
+        String text = name.getText().toString().toUpperCase(Locale.ROOT).trim();
+        if (text.isEmpty()) return;
+        int boardH = board.getLayoutParams().height;
+        float max = boardH >= Ui.dp(a, 280) ? 44 : boardH >= Ui.dp(a, 240) ? 38 : 32;
+        int w = a.getResources().getDisplayMetrics().widthPixels;
+        float avail = w - Ui.dp(a, 40) - Ui.dp(a, 4) - Ui.dp(a, 32) - Ui.dp(a, NAME_GAP_DP);
+        android.graphics.Paint p = new android.graphics.Paint();
+        p.setTypeface(Ui.display);
+        float density = a.getResources().getDisplayMetrics().scaledDensity;
+        String[] words = text.split("\\s+");
+        float sp = max;
+        for (; sp > 20; sp -= 1) {
+            p.setTextSize(sp * density);
+            float space = p.measureText(" ");
+            int lines = 1;
+            float x = 0;
+            boolean fits = true;
+            for (String word : words) {
+                float ww = p.measureText(word);
+                if (ww > avail) {
+                    fits = false;
+                    break;
+                }
+                if (x == 0) x = ww;
+                else if (x + space + ww <= avail) x += space + ww;
+                else {
+                    lines++;
+                    x = ww;
+                }
+            }
+            if (fits && lines <= 2) break;
+        }
+        name.setTextSize(sp);
     }
 
     void applyInsets(int top, int nav) {
-        col.setPadding(col.getPaddingLeft(), top + Ui.dp(a, 8), col.getPaddingRight(), nav + Ui.dp(a, 28));
+        ViewGroup.LayoutParams sb = statusBand.getLayoutParams();
+        sb.height = top;
+        statusBand.setLayoutParams(sb);
+        col.setPadding(col.getPaddingLeft(), top + Ui.dp(a, 12 + 14), col.getPaddingRight(), nav + Ui.dp(a, 28));
         relayout();
     }
 
@@ -294,7 +398,20 @@ final class NowPlaying {
     }
 
     void onArt(LogoView v) {
-        if (v == art) backdrop.setMood(Ui.moodColor(art.getAccentColor()));
+        if (v == art) paintBoard();
+    }
+
+    /** Paints the board in the station's own colour; ink stations get the full livery. */
+    private void paintBoard() {
+        int brand = art.getBrandColor();
+        boolean inky = Ui.luminance(brand) < 0.03;
+        boardBg.setFill(brand, inky ? new int[] {Ui.YELLOW, Ui.PINK, Ui.COBALT, Ui.LIVERY_GREEN}
+                : Ui.onColor(brand) == Ui.INK ? new int[] {Ui.INK, Ui.PAPER} : new int[] {Ui.PAPER, Ui.INK});
+        name.setTextColor(inky ? Ui.YELLOW : Ui.onColor(brand));
+        boolean darkTag = Ui.luminance(brand) > 0.06;
+        tag.setTextColor(darkTag ? Ui.PAPER : Ui.INK);
+        tag.setBackground(Ui.round(darkTag ? Ui.INK : Ui.PAPER, Ui.dp(a, 4)));
+        board.invalidate();
     }
 
     void refresh() {
@@ -309,23 +426,29 @@ final class NowPlaying {
             boundKey = s.key();
             a.bindLogo(art, s, DataMode.artPx(DataMode.effective(a)));
             name.setText(s.name);
-            backdrop.setMood(Ui.moodColor(art.getAccentColor()));
+            fitName();
+            paintBoard();
         }
         String w = s.province.length() > 0 ? s.province : s.custom ? "Your own stream" : "South African radio";
         where.setText(w);
-        String tags = s.firstTags(2);
+        String region = s.province.length() > 0 ? StationRepo.abbreviate(s.province) : "ZA";
+        tag.setText(((playing ? "● LIVE · " : st == RadioService.BUFFERING ? "TUNING IN · " : "") + w).toUpperCase(Locale.ROOT));
+        String genre = s.firstTags(1);
+        plate.setText((region + (genre.length() > 0 && genre.length() <= 14 ? " · " + genre : "")).toUpperCase(Locale.ROOT));
+        String tags = s.firstTags(3);
         sub.setText(tags.length() > 0 ? tags : s.custom ? "Custom stream" : "Live radio");
         art.setPlaying(playing);
 
         boolean hasSong = playing && RadioService.songTitle.length() > 0;
         song.setVisibility(hasSong ? View.VISIBLE : View.GONE);
-        song.setText("♪  " + RadioService.songTitle);
+        song.setText(RadioService.songTitle);
         bars.setRunning(open && playing);
 
+        statusRow.setVisibility(playing ? View.GONE : View.VISIBLE);
         liveDot.setVisibility(playing ? View.VISIBLE : View.GONE);
         spinner.setVisibility(st == RadioService.BUFFERING ? View.VISIBLE : View.GONE);
         status.setText(playing ? "LIVE" : MainActivity.playerLine());
-        status.setTextColor(st == RadioService.ERROR ? Ui.RED : playing ? Ui.TEXT : Ui.alpha(Ui.TEXT, 0.8f));
+        status.setTextColor(st == RadioService.ERROR ? Ui.RED : Ui.INK);
         status.setLetterSpacing(playing ? 0.16f : 0f);
 
         boolean active = RadioService.isActive();
@@ -333,17 +456,19 @@ final class NowPlaying {
         play.setContentDescription(active ? "Stop" : "Play");
         boolean isFav = a.isFav(s);
         fav.setImageResource(isFav ? R.drawable.ic_star : R.drawable.ic_star_outline);
-        fav.setColorFilter(isFav ? Ui.GOLD : Ui.TEXT);
-        favLabel.setText(isFav ? "Saved" : "Favourite");
-        fav.setContentDescription(isFav ? "Remove from favourites" : "Save to favourites");
+        favLabel.setText(isFav ? "SAVED" : "SAVE");
+        favBtn.setBackground(Ui.ripple(Ui.roundStroke(isFav ? Ui.PINK : Ui.PAPER, Ui.dp(a, 10), Ui.INK, Ui.line()), Ui.dp(a, 10)));
+        favBtn.setContentDescription(isFav ? "Remove from favourites" : "Save to favourites");
 
         if (RadioService.sleepAt > 0) {
             long mins = Math.max(1, (RadioService.sleepAt - System.currentTimeMillis() + 59_999) / 60_000);
-            sleepLabel.setText(mins + " min left");
-            sleepLabel.setTextColor(Ui.GOLD);
+            sleepLabel.setText(mins + " MIN");
+            sleepBtn.setBackground(Ui.ripple(Ui.roundStroke(Ui.YELLOW, Ui.dp(a, 10), Ui.INK, Ui.line()), Ui.dp(a, 10)));
+            sleepBtn.setContentDescription("Sleep timer, " + mins + " minutes left");
         } else {
-            sleepLabel.setText("Sleep timer");
-            sleepLabel.setTextColor(Ui.alpha(Ui.TEXT, 0.75f));
+            sleepLabel.setText("SLEEP");
+            sleepBtn.setBackground(Ui.ripple(Ui.roundStroke(Ui.PAPER, Ui.dp(a, 10), Ui.INK, Ui.line()), Ui.dp(a, 10)));
+            sleepBtn.setContentDescription("Sleep timer");
         }
 
         rebuildPresets();
@@ -367,7 +492,7 @@ final class NowPlaying {
         }
         if ("custom".equals(cur)) addPreset("custom", "Custom", true);
         for (EqPresets.Preset p : EqPresets.ALL) addPreset(p.id, p.name, p.id.equals(cur));
-        soundLink.setText("custom".equals(cur) ? "Edit curve" : "Equalizer");
+        soundLink.setText("custom".equals(cur) ? "Edit curve ›" : "Equaliser ›");
     }
 
     private void addPreset(final String id, String label, boolean selected) {

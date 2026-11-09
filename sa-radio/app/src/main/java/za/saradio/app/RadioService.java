@@ -727,7 +727,7 @@ public class RadioService extends Service implements AudioManager.OnAudioFocusCh
                 .setOngoing(active)
                 .setCategory(Notification.CATEGORY_TRANSPORT)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
-                .setColor(Ui.GOLD)
+                .setColor(Ui.ACCENT)
                 .addAction(new Notification.Action.Builder(
                         Icon.createWithResource(this, active ? R.drawable.ic_stop : R.drawable.ic_play),
                         active ? "Stop" : "Play", servicePi(ACTION_TOGGLE, 10)).build())

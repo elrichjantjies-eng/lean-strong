@@ -33,7 +33,7 @@ final class ArticleView extends FrameLayout {
 
     static final float[] SIZES = {15.5f, 17f, 19f, 21.5f};
     static final String[] SIZE_NAMES = {"Small", "Medium", "Large", "Extra large"};
-    private static final int BODY = 0xFFE4E7EC;
+    private static final int BODY = 0xFF1E1E1E;
 
     private final MainActivity a;
     private final Host host;
@@ -79,7 +79,7 @@ final class ArticleView extends FrameLayout {
         header(it, null);
         LinearLayout sk = Ui.column(a);
         View pic = new View(a);
-        pic.setBackground(Ui.round(Ui.SURFACE2, dp(18)));
+        pic.setBackground(Ui.round(Ui.SURFACE3, dp(10)));
         sk.addView(pic, Ui.lp(-1, dp(190), 0, dp(18), 0, dp(18)));
         int[] widths = {100, 96, 92, 98, 60, 0, 100, 94, 97, 40};
         for (int w : widths) {
@@ -88,7 +88,7 @@ final class ArticleView extends FrameLayout {
                 continue;
             }
             View bar = new View(a);
-            bar.setBackground(Ui.round(Ui.SURFACE2, dp(6)));
+            bar.setBackground(Ui.round(Ui.SURFACE3, dp(4)));
             int full = getResources().getDisplayMetrics().widthPixels - dp(44);
             sk.addView(bar, Ui.lp(full * w / 100, dp(13), 0, 0, 0, dp(11)));
         }
@@ -145,7 +145,7 @@ final class ArticleView extends FrameLayout {
         LinearLayout card = card();
         ImageView ic = new ImageView(a);
         ic.setImageResource(pay ? R.drawable.ic_lock : net ? R.drawable.ic_wifi : R.drawable.ic_nav_news);
-        ic.setColorFilter(Ui.GOLD);
+        ic.setColorFilter(Ui.ACCENT);
         card.addView(ic, Ui.lp(dp(26), dp(26)));
         String title = pay ? "For subscribers" : net ? "Couldn't reach " + it.source : "No clean version of this one";
         String body = pay
@@ -181,7 +181,7 @@ final class ArticleView extends FrameLayout {
 
     private void header(NewsRepo.Item it, Article art) {
         LinearLayout meta = Ui.row(a);
-        TextView src = Ui.text(a, it.source.toUpperCase(Locale.ROOT), 12, Ui.GOLD, Ui.W_HEAVY);
+        TextView src = Ui.text(a, it.source.toUpperCase(Locale.ROOT), 12, Ui.ACCENT, Ui.W_HEAVY);
         src.setLetterSpacing(0.1f);
         meta.addView(src);
         String when = NewsRepo.ago(it.time);
@@ -238,7 +238,7 @@ final class ArticleView extends FrameLayout {
                 LinearLayout row = Ui.row(a);
                 row.setGravity(Gravity.TOP);
                 View bar = new View(a);
-                bar.setBackground(Ui.round(Ui.GOLD, dp(2)));
+                bar.setBackground(Ui.round(Ui.ACCENT, dp(2)));
                 row.addView(bar, new LinearLayout.LayoutParams(dp(3), -1));
                 TextView q = body(b.html, size + 1);
                 q.setTypeface(Typeface.create(Typeface.SERIF, Typeface.ITALIC));
@@ -258,7 +258,7 @@ final class ArticleView extends FrameLayout {
                 for (String it : b.items) {
                     LinearLayout row = Ui.row(a);
                     row.setGravity(Gravity.TOP);
-                    TextView mark = Ui.text(a, b.ordered ? (n++) + "." : "•", size, Ui.GOLD, Ui.W_HEAVY);
+                    TextView mark = Ui.text(a, b.ordered ? (n++) + "." : "•", size, Ui.ACCENT, Ui.W_HEAVY);
                     mark.setGravity(Gravity.END);
                     row.addView(mark, Ui.lp(dp(22), -2));
                     TextView t = body(it, size);
@@ -308,7 +308,7 @@ final class ArticleView extends FrameLayout {
         t.setTypeface(Typeface.SERIF);
         t.setTextColor(BODY);
         t.setLineSpacing(0, 1.5f);
-        t.setLinkTextColor(Ui.GOLD);
+        t.setLinkTextColor(Ui.ACCENT);
         t.setMovementMethod(LinkMovementMethod.getInstance());
         return t;
     }
@@ -326,8 +326,9 @@ final class ArticleView extends FrameLayout {
         float aspect = w > 0 && h > 0 ? h / (float) w : 0.5625f;
         aspect = Math.max(0.45f, Math.min(1.25f, aspect));
         final FrameLayout box = new FrameLayout(a);
-        box.setBackground(Ui.round(Ui.SURFACE2, dp(18)));
-        Ui.roundClip(box, dp(18));
+        box.setBackground(Ui.round(Ui.SURFACE3, dp(10)));
+        box.setForeground(Ui.roundStroke(0, dp(10), Ui.INK, Ui.line()));
+        Ui.roundClip(box, dp(10));
         final ImageView iv = new ImageView(a);
         iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
         iv.setContentDescription(caption.isEmpty() ? "Picture" : caption);
@@ -396,10 +397,10 @@ final class ArticleView extends FrameLayout {
         row.setBackground(Ui.ripple(Ui.roundStroke(Ui.SURFACE2, r, Ui.STROKE2, dp(1)), r));
         ImageView ic = new ImageView(a);
         ic.setImageResource(video ? R.drawable.ic_play : R.drawable.ic_open);
-        ic.setColorFilter(Ui.ON_GOLD);
+        ic.setColorFilter(Ui.ON_ACCENT);
         int p = dp(8);
         ic.setPadding(p, p, p, p);
-        ic.setBackground(Ui.round(Ui.GOLD, dp(20)));
+        ic.setBackground(Ui.round(Ui.ACCENT, dp(20)));
         row.addView(ic, Ui.lp(dp(40), dp(40)));
         LinearLayout txt = Ui.column(a);
         txt.setPadding(dp(12), 0, 0, 0);
@@ -430,11 +431,11 @@ final class ArticleView extends FrameLayout {
 
     private void paywall(Article art) {
         LinearLayout k = card();
-        k.setBackground(Ui.roundStroke(Ui.alpha(Ui.GOLD, 0.1f), dp(22), Ui.alpha(Ui.GOLD, 0.5f), dp(1)));
+        k.setBackground(Ui.roundStroke(Ui.alpha(Ui.ACCENT, 0.1f), dp(22), Ui.alpha(Ui.ACCENT, 0.5f), dp(1)));
         LinearLayout top = Ui.row(a);
         ImageView ic = new ImageView(a);
         ic.setImageResource(R.drawable.ic_lock);
-        ic.setColorFilter(Ui.GOLD);
+        ic.setColorFilter(Ui.ACCENT);
         top.addView(ic, Ui.lp(dp(20), dp(20), 0, 0, dp(10), 0));
         top.addView(Ui.text(a, "The rest is for subscribers", 16, Ui.TEXT, Ui.W_HEAVY));
         k.addView(top);

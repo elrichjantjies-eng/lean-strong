@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- A chunky radio drawn like a painted sign: white body, ink outline. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp" android:height="108dp"
     android:viewportWidth="108" android:viewportHeight="108">
-    <path android:pathData="M54,28a26,26 0 1,1 0,52a26,26 0 1,1 0,-52z">
-        <aapt:attr name="android:fillColor">
-            <gradient android:type="linear" android:startX="34" android:startY="28"
-                android:endX="74" android:endY="80"
-                android:startColor="#FFFFD465" android:endColor="#FFF29A0B" />
-        </aapt:attr>
-    </path>
-    <path android:fillColor="#FF1A1300"
-        android:pathData="M54,49.5a4.5,4.5 0 1,1 0,9a4.5,4.5 0 1,1 0,-9z" />
-    <path android:strokeColor="#FF1A1300" android:strokeWidth="4" android:strokeLineCap="round"
-        android:pathData="M61.07,46.93A10,10 0 0,1 61.07,61.07M46.93,46.93A10,10 0 0,0 46.93,61.07" />
-    <path android:strokeColor="#FF1A1300" android:strokeWidth="4" android:strokeLineCap="round"
-        android:pathData="M66.02,41.98A17,17 0 0,1 66.02,66.02M41.98,41.98A17,17 0 0,0 41.98,66.02" />
+    <path android:strokeColor="#FF111111" android:strokeWidth="5" android:strokeLineCap="round"
+        android:pathData="M42,41L68,27" />
+    <path android:fillColor="#FFFFFFFF" android:strokeColor="#FF111111" android:strokeWidth="5"
+        android:pathData="M37,41h34a8,8 0 0 1 8,8v22a8,8 0 0 1 -8,8h-34a8,8 0 0 1 -8,-8v-22a8,8 0 0 1 8,-8z" />
+    <path android:fillColor="#FF111111" android:pathData="M45,60m-10,0a10,10 0 1,1 20,0a10,10 0 1,1 -20,0" />
+    <path android:fillColor="#FFFFD21F" android:pathData="M45,60m-4,0a4,4 0 1,1 8,0a4,4 0 1,1 -8,0" />
+    <path android:strokeColor="#FF111111" android:strokeWidth="4.5" android:strokeLineCap="round"
+        android:pathData="M61,52h10 M61,60h10 M61,68h6" />
 </vector>

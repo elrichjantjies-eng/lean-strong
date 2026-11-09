@@ -84,12 +84,13 @@ final class MatchSheet {
         boolean scored = (m.state == Sports.POST || m.state == Sports.LIVE) && !m.home.score.isEmpty();
         boolean cricket = Sports.CRICKET.equals(m.sport);
         String big = scored && !cricket ? m.home.score + "  –  " + m.away.score : m.state == Sports.PRE ? Sports.clock(m.time) : "v";
-        TextView score = Ui.text(a, big, scored && !cricket ? 30 : 24, Ui.TEXT, Ui.W_HEAVY);
+        TextView score = Ui.text(a, big, scored && !cricket ? 40 : 30, Ui.TEXT, Ui.W_HEAVY);
+        score.setTypeface(Ui.display);
         score.setGravity(Gravity.CENTER);
         mid.addView(score, Ui.lp(-2, -2, 0, dp(14), 0, 0));
         String st = m.state == Sports.LIVE ? (m.status.isEmpty() ? "LIVE" : m.status) : m.state == Sports.PRE
                 ? new SimpleDateFormat("EEE d MMM", Locale.ENGLISH).format(m.time) : m.status;
-        TextView status = Ui.text(a, st, 12.5f, m.state == Sports.LIVE ? Ui.LIVE : Ui.MUTED, Ui.W_HEAVY);
+        TextView status = Ui.text(a, st, 12.5f, m.state == Sports.LIVE ? Ui.LIVE : Ui.TEXT2, Ui.W_HEAVY);
         status.setGravity(Gravity.CENTER);
         mid.addView(status, Ui.lp(-2, -2, 0, dp(6), 0, 0));
         row.addView(mid, Ui.lp(dp(110), -2));
@@ -103,7 +104,7 @@ final class MatchSheet {
             s.body.addView(sc, Ui.lp(-1, -2, 0, dp(14), 0, 0));
         }
         if (!m.summary.isEmpty()) {
-            TextView sum = Ui.text(a, m.summary, 15, Ui.GOLD, Ui.W_BOLD);
+            TextView sum = Ui.text(a, m.summary, 15, Ui.ACCENT, Ui.W_BOLD);
             sum.setGravity(Gravity.CENTER);
             s.body.addView(sum, Ui.lp(-1, -2, 0, dp(12), 0, 0));
         }
@@ -117,7 +118,7 @@ final class MatchSheet {
         l.setCircle(true);
         SportView.bindLogo(a, l, side.name, side.logo);
         c.addView(l, Ui.lp(dp(60), dp(60)));
-        TextView n = Ui.text(a, side.name, 14.5f, side.sa ? Ui.GOLD : Ui.TEXT, Ui.W_BOLD);
+        TextView n = Ui.text(a, side.name, 14.5f, side.sa ? Ui.ACCENT : Ui.TEXT, Ui.W_BOLD);
         n.setGravity(Gravity.CENTER);
         n.setMaxLines(2);
         c.addView(n, Ui.lp(-1, -2, 0, dp(8), 0, 0));
@@ -125,11 +126,12 @@ final class MatchSheet {
     }
 
     private void eventHeader() {
-        TextView t = Ui.text(a, m.title, 21, Ui.TEXT, Ui.W_HEAVY);
-        t.setLineSpacing(0, 1.12f);
+        TextView t = Ui.text(a, m.title, 26, Ui.TEXT, Ui.W_HEAVY);
+        t.setTypeface(Ui.display);
+        t.setLineSpacing(0, 1.05f);
         s.body.addView(t, Ui.lp(-1, -2, 0, dp(2), 0, 0));
         String st = m.state == Sports.LIVE ? "Live · " + m.status : m.state == Sports.PRE ? "Starts " + when(m.time) : m.status;
-        TextView status = Ui.text(a, st, 13, m.state == Sports.LIVE ? Ui.LIVE : Ui.GOLD, Ui.W_HEAVY);
+        TextView status = Ui.text(a, st, 13, m.state == Sports.LIVE ? Ui.LIVE : Ui.ACCENT, Ui.W_HEAVY);
         s.body.addView(status, Ui.lp(-1, -2, 0, dp(8), 0, 0));
         meta();
     }
@@ -152,7 +154,7 @@ final class MatchSheet {
 
     private void loading() {
         ProgressBar p = new ProgressBar(a);
-        p.setIndeterminateTintList(ColorStateList.valueOf(Ui.GOLD));
+        p.setIndeterminateTintList(ColorStateList.valueOf(Ui.ACCENT));
         content.addView(p, Ui.lp(dp(36), dp(36), 0, dp(24), 0, dp(24)));
         ((LinearLayout.LayoutParams) p.getLayoutParams()).gravity = Gravity.CENTER_HORIZONTAL;
     }
@@ -216,14 +218,14 @@ final class MatchSheet {
         LinearLayout r = Ui.row(a);
         r.setGravity(Gravity.TOP);
         r.setPadding(0, dp(6), 0, dp(6));
-        TextView mid = Ui.text(a, minute, 12, Ui.GOLD, Ui.W_HEAVY);
+        TextView mid = Ui.text(a, minute, 12, Ui.ACCENT, Ui.W_HEAVY);
         mid.setGravity(Gravity.CENTER);
-        mid.setBackground(Ui.round(Ui.alpha(Ui.GOLD, 0.12f), dp(10)));
+        mid.setBackground(Ui.round(Ui.alpha(Ui.ACCENT, 0.12f), dp(10)));
         mid.setPadding(dp(4), dp(3), dp(4), dp(3));
         r.addView(mid, Ui.lp(dp(46), -2, 0, 0, dp(10), 0));
         Sports.Side side = home ? m.home : m.away;
         String tag = !side.abbr.isEmpty() && side.abbr.length() <= 4 ? side.abbr : side.shortName;
-        TextView team = Ui.text(a, tag, 12, side.sa ? Ui.GOLD : Ui.MUTED, Ui.W_HEAVY);
+        TextView team = Ui.text(a, tag, 12, side.sa ? Ui.ACCENT : Ui.MUTED, Ui.W_HEAVY);
         team.setSingleLine(true);
         team.setEllipsize(TextUtils.TruncateAt.END);
         r.addView(team, Ui.lp(dp(48), -2, 0, dp(2), dp(6), 0));
@@ -275,7 +277,7 @@ final class MatchSheet {
         k.setBackground(Ui.roundStroke(Ui.SURFACE2, dp(18), Ui.STROKE, dp(1)));
         String formation = team.optString("formation");
         if (!formation.isEmpty()) {
-            TextView f = Ui.text(a, "Formation  " + formation, 13, Ui.GOLD, Ui.W_HEAVY);
+            TextView f = Ui.text(a, "Formation  " + formation, 13, Ui.ACCENT, Ui.W_HEAVY);
             f.setPadding(0, dp(6), 0, dp(6));
             k.addView(f);
         }
@@ -333,7 +335,7 @@ final class MatchSheet {
     private View playerRow(JSONObject p, boolean rugby) {
         LinearLayout r = Ui.row(a);
         r.setPadding(0, dp(6), 0, dp(6));
-        TextView num = Ui.text(a, p.optString("jersey"), 13, Ui.GOLD, Ui.W_HEAVY);
+        TextView num = Ui.text(a, p.optString("jersey"), 13, Ui.ACCENT, Ui.W_HEAVY);
         r.addView(num, Ui.lp(dp(32), -2));
         JSONObject ath = p.optJSONObject("athlete");
         String name = ath == null ? "" : ath.optString("displayName");
@@ -450,7 +452,7 @@ final class MatchSheet {
         if (a0 + a1 > 0) {
             LinearLayout bar = Ui.row(a);
             View b0 = new View(a);
-            b0.setBackground(Ui.round(Ui.GOLD, dp(2)));
+            b0.setBackground(Ui.round(Ui.ACCENT, dp(2)));
             View b1 = new View(a);
             b1.setBackground(Ui.round(Ui.SURFACE3, dp(2)));
             LinearLayout.LayoutParams p0 = new LinearLayout.LayoutParams(0, dp(4), a0);
@@ -577,7 +579,7 @@ final class MatchSheet {
                 LinearLayout k = card();
                 if (t == 1) ((LinearLayout.LayoutParams) k.getLayoutParams()).topMargin = dp(8);
                 TextView tn = Ui.text(a, team.optJSONObject("team") != null ? team.optJSONObject("team").optString("displayName") : "", 13,
-                        Ui.GOLD, Ui.W_HEAVY);
+                        Ui.ACCENT, Ui.W_HEAVY);
                 tn.setPadding(0, dp(6), 0, dp(4));
                 k.addView(tn);
                 StringBuilder sb = new StringBuilder();
@@ -617,7 +619,7 @@ final class MatchSheet {
         a1.setEllipsize(TextUtils.TruncateAt.END);
         TextView a2 = Ui.text(a, c2, head ? 12 : 14, head ? Ui.MUTED : Ui.TEXT2, w);
         a2.setGravity(Gravity.END);
-        TextView a3 = Ui.text(a, c3, head ? 12 : 14, head ? Ui.MUTED : Ui.GOLD, Ui.W_HEAVY);
+        TextView a3 = Ui.text(a, c3, head ? 12 : 14, head ? Ui.MUTED : Ui.ACCENT, Ui.W_HEAVY);
         a3.setGravity(Gravity.END);
         r.addView(a1, Ui.weight(1));
         r.addView(a2, Ui.lp(dp(72), -2));
@@ -635,7 +637,7 @@ final class MatchSheet {
         }
         // Swap colours: runs matter more than balls in a batting card.
         LinearLayout r = (LinearLayout) c.getChildAt(0);
-        ((TextView) r.getChildAt(1)).setTextColor(Ui.GOLD);
+        ((TextView) r.getChildAt(1)).setTextColor(Ui.ACCENT);
         ((TextView) r.getChildAt(2)).setTextColor(Ui.MUTED);
         k.addView(c);
     }

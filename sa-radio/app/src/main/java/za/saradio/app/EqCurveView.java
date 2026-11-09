@@ -43,17 +43,17 @@ public class EqCurveView extends View {
     public EqCurveView(Context c) {
         super(c);
         float d = c.getResources().getDisplayMetrics().density;
-        grid.setColor(0x14FFFFFF);
+        grid.setColor(0x1F000000);
         grid.setStrokeWidth(d);
-        zero.setColor(0x33FFFFFF);
+        zero.setColor(0x66000000);
         zero.setStrokeWidth(d);
         zero.setPathEffect(new DashPathEffect(new float[] {4 * d, 4 * d}, 0));
         line.setStyle(Paint.Style.STROKE);
         line.setStrokeWidth(3 * d);
         line.setStrokeCap(Paint.Cap.ROUND);
         line.setStrokeJoin(Paint.Join.ROUND);
-        line.setColor(Ui.GOLD);
-        knob.setColor(Ui.GOLD);
+        line.setColor(Ui.ACCENT);
+        knob.setColor(Ui.ACCENT);
         knobRing.setColor(Ui.BG);
         label.setColor(Ui.MUTED);
         label.setTextSize(11 * c.getResources().getDisplayMetrics().scaledDensity);
@@ -61,7 +61,7 @@ public class EqCurveView extends View {
         label.setTextAlign(Paint.Align.CENTER);
         bubble.setColor(Ui.SURFACE3);
         setFocusable(true);
-        setContentDescription("Equalizer curve. Drag the points up or down to change the sound.");
+        setContentDescription("Equaliser curve. Drag the points up or down to change the sound.");
     }
 
     public void setListener(Listener l) {
@@ -135,7 +135,7 @@ public class EqCurveView extends View {
         fillPath.lineTo(getWidth(), bottom());
         fillPath.lineTo(0, bottom());
         fillPath.close();
-        area.setShader(new LinearGradient(0, top(), 0, bottom(), Ui.alpha(Ui.GOLD, 0.38f), Ui.alpha(Ui.GOLD, 0.0f), Shader.TileMode.CLAMP));
+        area.setShader(new LinearGradient(0, top(), 0, bottom(), Ui.alpha(Ui.ACCENT, 0.38f), Ui.alpha(Ui.ACCENT, 0.0f), Shader.TileMode.CLAMP));
         c.drawPath(fillPath, area);
         c.drawPath(path, line);
 

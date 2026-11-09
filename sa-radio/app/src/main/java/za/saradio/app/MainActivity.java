@@ -43,7 +43,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -62,6 +61,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
     private LinearLayout content;
     private LinearLayout bottomArea;
     private View bottomFade;
+    private View statusBand;
     private TextView snack;
     private int insetTop;
     private int insetNav;
@@ -85,6 +85,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
     private LinearLayout recentBlock;
     private LinearLayout recentRow;
     private TextView sectionTitle;
+    private TextView sectionTag;
     private TextView sectionHint;
     private LinearLayout empty;
     private ImageView emptyIcon;
@@ -123,6 +124,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
     private LogoView miniArt;
     private TextView miniName;
     private TextView miniSub;
+    private TextView miniStatus;
     private BarsView miniBars;
     private ProgressBar miniSpinner;
     private ImageView miniPlay;
@@ -254,7 +256,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
         } else {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            getWindow().setNavigationBarColor(Ui.BG);
+            getWindow().setNavigationBarColor(Ui.ROAD);
         }
     }
 
@@ -272,9 +274,10 @@ public class MainActivity extends Activity implements RadioService.Listener {
             insetIme = b > insetNav + Ui.dp(this, 80) ? b : 0;
         }
         content.setPadding(0, insetTop, 0, 0);
-        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) bottomArea.getLayoutParams();
-        lp.bottomMargin = insetNav;
-        bottomArea.setLayoutParams(lp);
+        ViewGroup.LayoutParams sb = statusBand.getLayoutParams();
+        sb.height = insetTop;
+        statusBand.setLayoutParams(sb);
+        nav.setBottomInset(insetNav);
         for (Sheet s : sheets) s.applyInsets(insetNav, insetIme, insetTop);
         if (nowPlaying != null) nowPlaying.applyInsets(insetTop, insetNav);
         return in;
@@ -355,17 +358,22 @@ public class MainActivity extends Activity implements RadioService.Listener {
     }
 
     private void updateSection() {
+        updatePlate();
         if (sectionTitle == null) return;
         boolean filtered = query.trim().length() > 0 || province.length() > 0;
         if (tab == TAB_FAV) {
-            sectionTitle.setText(filtered ? "Matching favourites" : "Your favourites");
+            sectionTitle.setText(filtered ? "Matches" : "Favourites");
+            sectionTag.setText(filtered ? "from your stations" : "your top picks");
             sectionHint.setText(favs.size() + " saved · hold a station to remove it");
         } else {
-            sectionTitle.setText(filtered ? (province.length() > 0 ? province : "Results") : "All stations");
+            boolean searching = query.trim().length() > 0;
+            sectionTitle.setText(searching ? "Results" : "Stations");
+            sectionTag.setText(province.length() > 0 ? "in " + province : searching ? "off the dial" : "fresh every day!");
             sectionHint.setText(shown.size() + (shown.size() == 1 ? " station" : " stations") + " · tap to play, hold to save");
         }
-        View header = (View) sectionTitle.getParent();
-        header.setVisibility(shown.isEmpty() ? View.GONE : View.VISIBLE);
+        View titleRow = (View) sectionTitle.getParent();
+        titleRow.setVisibility(shown.isEmpty() ? View.GONE : View.VISIBLE);
+        sectionHint.setVisibility(shown.isEmpty() ? View.GONE : View.VISIBLE);
 
         boolean showEmpty = shown.isEmpty();
         empty.setVisibility(showEmpty ? View.VISIBLE : View.GONE);
@@ -518,7 +526,8 @@ public class MainActivity extends Activity implements RadioService.Listener {
             bindLogo(miniArt, s, 160);
         }
         miniSub.setText(playerLine());
-        miniSub.setTextColor(st == RadioService.ERROR ? Ui.RED : playing && RadioService.songTitle.length() > 0 ? Ui.TEXT2 : Ui.MUTED);
+        miniSub.setTextColor(st == RadioService.ERROR ? 0xFFFF9A9A : 0xFFE6E6E6);
+        miniStatus.setText(playing ? "NOW PLAYING · LIVE" : st == RadioService.BUFFERING ? "TUNING IN" : "ON THE DIAL");
         miniBars.setVisibility(playing ? View.VISIBLE : View.GONE);
         miniBars.setRunning(playing);
         miniSpinner.setVisibility(st == RadioService.BUFFERING ? View.VISIBLE : View.GONE);
@@ -526,16 +535,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
         miniPlay.setImageResource(active ? R.drawable.ic_stop : R.drawable.ic_play);
         miniPlay.setContentDescription(active ? "Stop" : "Play");
         mini.setContentDescription(s.name + ", " + playerLine() + ". Open player");
-        tintMini();
         if (nowPlaying != null) nowPlaying.refresh();
-    }
-
-    private void tintMini() {
-        int mood = Ui.moodColor(miniArt.getAccentColor());
-        GradientDrawable g = Ui.gradient(GradientDrawable.Orientation.LEFT_RIGHT, Ui.dp(this, 24),
-                Ui.blend(Ui.SURFACE2, mood, 0.32f), Ui.SURFACE2);
-        g.setStroke(Ui.dp(this, 1), Ui.STROKE2);
-        mini.setBackground(g);
     }
 
     void bindLogo(final LogoView v, Station s, int px) {
@@ -552,7 +552,6 @@ public class MainActivity extends Activity implements RadioService.Listener {
             @Override
             public void onBitmap(String url, Bitmap bm) {
                 v.setLogo(bm);
-                if (v == miniArt) tintMini();
                 if (nowPlaying != null) nowPlaying.onArt(v);
             }
         });
@@ -571,10 +570,9 @@ public class MainActivity extends Activity implements RadioService.Listener {
         newsPage.setVisibility(!stations && articlePage.getVisibility() != View.VISIBLE ? View.VISIBLE : View.GONE);
         if (stations) articlePage.setVisibility(View.GONE);
         provinceScroll.setVisibility(t == TAB_RADIO ? View.VISIBLE : View.GONE);
-        search.setHint(t == TAB_FAV ? "Search your favourites" : "Search stations, genres, cities");
+        search.setHint(t == TAB_FAV ? "Search your favourites" : "Where to? Station, genre or city");
         title.setText(t == TAB_RADIO ? "SA Radio" : t == TAB_FAV ? "Favourites" : sportMode ? "Sport" : "News");
-        greeting.setText(t == TAB_NEWS ? (sportMode ? "Scores, fixtures and line-ups" : "Read while you listen")
-                : t == TAB_FAV ? "Your stations" : greetingText());
+        updatePlate();
         if (t == TAB_FAV) {
             actionBtn.setImageResource(R.drawable.ic_plus);
             actionBtn.setContentDescription("Add a station");
@@ -601,9 +599,15 @@ public class MainActivity extends Activity implements RadioService.Listener {
         updateHeaderSpinner();
     }
 
-    private static String greetingText() {
-        int h = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+    /** The number plate under the title: what's on this screen, at a glance. */
+    private void updatePlate() {
+        if (greeting == null) return;
+        String s;
+        if (tab == TAB_RADIO) s = all.isEmpty() ? "Mzansi on air" : "Mzansi · " + all.size() + " stations";
+        else if (tab == TAB_FAV) s = favs.isEmpty() ? "Nothing saved yet" : favs.size() + (favs.size() == 1 ? " station saved" : " stations saved");
+        else if (sportMode) s = "Scores & fixtures";
+        else s = newsShown.isEmpty() ? "Read while you listen" : newsShown.size() + " stories · ad-free";
+        greeting.setText(s.toUpperCase(Locale.ROOT));
     }
 
     void updateHeaderSpinner() {
@@ -620,12 +624,15 @@ public class MainActivity extends Activity implements RadioService.Listener {
 
     private int columnsFor() {
         float wdp = getResources().getDisplayMetrics().widthPixels / getResources().getDisplayMetrics().density;
-        return Math.max(3, (int) (wdp / 124));
+        return Math.max(2, (int) (wdp / 180));
     }
 
     private View buildUi() {
         root = new FrameLayout(this);
-        root.addView(new BackdropView(this), new FrameLayout.LayoutParams(-1, -1));
+        root.setBackgroundColor(Ui.BG);
+        statusBand = new View(this);
+        statusBand.setBackgroundColor(Ui.INK);
+        root.addView(statusBand, new FrameLayout.LayoutParams(-1, 0, Gravity.TOP));
 
         content = Ui.column(this);
         content.addView(buildHeader());
@@ -641,24 +648,25 @@ public class MainActivity extends Activity implements RadioService.Listener {
         // Bottom: a soft fade, the mini player and the floating nav. Lists scroll underneath.
         bottomFade = new View(this);
         bottomFade.setBackground(new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[] {0x000B0D12, 0xE60B0D12, Ui.BG}));
+                new int[] {Ui.alpha(Ui.BG, 0f), Ui.alpha(Ui.BG, 0.92f), Ui.BG}));
         root.addView(bottomFade, new FrameLayout.LayoutParams(-1, Ui.dp(this, 120), Gravity.BOTTOM));
         bottomArea = Ui.column(this);
         bottomArea.addView(buildMini(), Ui.lp(-1, -2, Ui.dp(this, 12), 0, Ui.dp(this, 12), Ui.dp(this, 10)));
         nav = new NavBar(this, new int[] {R.drawable.ic_nav_radio, R.drawable.ic_star, R.drawable.ic_nav_news},
                 new String[] {"Radio", "Favourites", "News"});
         nav.setListener(this::setTab);
-        bottomArea.addView(nav, Ui.lp(-1, Ui.dp(this, 60), Ui.dp(this, 22), 0, Ui.dp(this, 22), Ui.dp(this, 12)));
+        bottomArea.addView(nav, Ui.lp(-1, -2));
+        bottomArea.setClipChildren(false);
         root.addView(bottomArea, new FrameLayout.LayoutParams(-1, -2, Gravity.BOTTOM));
         bottomArea.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> {
             if (b - t != ob - ot || t != ot) main.post(this::padLists);
         });
 
-        snack = Ui.text(this, "", 14, Ui.TEXT, Ui.W_BOLD);
+        snack = Ui.text(this, "", 14, Ui.PAPER, Ui.W_BOLD);
         snack.setGravity(Gravity.CENTER);
         snack.setPadding(Ui.dp(this, 18), Ui.dp(this, 12), Ui.dp(this, 18), Ui.dp(this, 12));
-        snack.setBackground(Ui.roundStroke(Ui.SURFACE3, Ui.dp(this, 22), Ui.STROKE2, Ui.dp(this, 1)));
-        snack.setElevation(Ui.dp(this, 16));
+        snack.setBackground(Ui.roundStroke(Ui.INK, Ui.dp(this, 10), Ui.YELLOW, Ui.line()));
+        snack.setElevation(Ui.dp(this, 6));
         snack.setVisibility(View.GONE);
         snack.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
         root.addView(snack, new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL));
@@ -672,7 +680,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
 
     /** Keeps the end of each list clear of the floating player and nav. */
     private void padLists() {
-        int h = bottomArea.getHeight() + insetNav + Ui.dp(this, 8);
+        int h = bottomArea.getHeight() + Ui.dp(this, 8);
         grid.setPadding(grid.getPaddingLeft(), grid.getPaddingTop(), grid.getPaddingRight(), h);
         newsList.setPadding(newsList.getPaddingLeft(), newsList.getPaddingTop(), newsList.getPaddingRight(), h);
         sportView.setBottomPadding(h);
@@ -683,34 +691,32 @@ public class MainActivity extends Activity implements RadioService.Listener {
         sl.bottomMargin = h + Ui.dp(this, 4);
         snack.setLayoutParams(sl);
         FrameLayout.LayoutParams el = (FrameLayout.LayoutParams) empty.getLayoutParams();
-        el.bottomMargin = h - insetNav;
+        el.bottomMargin = h;
         empty.setLayoutParams(el);
     }
 
     private View buildHeader() {
-        LinearLayout h = Ui.row(this);
-        headerView = h;
+        LinearLayout outer = Ui.column(this);
+        headerView = outer;
         boolean tight = shortScreen();
-        h.setPadding(Ui.dp(this, 22), Ui.dp(this, tight ? 8 : 14), Ui.dp(this, 14), Ui.dp(this, tight ? 8 : 12));
+        outer.addView(new Livery.Band(this, Ui.PAPER), Ui.lp(-1, Ui.dp(this, 12)));
+        LinearLayout h = Ui.row(this);
+        h.setGravity(Gravity.TOP);
+        h.setPadding(Ui.dp(this, 20), Ui.dp(this, tight ? 10 : 16), Ui.dp(this, 16), Ui.dp(this, tight ? 10 : 14));
         LinearLayout titles = Ui.column(this);
-        LinearLayout gl = Ui.row(this);
-        gl.addView(new FlagStripe(this), Ui.lp(Ui.dp(this, 22), Ui.dp(this, 4), 0, 0, Ui.dp(this, 8), 0));
-        greeting = Ui.text(this, greetingText(), 13.5f, Ui.MUTED, Ui.W_BOLD);
-        gl.addView(greeting);
-        titles.addView(gl);
-        title = Ui.text(this, "SA Radio", tight ? 26 : 31, Ui.TEXT, Ui.W_HEAVY);
-        title.setLetterSpacing(-0.02f);
-        title.setPadding(0, Ui.dp(this, tight ? 4 : 6), 0, 0);
+        title = Ui.display(this, "SA Radio", tight ? 38 : 48, Ui.INK);
         Ui.heading(title);
         titles.addView(title);
+        greeting = numberPlate(this, "");
+        titles.addView(greeting, Ui.lp(-2, Ui.dp(this, 30), 0, Ui.dp(this, tight ? 6 : 9), 0, 0));
         h.addView(titles, Ui.weight(1));
 
         topSpinner = new ProgressBar(this, null, android.R.attr.progressBarStyleSmall);
-        topSpinner.setIndeterminateTintList(ColorStateList.valueOf(Ui.GOLD));
+        topSpinner.setIndeterminateTintList(ColorStateList.valueOf(Ui.INK));
         topSpinner.setContentDescription("Loading");
-        h.addView(topSpinner, Ui.lp(Ui.dp(this, 20), Ui.dp(this, 20), 0, 0, Ui.dp(this, 6), 0));
+        h.addView(topSpinner, Ui.lp(Ui.dp(this, 20), Ui.dp(this, 20), 0, Ui.dp(this, 14), Ui.dp(this, 10), 0));
 
-        actionBtn = Ui.iconButton(this, R.drawable.ic_refresh, Ui.TEXT, Ui.alpha(Ui.SURFACE2, 0.9f), 46, "Refresh");
+        actionBtn = Ui.iconButton(this, R.drawable.ic_refresh, Ui.YELLOW, Ui.INK, 48, "Refresh");
         actionBtn.setOnClickListener(v -> {
             if (tab == TAB_NEWS) {
                 v.animate().rotationBy(360).setDuration(500).start();
@@ -720,11 +726,29 @@ public class MainActivity extends Activity implements RadioService.Listener {
                 Panels.addStation(this);
             }
         });
-        h.addView(actionBtn, Ui.lp(Ui.dp(this, 46), Ui.dp(this, 46), Ui.dp(this, 4), 0, 0, 0));
-        ImageView settings = Ui.iconButton(this, R.drawable.ic_tune, Ui.TEXT, Ui.alpha(Ui.SURFACE2, 0.9f), 46, "Settings: data, sound and stations");
+        h.addView(actionBtn, Ui.lp(Ui.dp(this, 48), Ui.dp(this, 48)));
+        ImageView settings = Ui.iconButton(this, R.drawable.ic_tune, Ui.YELLOW, Ui.INK, 48, "Settings: data, sound and stations");
         settings.setOnClickListener(v -> Panels.settings(this));
-        h.addView(settings, Ui.lp(Ui.dp(this, 46), Ui.dp(this, 46), Ui.dp(this, 8), 0, 0, 0));
-        return h;
+        h.addView(settings, Ui.lp(Ui.dp(this, 48), Ui.dp(this, 48), Ui.dp(this, 8), 0, 0, 0));
+        outer.addView(h);
+        return outer;
+    }
+
+    /** A white number plate with two screws, for short labels. */
+    static TextView numberPlate(android.content.Context c, String s) {
+        TextView t = Ui.text(c, s, 13, Ui.INK, Ui.W_BOLD);
+        t.setLetterSpacing(0.12f);
+        t.setSingleLine(true);
+        t.setGravity(Gravity.CENTER_VERTICAL);
+        t.setPadding(Ui.dp(c, 10), 0, Ui.dp(c, 10), 0);
+        t.setBackground(Ui.roundStroke(Ui.PAPER, Ui.dp(c, 6), Ui.INK, Ui.line()));
+        GradientDrawable l = Ui.oval(0xFF9A9A9A), r = Ui.oval(0xFF9A9A9A);
+        int s5 = Ui.dp(c, 5);
+        l.setBounds(0, 0, s5, s5);
+        r.setBounds(0, 0, s5, s5);
+        t.setCompoundDrawables(l, null, r, null);
+        t.setCompoundDrawablePadding(Ui.dp(c, 8));
+        return t;
     }
 
     private View buildRadioPage() {
@@ -732,13 +756,13 @@ public class MainActivity extends Activity implements RadioService.Listener {
 
         LinearLayout box = Ui.row(this);
         box.setPadding(Ui.dp(this, 16), 0, Ui.dp(this, 6), 0);
-        box.setBackground(Ui.roundStroke(Ui.alpha(Ui.SURFACE2, 0.92f), Ui.dp(this, 18), Ui.STROKE, Ui.dp(this, 1)));
+        box.setBackground(Ui.roundStroke(Ui.PAPER, Ui.dp(this, 10), Ui.INK, Ui.line()));
         ImageView si = new ImageView(this);
         si.setImageResource(R.drawable.ic_search);
-        si.setColorFilter(Ui.MUTED);
+        si.setColorFilter(Ui.INK);
         box.addView(si, Ui.lp(Ui.dp(this, 20), Ui.dp(this, 20)));
         search = new EditText(this);
-        search.setHint("Search stations, genres, cities");
+        search.setHint("Where to? Station, genre or city");
         search.setHintTextColor(Ui.MUTED);
         search.setTextColor(Ui.TEXT);
         search.setTextSize(15);
@@ -771,16 +795,15 @@ public class MainActivity extends Activity implements RadioService.Listener {
         clearSearch.setVisibility(View.GONE);
         clearSearch.setOnClickListener(v -> search.setText(""));
         box.addView(clearSearch);
-        radioPage.addView(box, Ui.lp(-1, Ui.dp(this, 52), Ui.dp(this, 16), 0, Ui.dp(this, 16), Ui.dp(this, 12)));
+        radioPage.addView(box, Ui.lp(-1, Ui.dp(this, 52), Ui.dp(this, 20), 0, Ui.dp(this, 20), Ui.dp(this, 4)));
 
         provinceScroll = new HorizontalScrollView(this);
         provinceScroll.setHorizontalScrollBarEnabled(false);
         provinceScroll.setOverScrollMode(View.OVER_SCROLL_NEVER);
         provinceRow = Ui.row(this);
-        provinceRow.setPadding(Ui.dp(this, 16), 0, Ui.dp(this, 8), 0);
+        provinceRow.setPadding(Ui.dp(this, 20), 0, Ui.dp(this, 12), 0);
         provinceScroll.addView(provinceRow);
         rebuildProvinceChips();
-        radioPage.addView(provinceScroll, Ui.lp(-1, -2, 0, 0, 0, Ui.dp(this, 4)));
 
         FrameLayout listHolder = new FrameLayout(this);
         grid = new ListView(this);
@@ -811,15 +834,15 @@ public class MainActivity extends Activity implements RadioService.Listener {
 
     private View buildRecents() {
         recentBlock = Ui.column(this);
-        TextView t = Ui.text(this, "Jump back in", 18, Ui.TEXT, Ui.W_HEAVY);
+        TextView t = Ui.display(this, "Jump back in", 22, Ui.INK);
         Ui.heading(t);
-        t.setPadding(Ui.dp(this, 22), Ui.dp(this, 14), Ui.dp(this, 22), Ui.dp(this, 10));
+        t.setPadding(Ui.dp(this, 20), Ui.dp(this, 16), Ui.dp(this, 20), Ui.dp(this, 10));
         recentBlock.addView(t);
         HorizontalScrollView hs = new HorizontalScrollView(this);
         hs.setHorizontalScrollBarEnabled(false);
         hs.setOverScrollMode(View.OVER_SCROLL_NEVER);
         recentRow = Ui.row(this);
-        recentRow.setPadding(Ui.dp(this, 14), 0, Ui.dp(this, 14), 0);
+        recentRow.setPadding(Ui.dp(this, 16), 0, Ui.dp(this, 16), 0);
         recentRow.setGravity(Gravity.TOP);
         hs.addView(recentRow);
         recentBlock.addView(hs);
@@ -845,7 +868,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
             boolean on = cur != null && cur.key().equals(s.key()) && RadioService.isActive();
             art.setPlaying(on);
             cell.addView(art, Ui.lp(Ui.dp(this, 84), Ui.dp(this, 84)));
-            TextView n = Ui.text(this, s.name, 12.5f, on ? Ui.GOLD : Ui.TEXT2, Ui.W_BOLD);
+            TextView n = Ui.text(this, s.name, 12.5f, on ? Ui.SIGN_RED : Ui.INK, Ui.W_BOLD);
             n.setSingleLine(true);
             n.setEllipsize(TextUtils.TruncateAt.END);
             n.setGravity(Gravity.CENTER);
@@ -859,13 +882,26 @@ public class MainActivity extends Activity implements RadioService.Listener {
 
     private View buildSectionHeader() {
         LinearLayout h = Ui.column(this);
-        h.setPadding(Ui.dp(this, 22), Ui.dp(this, 16), Ui.dp(this, 22), Ui.dp(this, 10));
-        sectionTitle = Ui.text(this, "All stations", 18, Ui.TEXT, Ui.W_HEAVY);
+        h.setPadding(0, Ui.dp(this, 18), 0, Ui.dp(this, 14));
+        LinearLayout tr = Ui.row(this);
+        tr.setGravity(Gravity.START | Gravity.TOP); // lines the two scripts up on their baselines
+        tr.setPadding(Ui.dp(this, 20), 0, Ui.dp(this, 20), 0);
+        sectionTitle = Ui.sign(this, "Stations", 24, Ui.SIGN_RED);
+        Ui.paintedShadow(sectionTitle, Ui.dp(this, 2), Ui.dp(this, 2), Ui.INK);
+        sectionTitle.setSingleLine(true);
         Ui.heading(sectionTitle);
-        h.addView(sectionTitle);
-        sectionHint = Ui.text(this, "", 12.5f, Ui.MUTED, Ui.W_MEDIUM);
-        sectionHint.setPadding(0, Ui.dp(this, 4), 0, 0);
+        tr.addView(sectionTitle);
+        sectionTag = Ui.text(this, "fresh every day!", 21, Ui.COBALT, Ui.W_REGULAR);
+        sectionTag.setTypeface(Ui.brush);
+        sectionTag.setSingleLine(true);
+        sectionTag.setEllipsize(TextUtils.TruncateAt.END);
+        sectionTag.setPadding(Ui.dp(this, 10), 0, 0, 0);
+        tr.addView(sectionTag, Ui.lp(-2, -2));
+        h.addView(tr);
+        sectionHint = Ui.text(this, "", 12.5f, Ui.TEXT2, Ui.W_MEDIUM);
+        sectionHint.setPadding(Ui.dp(this, 20), Ui.dp(this, 6), Ui.dp(this, 20), 0);
         h.addView(sectionHint);
+        h.addView(provinceScroll, Ui.lp(-1, -2, 0, Ui.dp(this, 12), 0, 0));
         FrameLayout wrap = new FrameLayout(this);
         wrap.addView(h);
         return wrap;
@@ -876,15 +912,15 @@ public class MainActivity extends Activity implements RadioService.Listener {
         empty.setGravity(Gravity.CENTER);
         empty.setPadding(Ui.dp(this, 40), 0, Ui.dp(this, 40), 0);
         emptyIcon = new ImageView(this);
-        emptyIcon.setColorFilter(Ui.GOLD);
+        emptyIcon.setColorFilter(Ui.INK);
         int p = Ui.dp(this, 20);
         emptyIcon.setPadding(p, p, p, p);
-        emptyIcon.setBackground(Ui.round(Ui.alpha(Ui.GOLD, 0.12f), Ui.dp(this, 36)));
+        emptyIcon.setBackground(Ui.roundStroke(Ui.PAPER, Ui.dp(this, 12), Ui.INK, Ui.line()));
         empty.addView(emptyIcon, Ui.lp(Ui.dp(this, 72), Ui.dp(this, 72)));
-        emptyTitle = Ui.text(this, "", 19, Ui.TEXT, Ui.W_HEAVY);
+        emptyTitle = Ui.display(this, "", 26, Ui.INK);
         emptyTitle.setGravity(Gravity.CENTER);
         empty.addView(emptyTitle, Ui.lp(-2, -2, 0, Ui.dp(this, 18), 0, 0));
-        emptyBody = Ui.text(this, "", 14.5f, Ui.MUTED, Ui.W_MEDIUM);
+        emptyBody = Ui.text(this, "", 14.5f, Ui.TEXT2, Ui.W_MEDIUM);
         emptyBody.setGravity(Gravity.CENTER);
         emptyBody.setLineSpacing(0, 1.3f);
         empty.addView(emptyBody, Ui.lp(-2, -2, 0, Ui.dp(this, 8), 0, 0));
@@ -925,8 +961,11 @@ public class MainActivity extends Activity implements RadioService.Listener {
         LogoView art;
         TextView name;
         TextView sub;
+        TextView badge;
+        ImageView star;
         String key;
         Station station;
+        int painted;
     }
 
     private final class GridAdapter extends BaseAdapter {
@@ -956,11 +995,14 @@ public class MainActivity extends Activity implements RadioService.Listener {
             if (r == null || r.getChildCount() != cols) {
                 r = Ui.row(MainActivity.this);
                 r.setGravity(Gravity.TOP);
-                r.setPadding(Ui.dp(MainActivity.this, 10), 0, Ui.dp(MainActivity.this, 10), Ui.dp(MainActivity.this, 6));
+                // Each sign carries a 3dp shadow on its right and bottom, so trim that from the gaps.
+                r.setPadding(Ui.dp(MainActivity.this, 20), 0, Ui.dp(MainActivity.this, 17), Ui.dp(MainActivity.this, 9));
                 Tile[] tiles = new Tile[cols];
                 for (int i = 0; i < cols; i++) {
                     tiles[i] = makeTile();
-                    r.addView(tiles[i].view, Ui.weight(1));
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, Ui.dp(MainActivity.this, 136), 1f);
+                    lp.rightMargin = i < cols - 1 ? Ui.dp(MainActivity.this, 9) : 0;
+                    r.addView(tiles[i].view, lp);
                 }
                 r.setTag(tiles);
             }
@@ -982,24 +1024,49 @@ public class MainActivity extends Activity implements RadioService.Listener {
 
     private Tile makeTile() {
         final Tile t = new Tile();
-        LinearLayout v = Ui.column(this);
-        v.setGravity(Gravity.CENTER_HORIZONTAL);
-        v.setPadding(Ui.dp(this, 4), Ui.dp(this, 2), Ui.dp(this, 4), Ui.dp(this, 10));
+        FrameLayout v = new FrameLayout(this);
+        int sh = Ui.dp(this, 3);
+        LinearLayout col = Ui.column(this);
+        col.setPadding(Ui.dp(this, 9), Ui.dp(this, 9), Ui.dp(this, 11) + sh, Ui.dp(this, 11) + sh);
         t.art = new LogoView(this);
-        v.addView(t.art, Ui.lp(-1, -2));
-        t.name = Ui.text(this, "", 13.5f, Ui.TEXT, Ui.W_BOLD);
-        t.name.setGravity(Gravity.CENTER);
+        col.addView(t.art, Ui.lp(Ui.dp(this, 64), Ui.dp(this, 64)));
+        col.addView(new View(this), new LinearLayout.LayoutParams(-1, 0, 1f));
+        t.name = Ui.sign(this, "", 15, Ui.INK);
         t.name.setMaxLines(2);
         t.name.setEllipsize(TextUtils.TruncateAt.END);
-        t.name.setLineSpacing(0, 1.0f);
-        t.name.setPadding(Ui.dp(this, 2), Ui.dp(this, 4), Ui.dp(this, 2), 0);
-        v.addView(t.name, Ui.lp(-1, -2));
-        t.sub = Ui.text(this, "", 11.5f, Ui.MUTED, Ui.W_MEDIUM);
-        t.sub.setGravity(Gravity.CENTER);
+        t.name.setPadding(Ui.dp(this, 2), 0, 0, 0);
+        col.addView(t.name, Ui.lp(-1, -2));
+        t.sub = Ui.text(this, "", 12, Ui.INK, Ui.W_BOLD);
         t.sub.setSingleLine(true);
         t.sub.setEllipsize(TextUtils.TruncateAt.END);
-        t.sub.setPadding(Ui.dp(this, 2), Ui.dp(this, 3), Ui.dp(this, 2), 0);
-        v.addView(t.sub, Ui.lp(-1, -2));
+        t.sub.setPadding(Ui.dp(this, 2), 0, 0, 0);
+        col.addView(t.sub, Ui.lp(-1, -2, 0, Ui.dp(this, 3), 0, 0));
+        v.addView(col, new FrameLayout.LayoutParams(-1, -1));
+
+        t.badge = Ui.text(this, "ON AIR", 10.5f, Ui.INK, Ui.W_BOLD);
+        t.badge.setLetterSpacing(0.1f);
+        t.badge.setPadding(Ui.dp(this, 7), Ui.dp(this, 4), Ui.dp(this, 7), Ui.dp(this, 4));
+        t.badge.setBackground(Ui.roundStroke(Ui.YELLOW, Ui.dp(this, 4), Ui.INK, Ui.line()));
+        FrameLayout.LayoutParams bl = new FrameLayout.LayoutParams(-2, -2, Gravity.TOP | Gravity.END);
+        bl.setMargins(0, Ui.dp(this, 10), Ui.dp(this, 10) + sh, 0);
+        v.addView(t.badge, bl);
+        t.badge.setVisibility(View.GONE);
+
+        t.star = new ImageView(this);
+        t.star.setImageResource(R.drawable.ic_star);
+        t.star.setColorFilter(Ui.INK);
+        int sp = Ui.dp(this, 5);
+        t.star.setPadding(sp, sp, sp, sp);
+        GradientDrawable sb = Ui.oval(Ui.YELLOW);
+        sb.setStroke(Ui.line(), Ui.INK);
+        t.star.setBackground(sb);
+        t.star.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        FrameLayout.LayoutParams stl = new FrameLayout.LayoutParams(Ui.dp(this, 28), Ui.dp(this, 28), Gravity.TOP | Gravity.END);
+        stl.setMargins(0, Ui.dp(this, 9), Ui.dp(this, 9) + sh, 0);
+        v.addView(t.star, stl);
+        t.star.setVisibility(View.GONE);
+
+        t.art.setArtListener(x -> paintTile(t));
         v.setOnClickListener(x -> {
             if (t.station != null) playStation(t.station);
         });
@@ -1009,9 +1076,22 @@ public class MainActivity extends Activity implements RadioService.Listener {
             toggleFav(t.station);
             return true;
         });
-        Ui.press(v, 0.93f);
+        Ui.press(v, 0.95f);
         t.view = v;
         return t;
+    }
+
+    /** Paints the sign in the station's colour once its logo (or monogram) is known. */
+    private void paintTile(Tile t) {
+        int brand = t.art.getBrandColor();
+        if (brand == t.painted) return;
+        t.painted = brand;
+        // An ink sign gets a red shadow so it still stands off the page.
+        int shadow = Ui.luminance(brand) < 0.03 ? Ui.SIGN_RED : Ui.INK;
+        t.view.setBackground(Ui.plate(brand, Ui.dp(this, 8), Ui.dp(this, 3), shadow));
+        int on = Ui.onColor(brand);
+        t.name.setTextColor(on == Ui.PAPER && Ui.luminance(brand) < 0.03 ? Ui.YELLOW : on);
+        t.sub.setTextColor(on);
     }
 
     private void bindTile(Tile t, Station s) {
@@ -1020,21 +1100,21 @@ public class MainActivity extends Activity implements RadioService.Listener {
             t.key = s.key();
             bindLogo(t.art, s, DataMode.logoPx(DataMode.effective(this)));
         }
+        paintTile(t);
         Station cur = RadioService.current;
         boolean isCur = cur != null && cur.key().equals(s.key());
         boolean on = isCur && RadioService.isActive();
-        t.art.setPlaying(on);
-        t.art.setFav(tab == TAB_RADIO && isFav(s));
-        t.name.setText(s.name);
-        t.name.setTextColor(isCur ? Ui.GOLD : Ui.TEXT);
-        if (on) {
-            t.sub.setText(RadioService.state == RadioService.PLAYING ? "● Live" : "Connecting…");
-            t.sub.setTextColor(RadioService.state == RadioService.PLAYING ? Ui.LIVE : Ui.MUTED);
-        } else {
-            t.sub.setText(shortSub(s));
-            t.sub.setTextColor(Ui.MUTED);
-        }
         boolean fav = isFav(s);
+        t.art.setPlaying(on);
+        t.name.setText(s.name);
+        t.sub.setText(shortSub(s));
+        if (on) {
+            t.badge.setText(RadioService.state == RadioService.PLAYING ? "ON AIR" : "TUNING…");
+            t.badge.setVisibility(View.VISIBLE);
+        } else {
+            t.badge.setVisibility(View.GONE);
+        }
+        t.star.setVisibility(tab == TAB_RADIO && fav && !on ? View.VISIBLE : View.GONE);
         t.view.setContentDescription(s.name + ", " + shortSub(s) + (on ? ", playing" : "") + (fav ? ", favourite" : ""));
     }
 
@@ -1082,6 +1162,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
     }
 
     private void updateNewsStatus() {
+        updatePlate();
         if (newsStatus == null) return;
         if (!news.isEmpty()) {
             Set<String> pubs = new LinkedHashSet<>();
@@ -1128,7 +1209,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
         newsMode = new Segmented(this, new String[] {"Headlines", "Sport"});
         newsMode.select(sportMode ? 1 : 0, false);
         newsMode.setListener(i -> applyNewsMode(i == 1));
-        newsPage.addView(newsMode, Ui.lp(-1, -2, Ui.dp(this, 16), 0, Ui.dp(this, 16), Ui.dp(this, 12)));
+        newsPage.addView(newsMode, Ui.lp(-1, -2, Ui.dp(this, 20), 0, Ui.dp(this, 20), Ui.dp(this, 12)));
         newsContent = Ui.column(this);
         newsPage.addView(newsContent, new LinearLayout.LayoutParams(-1, 0, 1f));
         sportView = new SportView(this);
@@ -1137,11 +1218,11 @@ public class MainActivity extends Activity implements RadioService.Listener {
         hs.setHorizontalScrollBarEnabled(false);
         hs.setOverScrollMode(View.OVER_SCROLL_NEVER);
         newsChipRow = Ui.row(this);
-        newsChipRow.setPadding(Ui.dp(this, 16), 0, Ui.dp(this, 8), 0);
+        newsChipRow.setPadding(Ui.dp(this, 20), 0, Ui.dp(this, 12), 0);
         hs.addView(newsChipRow);
         newsContent.addView(hs);
-        newsStatus = Ui.text(this, "", 12.5f, Ui.MUTED, Ui.W_MEDIUM);
-        newsStatus.setPadding(Ui.dp(this, 22), Ui.dp(this, 12), Ui.dp(this, 22), Ui.dp(this, 6));
+        newsStatus = Ui.text(this, "", 12.5f, Ui.TEXT2, Ui.W_MEDIUM);
+        newsStatus.setPadding(Ui.dp(this, 20), Ui.dp(this, 12), Ui.dp(this, 20), Ui.dp(this, 6));
         newsContent.addView(newsStatus);
         newsList = new ListView(this);
         newsList.setDivider(null);
@@ -1149,7 +1230,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
         newsList.setSelector(android.R.color.transparent);
         newsList.setClipToPadding(false);
         newsList.setVerticalScrollBarEnabled(false);
-        newsList.setPadding(Ui.dp(this, 16), Ui.dp(this, 4), Ui.dp(this, 16), Ui.dp(this, 160));
+        newsList.setPadding(Ui.dp(this, 20), Ui.dp(this, 4), Ui.dp(this, 17), Ui.dp(this, 160));
         newsAdapter = new NewsAdapter();
         newsList.setAdapter(newsAdapter);
         newsList.setOnItemClickListener((p, v, i, id) -> {
@@ -1172,8 +1253,9 @@ public class MainActivity extends Activity implements RadioService.Listener {
 
     private View buildArticlePage() {
         articlePage = Ui.column(this);
+        articlePage.setBackgroundColor(Ui.PAPER);
         LinearLayout bar = Ui.row(this);
-        bar.setPadding(Ui.dp(this, 12), 0, Ui.dp(this, 12), Ui.dp(this, 8));
+        bar.setPadding(Ui.dp(this, 12), Ui.dp(this, 10), Ui.dp(this, 12), Ui.dp(this, 8));
         ImageView back = Ui.iconButton(this, R.drawable.ic_back, Ui.TEXT, Ui.SURFACE2, 44, "Back to headlines");
         back.setOnClickListener(v -> closeArticle());
         bar.addView(back);
@@ -1202,8 +1284,8 @@ public class MainActivity extends Activity implements RadioService.Listener {
         articlePage.addView(bar);
         webProgress = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
         webProgress.setMax(100);
-        webProgress.setProgressTintList(ColorStateList.valueOf(Ui.GOLD));
-        webProgress.setProgressBackgroundTintList(ColorStateList.valueOf(Ui.SURFACE2));
+        webProgress.setProgressTintList(ColorStateList.valueOf(Ui.ACCENT));
+        webProgress.setProgressBackgroundTintList(ColorStateList.valueOf(Ui.SURFACE3));
         webProgress.setVisibility(View.GONE);
         articlePage.addView(webProgress, Ui.lp(-1, Ui.dp(this, 3)));
         articleBody = new FrameLayout(this);
@@ -1278,7 +1360,8 @@ public class MainActivity extends Activity implements RadioService.Listener {
         articlePage.setTranslationX(Ui.dp(this, 40));
         articlePage.animate().alpha(1f).translationX(0).setDuration(220).setInterpolator(new DecelerateInterpolator()).start();
         // The story scrolls under the player and nav; keep its end clear of them.
-        articleView.setBottomPadding(bottomArea.getHeight() + insetNav + Ui.dp(this, 8));
+        articleView.setBottomPadding(bottomArea.getHeight() + Ui.dp(this, 8));
+        bottomFade.setVisibility(View.GONE);
     }
 
     private void showReader() {
@@ -1311,7 +1394,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
         modeBtn.setTooltipText("Back to reader view");
         sizeBtn.setVisibility(View.GONE);
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) web.getLayoutParams();
-        lp.bottomMargin = bottomArea.getHeight() + insetNav;
+        lp.bottomMargin = bottomArea.getHeight();
         web.setLayoutParams(lp);
     }
 
@@ -1389,6 +1472,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
     private void closeArticle() {
         articlePage.setVisibility(View.GONE);
         headerView.setVisibility(View.VISIBLE);
+        bottomFade.setVisibility(View.VISIBLE);
         if (tab == TAB_NEWS) newsPage.setVisibility(View.VISIBLE);
         articleItem = null;
         originalMode = false;
@@ -1401,7 +1485,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
     }
 
     private Drawable newsPlaceholder(String source) {
-        int[][] sets = {{0xFF1E3A5F, 0xFF0F1B2D}, {0xFF0B4F3C, 0xFF07261D}, {0xFF6B2A1F, 0xFF2A100C}, {0xFF4A3B12, 0xFF1F1806}, {0xFF3D2A5C, 0xFF180F26}};
+        int[][] sets = {{Ui.COBALT, 0xFF14228F}, {Ui.LIVERY_GREEN, 0xFF006B44}, {Ui.PINK, 0xFFC2275F}, {Ui.SIGN_RED, 0xFF8C1C2B}, {0xFF61107D, 0xFF3A0A4B}};
         return new GradientDrawable(GradientDrawable.Orientation.TL_BR, sets[(source.hashCode() & Integer.MAX_VALUE) % sets.length]);
     }
 
@@ -1468,9 +1552,15 @@ public class MainActivity extends Activity implements RadioService.Listener {
         private View hero(NewsCell c) {
             LinearLayout outer = Ui.column(MainActivity.this);
             outer.setPadding(0, Ui.dp(MainActivity.this, 4), 0, Ui.dp(MainActivity.this, 14));
+            int sh = Ui.dp(MainActivity.this, 4);
+            FrameLayout frame = new FrameLayout(MainActivity.this);
+            frame.setPadding(0, 0, sh, sh);
+            frame.setBackground(Ui.plate(Ui.INK, Ui.dp(MainActivity.this, 12), sh, Ui.INK));
             FrameLayout card = new FrameLayout(MainActivity.this);
-            card.setBackground(Ui.round(Ui.SURFACE2, Ui.dp(MainActivity.this, 26)));
-            Ui.roundClip(card, Ui.dp(MainActivity.this, 26));
+            card.setBackground(Ui.round(Ui.INK, Ui.dp(MainActivity.this, 12)));
+            card.setForeground(Ui.roundStroke(0, Ui.dp(MainActivity.this, 12), Ui.INK, Ui.line()));
+            Ui.roundClip(card, Ui.dp(MainActivity.this, 12));
+            frame.addView(card);
             c.image = new ImageView(MainActivity.this);
             c.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
             card.addView(c.image, new FrameLayout.LayoutParams(-1, Ui.dp(MainActivity.this, 250)));
@@ -1479,23 +1569,24 @@ public class MainActivity extends Activity implements RadioService.Listener {
             card.addView(shade, new FrameLayout.LayoutParams(-1, Ui.dp(MainActivity.this, 250)));
             LinearLayout txt = Ui.column(MainActivity.this);
             txt.setPadding(Ui.dp(MainActivity.this, 18), Ui.dp(MainActivity.this, 18), Ui.dp(MainActivity.this, 18), Ui.dp(MainActivity.this, 18));
-            TextView badge = Ui.text(MainActivity.this, "TOP STORY", 10.5f, Ui.ON_GOLD, Ui.W_HEAVY);
+            TextView badge = Ui.text(MainActivity.this, "TOP STORY", 10.5f, Ui.INK, Ui.W_HEAVY);
             badge.setLetterSpacing(0.14f);
-            badge.setBackground(Ui.round(Ui.GOLD, Ui.dp(MainActivity.this, 8)));
+            badge.setBackground(Ui.roundStroke(Ui.YELLOW, Ui.dp(MainActivity.this, 4), Ui.INK, Ui.line()));
             badge.setPadding(Ui.dp(MainActivity.this, 9), Ui.dp(MainActivity.this, 4), Ui.dp(MainActivity.this, 9), Ui.dp(MainActivity.this, 4));
             txt.addView(badge, Ui.lp(-2, -2));
-            c.title = Ui.text(MainActivity.this, "", 21, 0xFFFFFFFF, Ui.W_HEAVY);
+            c.title = Ui.text(MainActivity.this, "", 25, 0xFFFFFFFF, Ui.W_HEAVY);
+            c.title.setTypeface(Ui.display);
             c.title.setMaxLines(3);
             c.title.setEllipsize(TextUtils.TruncateAt.END);
-            c.title.setLineSpacing(0, 1.12f);
+            c.title.setLineSpacing(0, 1.05f);
             c.title.setPadding(0, Ui.dp(MainActivity.this, 10), 0, Ui.dp(MainActivity.this, 8));
             txt.addView(c.title);
             c.meta = Ui.text(MainActivity.this, "", 11.5f, 0xFFD6DAE2, Ui.W_BOLD);
             c.meta.setLetterSpacing(0.06f);
             txt.addView(c.meta);
             card.addView(txt, new FrameLayout.LayoutParams(-1, -2, Gravity.BOTTOM));
-            outer.addView(card, Ui.lp(-1, -2));
-            c.summary = Ui.text(MainActivity.this, "", 14, Ui.TEXT2, Ui.W_REGULAR);
+            outer.addView(frame, Ui.lp(-1, -2));
+            c.summary = Ui.text(MainActivity.this, "", 14.5f, Ui.INK, Ui.W_MEDIUM);
             c.summary.setMaxLines(3);
             c.summary.setEllipsize(TextUtils.TruncateAt.END);
             c.summary.setLineSpacing(0, 1.3f);
@@ -1506,17 +1597,19 @@ public class MainActivity extends Activity implements RadioService.Listener {
 
         private View row(NewsCell c) {
             FrameLayout outer = new FrameLayout(MainActivity.this);
-            outer.setPadding(0, Ui.dp(MainActivity.this, 5), 0, Ui.dp(MainActivity.this, 5));
+            outer.setPadding(0, Ui.dp(MainActivity.this, 5), 0, Ui.dp(MainActivity.this, 6));
             LinearLayout r = Ui.row(MainActivity.this);
-            r.setBackground(Ui.roundStroke(Ui.alpha(Ui.SURFACE, 0.9f), Ui.dp(MainActivity.this, 22), Ui.STROKE, Ui.dp(MainActivity.this, 1)));
-            r.setPadding(Ui.dp(MainActivity.this, 10), Ui.dp(MainActivity.this, 10), Ui.dp(MainActivity.this, 14), Ui.dp(MainActivity.this, 10));
+            int sh = Ui.dp(MainActivity.this, 3);
+            r.setBackground(Ui.plate(Ui.PAPER, Ui.dp(MainActivity.this, 10), sh, Ui.INK));
+            r.setPadding(Ui.dp(MainActivity.this, 10), Ui.dp(MainActivity.this, 10), Ui.dp(MainActivity.this, 14) + sh, Ui.dp(MainActivity.this, 10) + sh);
             c.image = new ImageView(MainActivity.this);
             c.image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            Ui.roundClip(c.image, Ui.dp(MainActivity.this, 16));
+            c.image.setForeground(Ui.roundStroke(0, Ui.dp(MainActivity.this, 6), Ui.INK, Ui.line()));
+            Ui.roundClip(c.image, Ui.dp(MainActivity.this, 6));
             r.addView(c.image, Ui.lp(Ui.dp(MainActivity.this, 92), Ui.dp(MainActivity.this, 92)));
             LinearLayout col = Ui.column(MainActivity.this);
             col.setPadding(Ui.dp(MainActivity.this, 14), 0, 0, 0);
-            c.meta = Ui.text(MainActivity.this, "", 12, Ui.GOLD, Ui.W_BOLD);
+            c.meta = Ui.text(MainActivity.this, "", 12, Ui.ACCENT, Ui.W_BOLD);
             col.addView(c.meta);
             c.title = Ui.text(MainActivity.this, "", 15.5f, Ui.TEXT, Ui.W_BOLD);
             c.title.setMaxLines(3);
@@ -1534,33 +1627,40 @@ public class MainActivity extends Activity implements RadioService.Listener {
 
     private View buildMini() {
         mini = Ui.row(this);
-        mini.setPadding(Ui.dp(this, 8), Ui.dp(this, 8), Ui.dp(this, 8), Ui.dp(this, 8));
-        mini.setElevation(Ui.dp(this, 10));
+        // The "now playing" card: an ink destination board with livery stripes up one end.
+        mini.setBackground(new Livery.Board(this, Ui.INK, new int[] {Ui.YELLOW, Ui.PINK, Ui.COBALT, Ui.LIVERY_GREEN}, 92));
+        mini.setPadding(Ui.dp(this, 10), Ui.dp(this, 10), Ui.dp(this, 16), Ui.dp(this, 10));
         miniArt = new LogoView(this);
-        miniArt.setCornerFraction(0.26f);
-        mini.addView(miniArt, Ui.lp(Ui.dp(this, 50), Ui.dp(this, 50)));
+        mini.addView(miniArt, Ui.lp(Ui.dp(this, 54), Ui.dp(this, 54)));
         LinearLayout col = Ui.column(this);
         col.setPadding(Ui.dp(this, 10), 0, Ui.dp(this, 8), 0);
-        miniName = Ui.text(this, "", 15, Ui.TEXT, Ui.W_BOLD);
+        LinearLayout line = Ui.row(this);
+        miniBars = new BarsView(this, BarsView.MINI, Ui.YELLOW);
+        line.addView(miniBars, Ui.lp(Ui.dp(this, 12), Ui.dp(this, 10), 0, 0, Ui.dp(this, 6), 0));
+        miniSpinner = new ProgressBar(this, null, android.R.attr.progressBarStyleSmall);
+        miniSpinner.setIndeterminateTintList(ColorStateList.valueOf(Ui.YELLOW));
+        line.addView(miniSpinner, Ui.lp(Ui.dp(this, 11), Ui.dp(this, 11), 0, 0, Ui.dp(this, 6), 0));
+        miniStatus = Ui.text(this, "NOW PLAYING", 10.5f, Ui.YELLOW, Ui.W_BOLD);
+        miniStatus.setLetterSpacing(0.14f);
+        miniStatus.setSingleLine(true);
+        line.addView(miniStatus);
+        col.addView(line);
+        miniName = Ui.display(this, "", 22, Ui.PAPER);
         miniName.setSingleLine(true);
         miniName.setEllipsize(TextUtils.TruncateAt.END);
+        miniName.setPadding(0, Ui.dp(this, 3), 0, Ui.dp(this, 2));
         col.addView(miniName);
-        LinearLayout line = Ui.row(this);
-        line.setPadding(0, Ui.dp(this, 4), 0, 0);
-        miniBars = new BarsView(this, BarsView.MINI, Ui.GOLD);
-        line.addView(miniBars, Ui.lp(Ui.dp(this, 14), Ui.dp(this, 12), 0, 0, Ui.dp(this, 7), 0));
-        miniSpinner = new ProgressBar(this, null, android.R.attr.progressBarStyleSmall);
-        miniSpinner.setIndeterminateTintList(ColorStateList.valueOf(Ui.GOLD));
-        line.addView(miniSpinner, Ui.lp(Ui.dp(this, 13), Ui.dp(this, 13), 0, 0, Ui.dp(this, 7), 0));
-        miniSub = Ui.text(this, "", 12.5f, Ui.MUTED, Ui.W_MEDIUM);
+        miniSub = Ui.text(this, "", 12.5f, 0xFFE6E6E6, Ui.W_MEDIUM);
         miniSub.setSingleLine(true);
         miniSub.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         miniSub.setMarqueeRepeatLimit(-1);
         miniSub.setSelected(true);
-        line.addView(miniSub);
-        col.addView(line);
+        col.addView(miniSub);
         mini.addView(col, Ui.weight(1));
-        miniPlay = Ui.iconButton(this, R.drawable.ic_play, Ui.ON_GOLD, Ui.GOLD, 48, "Play");
+        miniPlay = Ui.iconButton(this, R.drawable.ic_play, Ui.INK, Ui.PAPER, 54, "Play");
+        GradientDrawable pb = Ui.oval(Ui.PAPER);
+        pb.setStroke(Ui.line(), Ui.INK);
+        miniPlay.setBackground(pb);
         miniPlay.setOnClickListener(v -> {
             v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             togglePlay();
@@ -1600,25 +1700,5 @@ public class MainActivity extends Activity implements RadioService.Listener {
         adapter.notifyDataSetChanged();
         newsAdapter.notifyDataSetChanged();
         rebuildRecents();
-    }
-
-    /** Tiny four-colour stripe from the national flag, next to the greeting. */
-    static final class FlagStripe extends View {
-        private final android.graphics.Paint p = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
-        private final int[] c = {Ui.SA_GREEN, Ui.GOLD, Ui.SA_RED, 0xFF2F5BFF};
-
-        FlagStripe(android.content.Context ctx) {
-            super(ctx);
-            setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
-        }
-
-        @Override
-        protected void onDraw(android.graphics.Canvas cv) {
-            float w = getWidth() / 4f, h = getHeight();
-            for (int i = 0; i < 4; i++) {
-                p.setColor(c[i]);
-                cv.drawRoundRect(i * w + 1, 0, (i + 1) * w - 1, h, h / 2, h / 2, p);
-            }
-        }
     }
 }

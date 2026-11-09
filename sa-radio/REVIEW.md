@@ -165,7 +165,8 @@ touches the radio.
 - **Results** from the past week and **fixtures** for the next two, grouped by day and competition.
   Live matches sit at the top and refresh every minute while the screen is open.
 - **Filters:** SA focus, Rugby, Soccer, Cricket, F1, Golf and UFC. SA focus shows matches with South
-  African teams or players, plus F1. South African sides are marked in gold.
+  African teams or players, plus F1. South African sides are marked in blue, with a green band down
+  their match cards.
 - **Details when you tap a match:**
   - **Soccer:** goals and cards with minutes, line-ups by formation with substitutes, and match
     stats (possession, shots, corners and more)
@@ -218,3 +219,33 @@ Two feed quirks are handled:
   were played.
 - Its "starts at 13:00 local time" notes give the venue's time, so they're dropped in favour of
   the app's own times.
+
+## 4.0: the "Number Plate" design
+
+3.x still looked like a typical dark streaming app. Three new directions were mocked up (Hi-Fi,
+Taxi Rank and Broadsheet), then three takes on Taxi Rank. 4.0 is "Number Plate", with the station
+section from "Spaza Signwriter".
+
+- **Look:** taxi-rank yellow with black outlines and hard offset shadows instead of soft glows. A
+  band of minibus livery stripes runs across the top of each screen. Headlines are set in Anton,
+  station names in Bungee (signwriter lettering), asides in Caveat Brush and everything else in
+  Space Grotesk.
+- **Stations:** each station is a painted tin sign in its own brand colour, worked out from its
+  logo, with the logo in a white roundel. Logos with their own background colour (East Coast Radio's
+  yellow, for example) fill the roundel; white logos get a black roundel so they stay visible.
+  Stations without a logo get a painted letter. Black signs get a red shadow so they still stand off
+  the page. The playing station shows an ON AIR tag.
+- **Bottom bar:** three number plates on a strip of road with a yellow edge line and a dashed lane
+  line. The current tab's plate turns yellow and lifts off the road. It's still icon-only, with
+  spoken labels and long-press tooltips. 3.x's bar (icons on a sliding pill) was the pattern the
+  first Taxi Rank mock-up had reused, which is why it was replaced rather than recoloured.
+- **Now playing card:** a black destination board with livery stripes, the logo, the station name
+  and a white stop button.
+- **Now Playing screen:** the station's sign as a large board in its brand colour, with livery
+  stripes, a LIVE tag and a number plate showing the province and genre. The data setting is drawn
+  as a gear gate (Auto, Saver, Balanced, Best).
+- **News, Sport, reader and sheets:** white cards with black outlines, plate-style tags, scores in
+  Anton, and the reader on plain white paper for comfortable reading.
+- **Contrast:** body text is near-black on yellow or white; links and small highlights use cobalt
+  blue, which is readable on both. Yellow is only ever a fill, never text on a light background.
+- **App icon:** a white radio with a black outline on yellow, over a band of livery stripes.

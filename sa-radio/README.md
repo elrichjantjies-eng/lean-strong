@@ -1,21 +1,29 @@
-# SA Radio 3.2
+# SA Radio 4.0
 
 South African radio and news for Android. This is the source of the SA Radio app, rebuilt from the
 2.0 APK and redesigned. See [REVIEW.md](REVIEW.md) for what was wrong with 2.0 and what changed.
 
-| Home | Now Playing | Sound & data on the player | Equalizer |
-| --- | --- | --- | --- |
-| ![Home](docs/screenshots/home.jpg) | ![Now Playing](docs/screenshots/now-playing.jpg) | ![Sound and data](docs/screenshots/now-playing-sound-and-data.jpg) | ![Equalizer](docs/screenshots/equalizer.jpg) |
+4.0 has the "Number Plate" design: taxi-rank yellow, black outlines, minibus livery stripes and a
+bottom bar of number plates on a road. Stations are painted signs in each station's own colour
+with its logo.
 
-| News | Ad-free reader | Settings | Small phone (360×640 dp) |
+| Stations | Favourites | Now Playing | Sound & data gear |
 | --- | --- | --- | --- |
-| ![News](docs/screenshots/news.jpg) | ![Reader](docs/screenshots/reader.jpg) | ![Settings](docs/screenshots/settings.jpg) | ![Small phone](docs/screenshots/small-phone-now-playing.jpg) |
+| ![Stations](docs/screenshots/home.jpg) | ![Favourites](docs/screenshots/favourites.jpg) | ![Now Playing](docs/screenshots/now-playing.jpg) | ![Sound and data](docs/screenshots/now-playing-sound-and-data.jpg) |
+
+| News | Sport | Ad-free reader | Equaliser |
+| --- | --- | --- | --- |
+| ![News](docs/screenshots/news.jpg) | ![Sport](docs/screenshots/sport.jpg) | ![Reader](docs/screenshots/reader.jpg) | ![Equaliser](docs/screenshots/equaliser.jpg) |
+
+| Settings | Match details | Small phone (360×640 dp) |
+| --- | --- | --- |
+| ![Settings](docs/screenshots/settings.jpg) | ![Match details](docs/screenshots/match.jpg) | ![Small phone](docs/screenshots/small-phone-now-playing.jpg) |
 
 ## What it does
 
 - **Radio:** about 190 South African stations from the community directory at radio-browser.info,
   with search, provinces, favourites, recently played, and your own stream links.
-- **Sound:** a real equalizer (12 presets such as Talk & News, Amapiano, Phone speaker and Late
+- **Sound:** a real equaliser (12 presets such as Talk & News, Amapiano, Phone speaker and Late
   night, plus a curve you can drag), bass boost, surround and loudness. Uses the phone's own audio
   effects, so a few phones that reserve them for their own sound settings can't use it.
 - **Data & quality:** Auto, Saver, Balanced or Best. Picks the lighter or better stream when a
@@ -37,8 +45,8 @@ South African radio and news for Android. This is the source of the SA Radio app
 
 ## Install
 
-Download the latest `SA-Radio-3.x.apk`, open it on the phone and allow installing from that source.
-3.1 and later install over 3.0 directly.
+Download the latest `SA-Radio-4.x.apk`, open it on the phone and allow installing from that source.
+4.0 installs straight over any 3.x version, keeping favourites and settings.
 
 The app is signed with a new key, so **uninstall SA Radio 2.0 first** (Android refuses to install
 an app over one signed with a different key). Favourites from 2.0 can't be carried over.
@@ -73,16 +81,17 @@ users will have to uninstall again.
 | `StreamPlayer` | Downloads MP3/AAC streams, reads ICY song titles, splits frames, decodes and plays |
 | `RadioService` | Background playback, stream choice and fallback, data meter, notification, sleep timer |
 | `DataMode` | The Auto / Saver / Balanced / Best rules |
-| `AudioFx`, `EqPresets` | Equalizer and effects on the shared audio session; presets as frequency curves |
+| `AudioFx`, `EqPresets` | Equaliser and effects on the shared audio session; presets as frequency curves |
 | `Spectrum`, `BarsView` | Audio analysis for the visualiser, kept in step with the speaker |
 | `StationRepo`, `NewsRepo` | Station directory and news feeds |
 | `Extractor`, `Article`, `ArticleView`, `assets/reader/` | The ad-free reader: download a story's HTML, extract it with Readability, draw it |
 | `AdBlock` | Ad and tracker blocking for the original-page fallback |
 | `Sports`, `SportView`, `MatchSheet` | Fixtures, results and live scores; the Sport list; match details |
 | `MainActivity`, `NowPlaying`, `Panels`, `Sheet` | Screens and bottom sheets |
-| `Ui`, `LogoView`, `NavBar`, `Segmented`, `EqCurveView`, `BackdropView` | Design system and custom views |
+| `Ui`, `Livery`, `LogoView`, `NavBar`, `Segmented`, `EqCurveView` | Design system and custom views: colours and fonts, livery stripes, logo roundels and brand colours, the number-plate bar |
 
 `tools/reader-check/` re-tests the reader against live stories from every feed.
 
-Third-party: Plus Jakarta Sans (SIL Open Font License 1.1); Mozilla Readability 0.6.0
+Third-party: the fonts Anton, Bungee, Caveat Brush and Space Grotesk (all SIL Open Font License
+1.1); Mozilla Readability 0.6.0
 (Apache License 2.0, `assets/reader/readability.js`).

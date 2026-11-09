@@ -46,31 +46,36 @@ final class Sheet {
         overlay = new FrameLayout(c);
         overlay.setClickable(true);
         scrim = new View(c);
-        scrim.setBackgroundColor(0xA6000000);
+        scrim.setBackgroundColor(0x99000000);
         scrim.setOnClickListener(v -> dismiss());
         scrim.setContentDescription("Close");
         overlay.addView(scrim, new FrameLayout.LayoutParams(-1, -1));
 
         panel = new Panel(c);
         panel.setOrientation(LinearLayout.VERTICAL);
-        float r = Ui.dp(c, 28);
-        android.graphics.drawable.GradientDrawable bg = new android.graphics.drawable.GradientDrawable(
-                android.graphics.drawable.GradientDrawable.Orientation.TOP_BOTTOM, new int[] {Ui.SURFACE2, Ui.SURFACE});
+        float r = Ui.dp(c, 18);
+        android.graphics.drawable.GradientDrawable bg = new android.graphics.drawable.GradientDrawable();
+        bg.setColor(Ui.PAPER);
         bg.setCornerRadii(new float[] {r, r, r, r, 0, 0, 0, 0});
-        panel.setBackground(bg);
-        panel.setElevation(Ui.dp(c, 24));
+        bg.setStroke(Ui.line(), Ui.INK);
+        // Hide the outline's bottom edge below the screen.
+        android.graphics.drawable.LayerDrawable framed = new android.graphics.drawable.LayerDrawable(
+                new android.graphics.drawable.Drawable[] {bg});
+        framed.setLayerInset(0, -Ui.line(), 0, -Ui.line(), -Ui.line());
+        panel.setBackground(framed);
+        panel.setElevation(Ui.dp(c, 8));
         panel.setClickable(true);
 
         LinearLayout header = Ui.column(c);
         View handle = new View(c);
-        handle.setBackground(Ui.round(0x40FFFFFF, Ui.dp(c, 2)));
-        LinearLayout.LayoutParams hp = new LinearLayout.LayoutParams(Ui.dp(c, 40), Ui.dp(c, 4));
+        handle.setBackground(Ui.round(Ui.INK, Ui.dp(c, 3)));
+        LinearLayout.LayoutParams hp = new LinearLayout.LayoutParams(Ui.dp(c, 44), Ui.dp(c, 5));
         hp.gravity = Gravity.CENTER_HORIZONTAL;
         hp.setMargins(0, Ui.dp(c, 10), 0, Ui.dp(c, 6));
         header.addView(handle, hp);
         titleRow = Ui.row(c);
-        titleRow.setPadding(Ui.dp(c, 22), Ui.dp(c, 6), Ui.dp(c, 14), Ui.dp(c, 6));
-        TextView t = Ui.text(c, title, 21, Ui.TEXT, Ui.W_HEAVY);
+        titleRow.setPadding(Ui.dp(c, 20), Ui.dp(c, 6), Ui.dp(c, 14), Ui.dp(c, 6));
+        TextView t = Ui.display(c, title, 27, Ui.INK);
         Ui.heading(t);
         titleRow.addView(t, Ui.weight(1));
         header.addView(titleRow, Ui.lp(-1, Ui.dp(c, 52)));
@@ -157,8 +162,8 @@ final class Sheet {
     // ---- Building blocks for sheet content --------------------------------------------------
 
     TextView section(String label) {
-        TextView t = Ui.text(a, label.toUpperCase(java.util.Locale.ROOT), 11.5f, Ui.MUTED, Ui.W_BOLD);
-        t.setLetterSpacing(0.12f);
+        TextView t = Ui.text(a, label.toUpperCase(java.util.Locale.ROOT), 12, Ui.INK, Ui.W_BOLD);
+        t.setLetterSpacing(0.14f);
         Ui.heading(t);
         body.addView(t, Ui.lp(-2, -2, Ui.dp(a, 2), Ui.dp(a, 18), 0, Ui.dp(a, 10)));
         return t;
@@ -168,21 +173,22 @@ final class Sheet {
     LinearLayout row(int icon, String title, String subtitle, View.OnClickListener click) {
         Context c = a;
         LinearLayout row = Ui.row(c);
-        row.setPadding(Ui.dp(c, 12), Ui.dp(c, 12), Ui.dp(c, 12), Ui.dp(c, 12));
-        float r = Ui.dp(c, 18);
-        row.setBackground(Ui.ripple(Ui.roundStroke(Ui.SURFACE2, r, Ui.STROKE, Ui.dp(c, 1)), r));
+        int sh = Ui.dp(c, 3);
+        row.setPadding(Ui.dp(c, 12), Ui.dp(c, 12), Ui.dp(c, 12) + sh, Ui.dp(c, 12) + sh);
+        float r = Ui.dp(c, 10);
+        row.setBackground(Ui.ripple(Ui.plate(Ui.PAPER, r, sh, Ui.INK), r));
         android.widget.ImageView ic = new android.widget.ImageView(c);
         ic.setImageResource(icon);
-        ic.setColorFilter(Ui.GOLD);
+        ic.setColorFilter(Ui.INK);
         int p = Ui.dp(c, 9);
         ic.setPadding(p, p, p, p);
-        ic.setBackground(Ui.round(Ui.alpha(Ui.GOLD, 0.12f), Ui.dp(c, 12)));
+        ic.setBackground(Ui.roundStroke(Ui.YELLOW, Ui.dp(c, 8), Ui.INK, Ui.line()));
         row.addView(ic, Ui.lp(Ui.dp(c, 40), Ui.dp(c, 40)));
         LinearLayout txt = Ui.column(c);
         txt.setPadding(Ui.dp(c, 14), 0, Ui.dp(c, 8), 0);
         txt.addView(Ui.text(c, title, 15.5f, Ui.TEXT, Ui.W_BOLD));
         if (subtitle != null) {
-            TextView s = Ui.text(c, subtitle, 13, Ui.MUTED, Ui.W_MEDIUM);
+            TextView s = Ui.text(c, subtitle, 13, Ui.TEXT2, Ui.W_MEDIUM);
             s.setPadding(0, Ui.dp(c, 3), 0, 0);
             txt.addView(s);
         }
@@ -190,7 +196,7 @@ final class Sheet {
         if (click != null) {
             android.widget.ImageView chev = new android.widget.ImageView(c);
             chev.setImageResource(R.drawable.ic_chevron);
-            chev.setColorFilter(Ui.MUTED);
+            chev.setColorFilter(Ui.INK);
             row.addView(chev, Ui.lp(Ui.dp(c, 22), Ui.dp(c, 22)));
             row.setOnClickListener(click);
             Ui.press(row, 0.98f);
@@ -200,7 +206,7 @@ final class Sheet {
     }
 
     TextView note(String s) {
-        TextView t = Ui.text(a, s, 13.5f, Ui.MUTED, Ui.W_MEDIUM);
+        TextView t = Ui.text(a, s, 13.5f, Ui.TEXT2, Ui.W_MEDIUM);
         t.setLineSpacing(0, 1.3f);
         body.addView(t, Ui.lp(-1, -2, Ui.dp(a, 2), Ui.dp(a, 10), Ui.dp(a, 2), 0));
         return t;

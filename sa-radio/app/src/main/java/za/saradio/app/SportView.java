@@ -90,19 +90,19 @@ final class SportView extends LinearLayout {
             rebuild();
             toTop();
         });
-        addView(mode, Ui.lp(-1, -2, Ui.dp(act, 16), Ui.dp(act, 2), Ui.dp(act, 16), Ui.dp(act, 10)));
+        addView(mode, Ui.lp(-1, -2, Ui.dp(act, 20), Ui.dp(act, 2), Ui.dp(act, 20), Ui.dp(act, 10)));
 
         HorizontalScrollView hs = new HorizontalScrollView(act);
         hs.setHorizontalScrollBarEnabled(false);
         hs.setOverScrollMode(OVER_SCROLL_NEVER);
         chips = Ui.row(act);
-        chips.setPadding(Ui.dp(act, 16), 0, Ui.dp(act, 8), 0);
+        chips.setPadding(Ui.dp(act, 20), 0, Ui.dp(act, 12), 0);
         hs.addView(chips);
         addView(hs);
         rebuildChips();
 
-        status = Ui.text(act, "", 12.5f, Ui.MUTED, Ui.W_MEDIUM);
-        status.setPadding(Ui.dp(act, 22), Ui.dp(act, 10), Ui.dp(act, 22), Ui.dp(act, 2));
+        status = Ui.text(act, "", 12.5f, Ui.TEXT2, Ui.W_MEDIUM);
+        status.setPadding(Ui.dp(act, 20), Ui.dp(act, 10), Ui.dp(act, 20), Ui.dp(act, 2));
         addView(status);
 
         FrameLayout holder = new FrameLayout(act);
@@ -118,10 +118,10 @@ final class SportView extends LinearLayout {
         empty = Ui.column(act);
         empty.setGravity(Gravity.CENTER);
         empty.setPadding(Ui.dp(act, 40), 0, Ui.dp(act, 40), Ui.dp(act, 120));
-        emptyTitle = Ui.text(act, "", 18, Ui.TEXT, Ui.W_HEAVY);
+        emptyTitle = Ui.display(act, "", 24, Ui.INK);
         emptyTitle.setGravity(Gravity.CENTER);
         empty.addView(emptyTitle);
-        emptyBody = Ui.text(act, "", 14, Ui.MUTED, Ui.W_MEDIUM);
+        emptyBody = Ui.text(act, "", 14, Ui.TEXT2, Ui.W_MEDIUM);
         emptyBody.setGravity(Gravity.CENTER);
         emptyBody.setLineSpacing(0, 1.3f);
         empty.addView(emptyBody, Ui.lp(-2, -2, 0, Ui.dp(act, 8), 0, 0));
@@ -433,8 +433,8 @@ final class SportView extends LinearLayout {
 
     private View dayRow(TextView t, Row r) {
         if (t == null) {
-            t = Ui.text(a, "", 18, Ui.TEXT, Ui.W_HEAVY);
-            t.setPadding(Ui.dp(a, 22), Ui.dp(a, 18), Ui.dp(a, 22), Ui.dp(a, 4));
+            t = Ui.display(a, "", 22, Ui.INK);
+            t.setPadding(Ui.dp(a, 20), Ui.dp(a, 18), Ui.dp(a, 20), Ui.dp(a, 4));
             t.setLayoutParams(new AbsListView.LayoutParams(-1, -2));
             Ui.heading(t);
         }
@@ -445,9 +445,9 @@ final class SportView extends LinearLayout {
 
     private View compRow(TextView t, Row r) {
         if (t == null) {
-            t = Ui.text(a, "", 12, Ui.MUTED, Ui.W_HEAVY);
-            t.setLetterSpacing(0.06f);
-            t.setPadding(Ui.dp(a, 22), Ui.dp(a, 12), Ui.dp(a, 22), Ui.dp(a, 8));
+            t = Ui.text(a, "", 12, Ui.TEXT2, Ui.W_HEAVY);
+            t.setLetterSpacing(0.1f);
+            t.setPadding(Ui.dp(a, 20), Ui.dp(a, 12), Ui.dp(a, 20), Ui.dp(a, 8));
             t.setLayoutParams(new AbsListView.LayoutParams(-1, -2));
         }
         t.setText(r.text.toUpperCase(Locale.ROOT));
@@ -456,15 +456,19 @@ final class SportView extends LinearLayout {
 
     private FrameLayout cardShell(LinearLayout content, View[] accentOut) {
         FrameLayout outer = new FrameLayout(a);
-        outer.setPadding(Ui.dp(a, 16), 0, Ui.dp(a, 16), Ui.dp(a, 8));
+        int sh = Ui.dp(a, 3);
+        outer.setPadding(Ui.dp(a, 20), 0, Ui.dp(a, 20) - sh, Ui.dp(a, 10));
         FrameLayout card = new FrameLayout(a);
-        float r = Ui.dp(a, 18);
-        card.setBackground(Ui.ripple(Ui.roundStroke(Ui.alpha(Ui.SURFACE, 0.94f), r, Ui.STROKE, Ui.dp(a, 1)), r));
-        Ui.roundClip(card, r);
+        float r = Ui.dp(a, 10);
+        card.setBackground(Ui.ripple(Ui.plate(Ui.PAPER, r, sh, Ui.INK), r));
+        // Children stay on the plate's face, clear of the shadow and inside the outline.
+        int ln = Ui.line();
+        card.setPadding(ln, ln, sh + ln, sh + ln);
         card.addView(content, new FrameLayout.LayoutParams(-1, -2));
+        // South African games get a Springbok-green band down the side.
         View accent = new View(a);
-        accent.setBackgroundColor(Ui.GOLD);
-        card.addView(accent, new FrameLayout.LayoutParams(Ui.dp(a, 3), -1, Gravity.START));
+        accent.setBackgroundColor(Ui.LIVERY_GREEN);
+        card.addView(accent, new FrameLayout.LayoutParams(Ui.dp(a, 6), -1, Gravity.START));
         accentOut[0] = accent;
         outer.addView(card, new FrameLayout.LayoutParams(-1, -2));
         Ui.press(card, 0.98f);
@@ -478,13 +482,13 @@ final class SportView extends LinearLayout {
             h = new MatchHolder();
             LinearLayout row = Ui.row(a);
             row.setPadding(Ui.dp(a, 10), Ui.dp(a, 12), Ui.dp(a, 14), Ui.dp(a, 12));
-            h.state = Ui.text(a, "", 12.5f, Ui.MUTED, Ui.W_HEAVY);
+            h.state = Ui.text(a, "", 12.5f, Ui.TEXT2, Ui.W_HEAVY);
             h.state.setGravity(Gravity.CENTER);
             h.state.setMaxLines(2);
             row.addView(h.state, Ui.lp(Ui.dp(a, 54), -2));
             View div = new View(a);
-            div.setBackgroundColor(Ui.STROKE);
-            row.addView(div, Ui.lp(Ui.dp(a, 1), Ui.dp(a, 40), 0, 0, Ui.dp(a, 12), 0));
+            div.setBackgroundColor(Ui.INK);
+            row.addView(div, Ui.lp(Ui.dp(a, 2), Ui.dp(a, 40), 0, 0, Ui.dp(a, 12), 0));
             LinearLayout col = Ui.column(a);
             LinearLayout t1 = Ui.row(a), t2 = Ui.row(a);
             h.logo1 = logo();
@@ -501,7 +505,7 @@ final class SportView extends LinearLayout {
             t2.addView(h.score2);
             col.addView(t1);
             col.addView(t2, Ui.lp(-1, -2, 0, Ui.dp(a, 6), 0, 0));
-            h.summary = Ui.text(a, "", 12, Ui.MUTED, Ui.W_MEDIUM);
+            h.summary = Ui.text(a, "", 12, Ui.TEXT2, Ui.W_MEDIUM);
             h.summary.setMaxLines(2);
             h.summary.setEllipsize(TextUtils.TruncateAt.END);
             col.addView(h.summary, Ui.lp(-1, -2, 0, Ui.dp(a, 7), 0, 0));
@@ -533,7 +537,7 @@ final class SportView extends LinearLayout {
                 break;
             default:
                 h.state.setText(m.status.length() > 8 ? "FT" : m.status);
-                h.state.setTextColor(Ui.MUTED);
+                h.state.setTextColor(Ui.TEXT2);
         }
         String sum = m.state == Sports.OFF ? m.status : !m.summary.isEmpty() ? m.summary : m.state == Sports.PRE ? m.venue : "";
         h.summary.setText(sum);
@@ -570,6 +574,7 @@ final class SportView extends LinearLayout {
 
     private TextView score() {
         TextView t = Ui.text(a, "", 15, Ui.TEXT, Ui.W_HEAVY);
+        t.setTypeface(Ui.display);
         t.setGravity(Gravity.END);
         t.setMaxWidth(Ui.dp(a, 150));
         t.setSingleLine(true);
@@ -580,11 +585,11 @@ final class SportView extends LinearLayout {
     private void bindSide(LogoView logo, TextView name, TextView score, Sports.Side s, boolean lost) {
         bindLogo(a, logo, s.name, s.logo);
         name.setText(s.shortName.isEmpty() ? s.name : s.shortName);
-        name.setTextColor(s.sa ? Ui.GOLD : lost ? Ui.MUTED : Ui.TEXT);
+        name.setTextColor(s.sa ? Ui.ACCENT : lost ? Ui.MUTED : Ui.TEXT);
         score.setText(s.score);
         score.setTextColor(lost ? Ui.MUTED : Ui.TEXT);
         // Cricket scores ("169/6 (20 ov, target 179)") are long; keep them smaller.
-        score.setTextSize(s.score.length() > 6 ? 13 : 16);
+        score.setTextSize(s.score.length() > 6 ? 15 : 20);
     }
 
     static void bindLogo(MainActivity a, final LogoView v, String name, String url) {
@@ -619,6 +624,7 @@ final class SportView extends LinearLayout {
             h.title.setMaxLines(2);
             top.addView(h.title, Ui.weight(1));
             h.pill = Ui.text(a, "", 11, Ui.TEXT2, Ui.W_HEAVY);
+            h.pill.setLetterSpacing(0.08f);
             h.pill.setPadding(Ui.dp(a, 8), Ui.dp(a, 3), Ui.dp(a, 8), Ui.dp(a, 3));
             top.addView(h.pill, Ui.lp(-2, -2, Ui.dp(a, 8), 0, 0, 0));
             col.addView(top);
@@ -643,21 +649,21 @@ final class SportView extends LinearLayout {
         int fg;
         if (m.state == Sports.LIVE) {
             pill = m.status.isEmpty() ? "LIVE" : m.status;
-            bg = Ui.alpha(Ui.LIVE, 0.18f);
-            fg = Ui.LIVE;
+            bg = Ui.LIVE;
+            fg = Ui.PAPER;
         } else if (m.state == Sports.PRE) {
             pill = new SimpleDateFormat("EEE d MMM, HH:mm", Locale.ENGLISH).format(m.time);
-            bg = Ui.alpha(Ui.GOLD, 0.14f);
-            fg = Ui.GOLD;
+            bg = Ui.YELLOW;
+            fg = Ui.INK;
         } else {
             pill = m.status.isEmpty() ? "Final" : m.status;
-            bg = Ui.SURFACE3;
-            fg = Ui.TEXT2;
+            bg = Ui.LIVERY_GREEN;
+            fg = Ui.INK;
         }
         if (pill.length() > 22) pill = pill.substring(0, 22) + "…";
         h.pill.setText(pill.toUpperCase(Locale.ROOT));
         h.pill.setTextColor(fg);
-        h.pill.setBackground(Ui.round(bg, Ui.dp(a, 8)));
+        h.pill.setBackground(Ui.roundStroke(bg, Ui.dp(a, 4), Ui.INK, Ui.line()));
         h.sub.setText(m.venue);
         h.sub.setVisibility(m.venue.isEmpty() ? GONE : VISIBLE);
         h.lines.removeAllViews();
@@ -673,11 +679,11 @@ final class SportView extends LinearLayout {
         LinearLayout r = Ui.row(a);
         r.setPadding(0, Ui.dp(a, big ? 7 : 4), 0, Ui.dp(a, big ? 7 : 4));
         if (!l.rank.isEmpty()) {
-            TextView rank = Ui.text(a, l.rank, 12.5f, Ui.MUTED, Ui.W_HEAVY);
+            TextView rank = Ui.text(a, l.rank, 12.5f, Ui.TEXT2, Ui.W_HEAVY);
             r.addView(rank, Ui.lp(Ui.dp(a, 38), -2));
         }
         LinearLayout mid = Ui.column(a);
-        TextView n = Ui.text(a, l.name + (l.sa ? "  🇿🇦" : ""), big ? 14.5f : 13.5f, l.sa ? Ui.GOLD : Ui.TEXT2,
+        TextView n = Ui.text(a, l.name + (l.sa ? "  🇿🇦" : ""), big ? 14.5f : 13.5f, l.sa ? Ui.ACCENT : Ui.TEXT2,
                 l.sa ? Ui.W_BOLD : Ui.W_MEDIUM);
         n.setMaxLines(2);
         n.setEllipsize(TextUtils.TruncateAt.END);
