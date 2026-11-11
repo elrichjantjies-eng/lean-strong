@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/w_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/w_row"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="10dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="12dp"
+    android:paddingBottom="8dp">
+
+    <TextView
+        android:includeFontPadding="false"
+        android:id="@+id/w_state"
+        android:layout_width="58dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/w_pill_ft"
+        android:fontFamily="@font/grotesk_bold"
+        android:gravity="center"
+        android:maxLines="2"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:textColor="#FF111111"
+        android:textSize="10sp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:includeFontPadding="false"
+            android:id="@+id/w_comp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="@font/grotesk_bold"
+            android:letterSpacing="0.06"
+            android:maxLines="1"
+            android:textColor="#FF555555"
+            android:textSize="9.5sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:includeFontPadding="false"
+                android:id="@+id/w_home"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:fontFamily="@font/grotesk_bold"
+                android:maxLines="1"
+                android:textColor="#FF111111"
+                android:textSize="13.5sp" />
+
+            <TextView
+                android:includeFontPadding="false"
+                android:id="@+id/w_hs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:fontFamily="@font/anton"
+                android:textColor="#FF111111"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/w_away_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:includeFontPadding="false"
+                android:id="@+id/w_away"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:fontFamily="@font/grotesk_bold"
+                android:maxLines="1"
+                android:textColor="#FF111111"
+                android:textSize="13.5sp" />
+
+            <TextView
+                android:includeFontPadding="false"
+                android:id="@+id/w_as"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:fontFamily="@font/anton"
+                android:textColor="#FF111111"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

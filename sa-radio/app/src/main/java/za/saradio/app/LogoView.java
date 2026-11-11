@@ -93,6 +93,21 @@ public class LogoView extends View {
         return url;
     }
 
+    /** The monogram colour a station gets when it has no logo. */
+    static int monoColor(String name) {
+        String n = name == null ? "" : name.trim();
+        return MONO[(n.hashCode() & Integer.MAX_VALUE) % MONO.length];
+    }
+
+    /** The painted letter a station gets when it has no logo. */
+    static String monoLetter(String name) {
+        String n = name == null ? "" : name.trim();
+        for (String w : n.split("\\s+")) {
+            if (w.length() > 0 && Character.isLetterOrDigit(w.charAt(0))) return String.valueOf(Character.toUpperCase(w.charAt(0)));
+        }
+        return "♪";
+    }
+
     public void setStation(String name, String logoUrl) {
         url = logoUrl;
         logo = null;

@@ -34,5 +34,74 @@
             android:name=".RadioService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
+        <receiver
+            android:name=".RadioWidget"
+            android:exported="false"
+            android:label="@string/widget_radio">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_radio_info" />
+        </receiver>
+
+        <receiver
+            android:name=".PresetsWidget"
+            android:exported="false"
+            android:label="@string/widget_presets">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_presets_info" />
+        </receiver>
+
+        <receiver
+            android:name=".HeadlinesWidget"
+            android:exported="false"
+            android:label="@string/widget_headlines">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_headlines_info" />
+        </receiver>
+
+        <receiver
+            android:name=".StoryWidget"
+            android:exported="false"
+            android:label="@string/widget_story">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_story_info" />
+        </receiver>
+
+        <receiver
+            android:name=".SportWidget"
+            android:exported="false"
+            android:label="@string/widget_sport">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_sport_info" />
+        </receiver>
+
+        <service
+            android:name=".WidgetListService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <service
+            android:name=".WidgetJobs"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 </manifest>

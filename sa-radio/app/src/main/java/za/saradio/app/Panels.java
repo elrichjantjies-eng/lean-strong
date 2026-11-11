@@ -54,6 +54,31 @@ final class Panels {
             sound(a);
         });
 
+        s.section("Tuning");
+        Segmented tb = new Segmented(c, Tuner.LABELS);
+        tb.select(Tuner.band(a), false);
+        s.body.addView(tb, Ui.lp(-1, -2));
+        final TextView tn = s.note(tuningNote(Tuner.band(a)));
+        tb.setListener(i -> {
+            Tuner.setBand(a, i);
+            tn.setText(tuningNote(i));
+            a.refreshPlayer();
+            Widgets.radioChanged(a);
+        });
+        TextView tw = s.note("Tune with ◀ ▶ on Now Playing, the ▶ on the player bar, the notification, headphone and car "
+                + "buttons, or the radio widget. Playing a station from Favourites switches to Favs; playing one from "
+                + "Radio switches back.");
+        tw.setTextSize(12);
+
+        s.section("Home-screen widgets");
+        for (final Widgets.Kind k : Widgets.KINDS) {
+            s.row(k.icon, k.title, k.blurb, v -> {
+                if (!Widgets.pin(a, k)) {
+                    a.snack("Touch and hold your home screen, then choose Widgets → SA Radio");
+                }
+            });
+        }
+
         s.section("Stations");
         long at = Prefs.get(a).getLong("stationsAt", 0);
         String upd = a.stationCount() + " stations" + (at > 0 ? " · updated " + NewsRepo.ago(at).toLowerCase(java.util.Locale.ROOT) : "");
@@ -69,8 +94,20 @@ final class Panels {
         s.section("About");
         s.note("SA Radio " + BuildConfig.VERSION_NAME + ". Stations come from radio-browser.info, a free community directory, so a few may be "
                 + "off air at times. Headlines come from " + NewsRepo.FEEDS.length + " South African publishers' public "
-                + "feeds, and stories open on the publisher's own site.");
+                + "feeds, and stories open in the app's ad-free reader. Scores come from ESPN's public feeds and Jolpica (F1). "
+                + "Frequencies are each station's main FM frequency in its home city, where the app knows it.");
         s.show();
+    }
+
+    static String tuningNote(int band) {
+        switch (band) {
+            case Tuner.FREQ:
+                return "All stations in order of FM frequency, low to high. Online-only stations come after, A to Z.";
+            case Tuner.FAVS:
+                return "Just your favourites, in the order you saved them.";
+            default:
+                return "All stations, A to Z.";
+        }
     }
 
     private static View stat(Context c, String big, String small) {

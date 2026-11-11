@@ -1,4 +1,4 @@
-# SA Radio 4.0
+# SA Radio 4.1
 
 South African radio and news for Android. This is the source of the SA Radio app, rebuilt from the
 2.0 APK and redesigned. See [REVIEW.md](REVIEW.md) for what was wrong with 2.0 and what changed.
@@ -14,6 +14,12 @@ with its logo.
 | News | Sport | Ad-free reader | Equaliser |
 | --- | --- | --- | --- |
 | ![News](docs/screenshots/news.jpg) | ![Sport](docs/screenshots/sport.jpg) | ![Reader](docs/screenshots/reader.jpg) | ![Equaliser](docs/screenshots/equaliser.jpg) |
+
+Home-screen widgets (4.1):
+
+| Pocket radio | Presets | Headlines | Read here | Scoreboard |
+| --- | --- | --- | --- | --- |
+| ![Pocket radio](docs/screenshots/widget-radio.jpg) | ![Presets](docs/screenshots/widget-presets.jpg) | ![Headlines](docs/screenshots/widget-headlines.jpg) | ![Read here](docs/screenshots/widget-story.jpg) | ![Scoreboard](docs/screenshots/widget-sport.jpg) |
 
 | Settings | Match details | Small phone (360×640 dp) |
 | --- | --- | --- |
@@ -40,13 +46,32 @@ with its logo.
   cricket (Proteas and South African domestic), F1, golf and UFC. "SA focus" shows South African
   teams and players. Tap a match for line-ups, scorers, scorecards, race classifications or
   leaderboards. Data comes from ESPN's public score feeds and Jolpica (F1).
+- **Tuning:** ◀ ▶ step to the previous or next station, like changing channel (not a sweep across
+  the dial). The band decides which stations: **A–Z** (all stations alphabetically), **MHz** (all
+  stations by FM frequency, then online-only stations A–Z) or **Favs** (your favourites, in the
+  order you saved them). Playing from the Favourites tab switches to Favs; playing from Radio
+  switches back. Tune from Now Playing (buttons, or swipe the station board), the ▶ on the player
+  bar, the notification, headphone, Bluetooth and car buttons, or the radio widget. Frequencies come
+  from the station's listing ("KFM 94.5", "Kaya 959") or, for a few big stations, a short table of
+  their main frequency in their home city.
+- **Home-screen widgets:**
+  - **Pocket radio:** a little radio with an aerial, the station's logo on the speaker, a tuning
+    dial with a needle, ◀ ▶, play/stop and a band switch.
+  - **Presets:** your first six favourites as car-radio buttons; tap to play, tap the playing one to stop.
+  - **Headlines:** the latest stories; tap one to read it in the app.
+  - **Read here:** one story at a time, readable inside the widget. ◀ ▶ flip stories; "Read the
+    whole story here" downloads just that page's text (automatic on Wi-Fi unless Data is on Saver).
+  - **Scoreboard:** live games, fixtures and results for South African teams and players, refreshed
+    every 2 minutes while a game is on (5 on Saver), otherwise hourly.
+
+  Add them from Settings → Home-screen widgets, or by holding the home screen and choosing Widgets.
 - **Visualiser** driven by the actual audio, a sleep timer that fades out, and lock-screen and
   notification controls.
 
 ## Install
 
 Download the latest `SA-Radio-4.x.apk`, open it on the phone and allow installing from that source.
-4.0 installs straight over any 3.x version, keeping favourites and settings.
+4.x installs straight over any 3.x or 4.x version, keeping favourites and settings.
 
 The app is signed with a new key, so **uninstall SA Radio 2.0 first** (Android refuses to install
 an app over one signed with a different key). Favourites from 2.0 can't be carried over.
@@ -88,6 +113,10 @@ users will have to uninstall again.
 | `AdBlock` | Ad and tracker blocking for the original-page fallback |
 | `Sports`, `SportView`, `MatchSheet` | Fixtures, results and live scores; the Sport list; match details |
 | `MainActivity`, `NowPlaying`, `Panels`, `Sheet` | Screens and bottom sheets |
+| `Tuner`, `Freq`, `Dial` | Tuning order (A–Z, frequency, favourites), FM frequencies, the tuning dial |
+| `RadioWidget`, `PresetsWidget`, `HeadlinesWidget`, `StoryWidget`, `SportWidget` | The home-screen widgets |
+| `Widgets`, `WidgetListService`, `WidgetJobs`, `WidgetStore` | Widget plumbing: intents and pictures, list rows, background refreshes, saved scores and story text |
+| `PlainText` | Pulls a story's text out of its page for the Read here widget (a widget can't run the reader's WebView) |
 | `Ui`, `Livery`, `LogoView`, `NavBar`, `Segmented`, `EqCurveView` | Design system and custom views: colours and fonts, livery stripes, logo roundels and brand colours, the number-plate bar |
 
 `tools/reader-check/` re-tests the reader against live stories from every feed.

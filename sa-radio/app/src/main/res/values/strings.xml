@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SA Radio</string>
+    <string name="widget_radio">Pocket radio</string>
+    <string name="widget_radio_desc">A little radio: tune ◀ ▶ through all stations or your favourites, play and stop.</string>
+    <string name="widget_presets">Presets</string>
+    <string name="widget_presets_desc">Your first six favourites as car-radio presets. One tap to play.</string>
+    <string name="widget_headlines">Headlines</string>
+    <string name="widget_headlines_desc">The latest South African headlines. Tap one to read it ad-free.</string>
+    <string name="widget_story">Read here</string>
+    <string name="widget_story_desc">Flip through the news and read whole stories right in the widget.</string>
+    <string name="widget_sport">Scoreboard</string>
+    <string name="widget_sport_desc">Live scores, fixtures and results for South African teams and players.</string>
 </resources>

@@ -196,6 +196,8 @@ final class SportView extends LinearLayout {
                         onDemandLoaded = true;
                     }
                     loadedAt = r.at;
+                    WidgetStore.saveScores(a, new ArrayList<>(all.values()), loadedAt);
+                    Widgets.sportChanged(a);
                     if (announce) a.snack("Scores up to date");
                 } else if (announce || all.isEmpty()) {
                     a.snack("Couldn't load scores. Check your connection.");
@@ -234,6 +236,8 @@ final class SportView extends LinearLayout {
             if (fresh.isEmpty()) return;
             main.post(() -> {
                 for (Sports.Match m : fresh) if (all.containsKey(m.key())) all.put(m.key(), m);
+                WidgetStore.saveScores(a, new ArrayList<>(all.values()), loadedAt);
+                Widgets.sportChanged(a);
                 rebuild();
             });
         }, "sports-live").start();

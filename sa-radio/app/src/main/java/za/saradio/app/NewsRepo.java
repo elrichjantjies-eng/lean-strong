@@ -346,6 +346,7 @@ public final class NewsRepo {
         }
         //noinspection ResultOfMethodCallIgnored
         tmp.renameTo(new File(c.getFilesDir(), "news.json"));
+        Widgets.newsChanged(c);
     }
 
     public static List<Item> load(Context c) {

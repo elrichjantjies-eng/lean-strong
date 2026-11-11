@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One story at a time, readable right in the widget. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/w_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/w_card"
+    android:orientation="vertical"
+    android:paddingStart="2.5dp"
+    android:paddingTop="2.5dp"
+    android:paddingEnd="5.5dp"
+    android:paddingBottom="5.5dp">
+
+    <LinearLayout
+        android:id="@+id/w_header"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="@drawable/w_head"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:paddingBottom="2.5dp">
+
+        <ImageView
+            android:id="@+id/w_prev"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="Previous story"
+            android:padding="9dp"
+            android:src="@drawable/ic_back"
+            android:tint="#FF111111" />
+        <TextView
+            android:includeFontPadding="false"
+            android:id="@+id/w_sub"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:fontFamily="@font/grotesk_bold"
+            android:gravity="center"
+            android:letterSpacing="0.08"
+            android:maxLines="1"
+            android:text="READ HERE"
+            android:textColor="#FF111111"
+            android:textSize="10.5sp" />
+
+        <ImageView
+            android:id="@+id/w_next"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="Next story"
+            android:padding="9dp"
+            android:src="@drawable/ic_chevron"
+            android:tint="#FF111111" />
+
+        <ImageView
+            android:id="@+id/w_open"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="Open in SA Radio"
+            android:padding="9dp"
+            android:src="@drawable/ic_open"
+            android:tint="#FF111111" />
+    </LinearLayout>
+
+    <TextView
+        android:includeFontPadding="false"
+        android:id="@+id/w_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:fontFamily="@font/anton"
+        android:lineSpacingMultiplier="1.02"
+        android:maxLines="3"
+        android:paddingStart="14dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="14dp"
+        android:textColor="#FF111111"
+        android:textSize="19sp" />
+
+    <TextView
+        android:includeFontPadding="false"
+        android:id="@+id/w_meta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/grotesk_bold"
+        android:paddingStart="14dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="14dp"
+        android:paddingBottom="4dp"
+        android:maxLines="1"
+        android:textColor="#FF2340FF"
+        android:textSize="11sp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ListView
+            android:id="@+id/w_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="10dp"
+            android:clipToPadding="true"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:scrollbars="none" />
+
+        <TextView
+            android:includeFontPadding="false"
+            android:id="@+id/w_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/grotesk_medium"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="No stories yet."
+            android:textColor="#FF2B2B2B"
+            android:textSize="13sp" />
+    </FrameLayout>
+</LinearLayout>

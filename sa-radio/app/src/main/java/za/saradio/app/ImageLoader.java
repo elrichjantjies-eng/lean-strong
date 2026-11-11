@@ -96,6 +96,16 @@ public final class ImageLoader {
     }
 
     /** Any size of this picture that's already in memory. */
+    /** The logo from the disk cache, decoded at about {@code px} (for widgets; call off the main thread when possible). */
+    static Bitmap fromDisk(String url, int px) {
+        if (url == null || url.isEmpty()) return null;
+        try {
+            return loadDisk(url, px);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public static Bitmap cachedAny(String url) {
         if (url == null || url.length() == 0) return null;
         String k = LAST_KEY.get(url);

@@ -249,3 +249,44 @@ section from "Spaza Signwriter".
 - **Contrast:** body text is near-black on yellow or white; links and small highlights use cobalt
   blue, which is readable on both. Yellow is only ever a fill, never text on a light background.
 - **App icon:** a white radio with a black outline on yellow, over a band of livery stripes.
+
+## 4.1: tuning and widgets
+
+**Tuning.** ◀ ▶ switch straight to the previous or next station; there's no sweep or static. Quick
+taps only connect to the station you stop on, so skipping through five stations doesn't open five
+streams.
+
+- **Bands:** A–Z (all stations), MHz (all stations by frequency) and Favs (favourites in saved
+  order). Playing from the Favourites tab switches to Favs automatically; playing from Radio
+  switches back to A–Z or MHz, whichever you used last.
+- **Where:** Now Playing (◀ ▶ beside play, a tuning dial showing the stations either side, the band
+  switch, and swiping the station board), a ▶ on the player bar, previous/next in the notification,
+  and headphone, Bluetooth and car skip buttons.
+- **Duplicates:** the directory lists some stations twice ("Jacaranda" and "Jacaranda FM"). The dial
+  keeps one, so tuning never lands on the same station twice.
+- **Frequencies:** the directory has no frequency field. The app reads one from the name or tags,
+  and has a short table of main home-city frequencies for big stations whose listings leave it out
+  (Jacaranda 94.2, Metro FM 96.4, 5FM 98.0, 702 92.7, East Coast Radio 94.0 and a few more). Ukhozi
+  and the other SABC regional stations broadcast on many frequencies and aren't in the table, so they
+  sort with the online-only stations. Frequencies now also show on the station signs and on Now
+  Playing's number plate.
+
+**Widgets.** Five widgets in the Number Plate style (screenshots in the README):
+
+- **Pocket radio:** tune, play/stop, band switch. The dial and logo are drawn as small pictures; the
+  rest is a normal widget layout.
+- **Presets:** six favourites, like a car radio.
+- **Headlines:** a scrolling list; tapping a story opens it in the ad-free reader.
+- **Read here:** reads the whole story inside the widget. The app's reader uses Mozilla Readability in
+  a WebView, which a widget can't run, so the widget uses a small extractor written for it
+  (`PlainText`) that follows Readability's main idea. On 26 saved articles from 13 South African
+  publishers it found 96% of the paragraphs Readability found, and 96% of what it kept was in
+  Readability's text. The differences are mostly short lists (like council-by-council election
+  results) and the odd "share your thoughts" line. Pictures aren't shown; ↗ opens the full page.
+- **Scoreboard:** live games first, then fixtures, then results. The system's job scheduler does the
+  refreshing, so it waits for a network and doesn't keep the phone awake. Live games refresh every
+  2 minutes (5 on Saver) and fetch only those games' competitions. On Saver, the background
+  refreshes of news and full scores wait for Wi-Fi.
+
+The widget pictures in the launcher's list use made-up sample stories and painted letters, so no
+publisher's headlines or station logos are packaged in the app.

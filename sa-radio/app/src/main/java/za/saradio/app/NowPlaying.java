@@ -56,6 +56,9 @@ final class NowPlaying {
     private final ImageView fav;
     private final TextView favLabel;
     private final LinearLayout sleepBtn;
+    private final Dial dial;
+    private final Segmented band;
+    private final TextView bandNote;
     private final TextView sleepLabel;
     private final LinearLayout presetRow;
     private final TextView soundLink;
@@ -146,6 +149,23 @@ final class NowPlaying {
         // Leave room for the board's hard shadow on the right and bottom.
         board.addView(boardCol, new FrameLayout.LayoutParams(-1, -1));
         board.setPadding(0, 0, Ui.dp(c, 4), Ui.dp(c, 4));
+        // Swipe the board sideways to tune.
+        final android.view.GestureDetector swipe = new android.view.GestureDetector(c, new android.view.GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return true;
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float vx, float vy) {
+                if (e1 == null || Math.abs(vx) < Math.abs(vy) * 1.5f || Math.abs(e2.getX() - e1.getX()) < Ui.dp(a, 48)) return false;
+                board.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);
+                a.tune(vx < 0 ? 1 : -1);
+                return true;
+            }
+        });
+        board.setOnTouchListener((v, e) -> swipe.onTouchEvent(e));
+        board.setContentDescription("Station board. Swipe left or right to tune.");
         col.addView(board, Ui.lp(-1, Ui.dp(c, 300)));
 
         song = Ui.display(c, "", 26, Ui.INK);
@@ -175,12 +195,10 @@ final class NowPlaying {
         statusRow.addView(status);
         col.addView(statusRow, Ui.lp(-2, Ui.dp(c, 24), 0, Ui.dp(c, 8), 0, 0));
 
-        // Controls
+        // Controls: tune back, play, tune forward.
         LinearLayout controls = Ui.row(c);
         controls.setGravity(Gravity.CENTER_VERTICAL);
-        sleepBtn = plateButton(R.drawable.ic_moon, "Sleep", "Sleep timer", v -> Panels.sleep(a));
-        sleepLabel = (TextView) sleepBtn.getChildAt(1);
-        controls.addView(sleepBtn, new LinearLayout.LayoutParams(0, Ui.dp(c, 54), 1f));
+        controls.addView(tuneButton(R.drawable.ic_tune_prev, "Previous station", -1), new LinearLayout.LayoutParams(0, Ui.dp(c, 60), 1f));
         play = new ImageView(c);
         play.setImageResource(R.drawable.ic_play);
         play.setColorFilter(Ui.YELLOW);
@@ -194,7 +212,30 @@ final class NowPlaying {
             a.togglePlay();
         });
         Ui.press(play, 0.9f);
-        controls.addView(play, Ui.lp(Ui.dp(c, 92), Ui.dp(c, 92), Ui.dp(c, 12), 0, Ui.dp(c, 12), 0));
+        controls.addView(play, Ui.lp(Ui.dp(c, 92), Ui.dp(c, 92), Ui.dp(c, 14), 0, Ui.dp(c, 14), 0));
+        controls.addView(tuneButton(R.drawable.ic_tune_next, "Next station", 1), new LinearLayout.LayoutParams(0, Ui.dp(c, 60), 1f));
+        col.addView(controls, Ui.lp(-1, -2, 0, Ui.dp(c, 14), 0, 0));
+
+        // The tuning dial and the band: which stations the buttons step through.
+        dial = new Dial(c);
+        dial.setOnClickListener(v -> a.snack("Tuning through " + Tuner.name(Tuner.band(a)).toLowerCase(Locale.ROOT)));
+        col.addView(dial, Ui.lp(-1, Ui.dp(c, 96), 0, Ui.dp(c, 16), 0, 0));
+        band = new Segmented(c, Tuner.LABELS);
+        band.setListener(i -> {
+            Tuner.setBand(a, i);
+            if (i == Tuner.FAVS && Prefs.favourites(a).isEmpty()) a.snack("No favourites yet, so tuning goes A to Z");
+            refreshDial(true);
+        });
+        col.addView(band, Ui.lp(-1, -2, 0, Ui.dp(c, 10), 0, 0));
+        bandNote = Ui.text(c, "", 12.5f, Ui.TEXT2, Ui.W_MEDIUM);
+        bandNote.setLineSpacing(0, 1.25f);
+        col.addView(bandNote, Ui.lp(-1, -2, Ui.dp(c, 2), Ui.dp(c, 8), Ui.dp(c, 2), 0));
+
+        // Sleep timer and favourite.
+        LinearLayout extras = Ui.row(c);
+        sleepBtn = plateButton(R.drawable.ic_moon, "Sleep", "Sleep timer", v -> Panels.sleep(a));
+        sleepLabel = (TextView) sleepBtn.getChildAt(1);
+        extras.addView(sleepBtn, new LinearLayout.LayoutParams(0, Ui.dp(c, 52), 1f));
         favBtn = plateButton(R.drawable.ic_star_outline, "Save", "Save to favourites", v -> {
             if (RadioService.current != null) {
                 v.performHapticFeedback(HapticFeedbackConstants.CONFIRM);
@@ -203,8 +244,10 @@ final class NowPlaying {
         });
         fav = (ImageView) favBtn.getChildAt(0);
         favLabel = (TextView) favBtn.getChildAt(1);
-        controls.addView(favBtn, new LinearLayout.LayoutParams(0, Ui.dp(c, 54), 1f));
-        col.addView(controls, Ui.lp(-1, -2, 0, Ui.dp(c, 14), 0, Ui.dp(c, 8)));
+        LinearLayout.LayoutParams fl = new LinearLayout.LayoutParams(0, Ui.dp(c, 52), 1f);
+        fl.leftMargin = Ui.dp(c, 12);
+        extras.addView(favBtn, fl);
+        col.addView(extras, Ui.lp(-1, -2, 0, Ui.dp(c, 16), 0, Ui.dp(c, 4)));
 
         // Sound card: quick presets
         LinearLayout soundCard = card();
@@ -247,6 +290,26 @@ final class NowPlaying {
         a.root().addView(view, new FrameLayout.LayoutParams(-1, -1));
         applyInsets(a.topInset(), a.navInset());
         relayout();
+    }
+
+    /** A square plate with a tuning arrow. */
+    private ImageView tuneButton(int icon, String label, final int dir) {
+        Context c = a;
+        ImageView b = new ImageView(c);
+        b.setImageResource(icon);
+        b.setColorFilter(Ui.INK);
+        b.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        int p = Ui.dp(c, 16);
+        b.setPadding(p, p, p, p);
+        b.setBackground(Ui.ripple(Ui.roundStroke(Ui.YELLOW, Ui.dp(c, 10), Ui.INK, Ui.line()), Ui.dp(c, 10)));
+        b.setContentDescription(label);
+        b.setTooltipText(label);
+        b.setOnClickListener(v -> {
+            v.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);
+            a.tune(dir);
+        });
+        Ui.press(b, 0.92f);
+        return b;
     }
 
     /** The big ink disc with a yellow ring, like a hubcap. */
@@ -307,8 +370,8 @@ final class NowPlaying {
     void relayout() {
         int w = a.getResources().getDisplayMetrics().widthPixels;
         int h = a.getResources().getDisplayMetrics().heightPixels;
-        // The top bar, song, bars, status and controls need ~420dp besides the board.
-        int room = h - a.topInset() - a.navInset() - Ui.dp(a, 420);
+        // The top bar, song, bars and controls need ~430dp besides the board; the dial sits just below.
+        int room = h - a.topInset() - a.navInset() - Ui.dp(a, 430);
         int height = Math.max(Ui.dp(a, 210), Math.min(Math.min((int) ((w - Ui.dp(a, 40)) * 0.9f), Ui.dp(a, 340)), room));
         ViewGroup.LayoutParams lp = board.getLayoutParams();
         lp.height = height;
@@ -434,7 +497,9 @@ final class NowPlaying {
         String region = s.province.length() > 0 ? StationRepo.abbreviate(s.province) : "ZA";
         tag.setText(((playing ? "● LIVE · " : st == RadioService.BUFFERING ? "TUNING IN · " : "") + w).toUpperCase(Locale.ROOT));
         String genre = s.firstTags(1);
-        plate.setText((region + (genre.length() > 0 && genre.length() <= 14 ? " · " + genre : "")).toUpperCase(Locale.ROOT));
+        String fq = Freq.label(s);
+        plate.setText((fq.isEmpty() ? region + (genre.length() > 0 && genre.length() <= 14 ? " · " + genre : "") : fq + " · " + region)
+                .toUpperCase(Locale.ROOT));
         String tags = s.firstTags(3);
         sub.setText(tags.length() > 0 ? tags : s.custom ? "Custom stream" : "Live radio");
         art.setPlaying(playing);
@@ -471,8 +536,28 @@ final class NowPlaying {
             sleepBtn.setContentDescription("Sleep timer");
         }
 
+        refreshDial(open);
         rebuildPresets();
         refreshQuality();
+    }
+
+    private void refreshDial(boolean animate) {
+        Station s = RadioService.current;
+        int b = Tuner.band(a);
+        band.select(b, false);
+        dial.setState(Dial.State.of(a, s), animate);
+        String note;
+        if (b == Tuner.FAVS) {
+            int n = Prefs.favourites(a).size();
+            note = n == 0 ? "You have no favourites yet, so ◀ ▶ step through all stations, A to Z."
+                    : "◀ ▶ step through your " + n + (n == 1 ? " favourite." : " favourites, in the order you saved them.");
+        } else if (b == Tuner.FREQ) {
+            note = "◀ ▶ step through all stations by FM frequency (the main frequency in the station's home city, where known). "
+                    + "Online-only stations follow, A to Z.";
+        } else {
+            note = "◀ ▶ step through all stations, A to Z. Swipe the board to tune too.";
+        }
+        bandNote.setText(note);
     }
 
     private String presetState;

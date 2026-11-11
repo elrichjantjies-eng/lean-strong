@@ -170,6 +170,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
         extractor = new Extractor(this);
         String cache = StationRepo.loadCache(this);
         if (cache != null) all = StationRepo.parse(cache);
+        Tuner.setStations(all);
         news = NewsRepo.load(this);
         rebuildNewsChips();
         applyFilter();
@@ -178,6 +179,57 @@ public class MainActivity extends Activity implements RadioService.Listener {
         long age = System.currentTimeMillis() - Prefs.get(this).getLong("stationsAt", 0);
         long maxAge = DataMode.effective(this) == DataMode.SAVER ? 3 * 86400_000L : 12 * 3600_000L;
         if (all.isEmpty() || age > maxAge) refreshStations(false);
+        handleWidgetIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent i) {
+        super.onNewIntent(i);
+        setIntent(i);
+        handleWidgetIntent(i);
+    }
+
+    /** A tap on a home-screen widget: go to the matching screen. */
+    private void handleWidgetIntent(Intent i) {
+        if (i == null) return;
+        String what = i.getStringExtra(Widgets.EXTRA_OPEN);
+        if (what == null) return;
+        i.removeExtra(Widgets.EXTRA_OPEN); // once only, not again after a rotation
+        while (!sheets.isEmpty()) sheets.get(sheets.size() - 1).dismiss();
+        if (!Widgets.OPEN_PLAYER.equals(what) && nowPlaying != null && nowPlaying.isOpen()) nowPlaying.close();
+        switch (what) {
+            case Widgets.OPEN_PLAYER:
+                if (RadioService.current == null) RadioService.current = Prefs.lastStation(this);
+                if (RadioService.current != null) main.post(this::openNowPlaying);
+                break;
+            case Widgets.OPEN_FAVS:
+                setTab(TAB_FAV);
+                break;
+            case Widgets.OPEN_SPORT:
+                setTab(TAB_NEWS);
+                showSport(true);
+                break;
+            case Widgets.OPEN_ARTICLE: {
+                NewsRepo.Item it = new NewsRepo.Item();
+                it.link = nz(i.getStringExtra("link"));
+                it.title = nz(i.getStringExtra("title"));
+                it.source = nz(i.getStringExtra("source"));
+                it.summary = nz(i.getStringExtra("summary"));
+                it.image = nz(i.getStringExtra("image"));
+                it.time = i.getLongExtra("time", 0);
+                setTab(TAB_NEWS);
+                showSport(false);
+                if (!it.link.isEmpty()) main.post(() -> openArticle(it));
+                break;
+            }
+            default:
+                setTab(TAB_NEWS);
+                showSport(false);
+        }
+    }
+
+    private static String nz(String s) {
+        return s == null ? "" : s;
     }
 
     @Override
@@ -327,6 +379,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
                 loading = false;
                 if (list != null && !list.isEmpty()) {
                     all = list;
+                    Tuner.setStations(all);
                     if (announce) snack(list.size() + " stations up to date");
                 } else if (announce || all.isEmpty()) {
                     snack("Couldn't update stations. Check your connection.");
@@ -429,6 +482,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
         Prefs.saveFavourites(this, favs);
         applyFilter();
         refreshPlayer();
+        Widgets.radioChanged(this);
     }
 
     void addCustomStation(String name, String url) {
@@ -456,6 +510,9 @@ public class MainActivity extends Activity implements RadioService.Listener {
             requestPermissions(new String[] {Manifest.permission.POST_NOTIFICATIONS}, 1);
         }
         s = withLatestStreams(s);
+        // Playing from Favourites tunes through favourites; playing from anywhere else tunes through everything.
+        if (tab == TAB_FAV) Tuner.setBand(this, Tuner.FAVS);
+        else if (Tuner.band(this) == Tuner.FAVS) Tuner.setBand(this, Tuner.allBand(this));
         Station cur = RadioService.current;
         boolean same = cur != null && cur.key().equals(s.key());
         if (same && RadioService.isActive()) {
@@ -477,6 +534,12 @@ public class MainActivity extends Activity implements RadioService.Listener {
         if (s.custom) return s;
         for (Station x : all) if (x.key().equals(s.key())) return x;
         return s;
+    }
+
+    /** Steps to the next ({@code dir} 1) or previous (-1) station on the tuning band. */
+    void tune(int dir) {
+        if (RadioService.current == null && Tuner.dial(this, Tuner.band(this)).isEmpty() && all.isEmpty()) return;
+        RadioService.tune(this, dir);
     }
 
     void togglePlay() {
@@ -1120,6 +1183,12 @@ public class MainActivity extends Activity implements RadioService.Listener {
 
     static String shortSub(Station s) {
         if (s.custom) return "Your stream";
+        String f = Freq.label(s);
+        String rest = shortSubNoFreq(s);
+        return f.isEmpty() ? rest : f + " · " + rest;
+    }
+
+    private static String shortSubNoFreq(Station s) {
         String tag = s.tags == null ? "" : s.tags.split(",")[0].trim();
         if (tag.length() > 14 || tag.equalsIgnoreCase("south africa") || tag.equalsIgnoreCase("za")) tag = "";
         if (tag.length() > 0) tag = Character.toUpperCase(tag.charAt(0)) + tag.substring(1);
@@ -1657,6 +1726,16 @@ public class MainActivity extends Activity implements RadioService.Listener {
         miniSub.setSelected(true);
         col.addView(miniSub);
         mini.addView(col, Ui.weight(1));
+        ImageView miniNext = Ui.iconButton(this, R.drawable.ic_tune_next, Ui.INK, Ui.YELLOW, 40, "Next station");
+        GradientDrawable nb = Ui.oval(Ui.YELLOW);
+        nb.setStroke(Ui.line(), Ui.INK);
+        miniNext.setBackground(nb);
+        miniNext.setOnClickListener(v -> {
+            v.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);
+            tune(1);
+        });
+        Ui.press(miniNext, 0.88f);
+        mini.addView(miniNext, Ui.lp(Ui.dp(this, 40), Ui.dp(this, 40), 0, 0, Ui.dp(this, 8), 0));
         miniPlay = Ui.iconButton(this, R.drawable.ic_play, Ui.INK, Ui.PAPER, 54, "Play");
         GradientDrawable pb = Ui.oval(Ui.PAPER);
         pb.setStroke(Ui.line(), Ui.INK);

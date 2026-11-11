@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Car-radio presets: your first six favourites, one tap each. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/w_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/w_presets_body"
+    android:paddingStart="8dp"
+    android:paddingTop="7dp"
+    android:paddingEnd="11dp"
+    android:paddingBottom="10dp">
+
+    <LinearLayout
+        android:id="@+id/w_slots"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/w_slot1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/w_slot_off">
+
+            <ImageView
+                android:id="@+id/w_slot1_logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="4dp"
+                android:importantForAccessibility="no"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:includeFontPadding="false"
+                android:id="@+id/w_slot1_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:layout_marginStart="2dp"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/w_band"
+                android:fontFamily="@font/grotesk_bold"
+                android:importantForAccessibility="no"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="1"
+                android:textColor="#FFFFD21F"
+                android:textSize="9sp" />
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/w_slot2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/w_slot_off">
+
+            <ImageView
+                android:id="@+id/w_slot2_logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="4dp"
+                android:importantForAccessibility="no"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:includeFontPadding="false"
+                android:id="@+id/w_slot2_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:layout_marginStart="2dp"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/w_band"
+                android:fontFamily="@font/grotesk_bold"
+                android:importantForAccessibility="no"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="2"
+                android:textColor="#FFFFD21F"
+                android:textSize="9sp" />
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/w_slot3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/w_slot_off">
+
+            <ImageView
+                android:id="@+id/w_slot3_logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="4dp"
+                android:importantForAccessibility="no"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:includeFontPadding="false"
+                android:id="@+id/w_slot3_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:layout_marginStart="2dp"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/w_band"
+                android:fontFamily="@font/grotesk_bold"
+                android:importantForAccessibility="no"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="3"
+                android:textColor="#FFFFD21F"
+                android:textSize="9sp" />
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/w_slot4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/w_slot_off">
+
+            <ImageView
+                android:id="@+id/w_slot4_logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="4dp"
+                android:importantForAccessibility="no"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:includeFontPadding="false"
+                android:id="@+id/w_slot4_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:layout_marginStart="2dp"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/w_band"
+                android:fontFamily="@font/grotesk_bold"
+                android:importantForAccessibility="no"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="4"
+                android:textColor="#FFFFD21F"
+                android:textSize="9sp" />
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/w_slot5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/w_slot_off">
+
+            <ImageView
+                android:id="@+id/w_slot5_logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="4dp"
+                android:importantForAccessibility="no"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:includeFontPadding="false"
+                android:id="@+id/w_slot5_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:layout_marginStart="2dp"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/w_band"
+                android:fontFamily="@font/grotesk_bold"
+                android:importantForAccessibility="no"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="5"
+                android:textColor="#FFFFD21F"
+                android:textSize="9sp" />
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/w_slot6"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/w_slot_off">
+
+            <ImageView
+                android:id="@+id/w_slot6_logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="4dp"
+                android:importantForAccessibility="no"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:includeFontPadding="false"
+                android:id="@+id/w_slot6_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:layout_marginStart="2dp"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/w_band"
+                android:fontFamily="@font/grotesk_bold"
+                android:importantForAccessibility="no"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:text="6"
+                android:textColor="#FFFFD21F"
+                android:textSize="9sp" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <TextView
+        android:includeFontPadding="false"
+        android:id="@+id/w_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/grotesk_bold"
+        android:gravity="center"
+        android:text="Hold a station in SA Radio to save it. Your first six favourites appear here."
+        android:textColor="#FF111111"
+        android:textSize="12sp"
+        android:visibility="gone" />
+</FrameLayout>

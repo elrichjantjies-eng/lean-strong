@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- LIVE tag. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#FFD7263D" />
+    <stroke android:width="2dp" android:color="#FF111111" />
+    <corners android:radius="4dp" />
+</shape>

@@ -46,8 +46,15 @@ public class RadioService extends Service implements AudioManager.OnAudioFocusCh
     public static final String ACTION_SLEEP = "za.saradio.app.SLEEP";
     /** The data &amp; quality setting changed: pick the stream again. */
     public static final String ACTION_QUALITY = "za.saradio.app.QUALITY";
+    /** Step to the next (or previous) station on the tuning band; see {@link Tuner}. */
+    public static final String ACTION_TUNE = "za.saradio.app.TUNE";
     public static final String EXTRA_STATION = "station";
     public static final String EXTRA_MINUTES = "minutes";
+    public static final String EXTRA_DIR = "dir";
+    /** Optional with PLAY: switch the tuning band too (the presets widget tunes through favourites). */
+    public static final String EXTRA_BAND = "band";
+    /** Quick taps through several stations only connect to the one you stop on. */
+    private static final long TUNE_SETTLE_MS = 450;
 
     public static final int IDLE = 0;
     public static final int BUFFERING = 1;
@@ -143,6 +150,10 @@ public class RadioService extends Service implements AudioManager.OnAudioFocusCh
 
     private final Runnable requality = this::applyQuality;
 
+    private final Runnable tuneSettle = () -> {
+        if (current != null) play(current, true);
+    };
+
     public static void setListener(Listener l) {
         listener = l;
         if (l != null) l.onRadioState(current, state, message);
@@ -150,6 +161,19 @@ public class RadioService extends Service implements AudioManager.OnAudioFocusCh
 
     public static boolean isActive() {
         return state == PLAYING || state == BUFFERING;
+    }
+
+    /** Tunes one station forward ({@code dir} 1) or back (-1). */
+    public static void tune(Context c, int dir) {
+        Intent i = new Intent(c, RadioService.class).setAction(ACTION_TUNE).putExtra(EXTRA_DIR, dir);
+        try {
+            c.startForegroundService(i);
+        } catch (Exception e) {
+            try {
+                c.startService(i);
+            } catch (Exception ignored) {
+            }
+        }
     }
 
     public static void send(Context c, String action, Station s, int minutes) {
@@ -212,6 +236,16 @@ public class RadioService extends Service implements AudioManager.OnAudioFocusCh
             public void onStop() {
                 stopPlayback("Stopped");
             }
+
+            @Override
+            public void onSkipToNext() {
+                tuneBy(1);
+            }
+
+            @Override
+            public void onSkipToPrevious() {
+                tuneBy(-1);
+            }
         });
         session.setSessionActivity(PendingIntent.getActivity(this, 1,
                 new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
@@ -253,6 +287,7 @@ public class RadioService extends Service implements AudioManager.OnAudioFocusCh
                     s = Station.fromJson(new JSONObject(intent.getStringExtra(EXTRA_STATION)));
                 } catch (Exception ignored) {
                 }
+                if (s != null && intent.hasExtra(EXTRA_BAND)) Tuner.setBand(this, intent.getIntExtra(EXTRA_BAND, Tuner.AZ));
                 if (s == null) leaveForegroundIfIdle();
                 else play(s, true);
                 break;
@@ -276,13 +311,39 @@ public class RadioService extends Service implements AudioManager.OnAudioFocusCh
                 applyQuality();
                 leaveForegroundIfIdle();
                 break;
+            case ACTION_TUNE:
+                tuneBy(intent.getIntExtra(EXTRA_DIR, 1) < 0 ? -1 : 1);
+                break;
             default:
                 leaveForegroundIfIdle();
         }
         return START_NOT_STICKY;
     }
 
+    /**
+     * Switches straight to the next station: the name changes at once and the old stream stops,
+     * but the new one only connects once the tapping stops.
+     */
+    private void tuneBy(int dir) {
+        Station next = Tuner.step(this, current, dir);
+        if (next == null) {
+            leaveForegroundIfIdle();
+            return;
+        }
+        MAIN.removeCallbacks(tuneSettle);
+        MAIN.removeCallbacks(retry);
+        wantPlaying = false;
+        releasePlayers();
+        boolean same = current != null && current.key().equals(next.key());
+        if (!same) songTitle = "";
+        current = next;
+        Prefs.saveLastStation(this, next);
+        setState(BUFFERING, "Tuning…");
+        MAIN.postDelayed(tuneSettle, TUNE_SETTLE_MS);
+    }
+
     private void play(Station s, boolean userChoice) {
+        MAIN.removeCallbacks(tuneSettle);
         boolean same = current != null && current.key().equals(s.key());
         if (!same) songTitle = "";
         current = s;
@@ -503,6 +564,7 @@ public class RadioService extends Service implements AudioManager.OnAudioFocusCh
         wantPlaying = false;
         resumeAfterFocus = false;
         MAIN.removeCallbacks(retry);
+        MAIN.removeCallbacks(tuneSettle);
         meterTick();
         flushMonth();
         MAIN.removeCallbacks(meter);
@@ -665,7 +727,8 @@ public class RadioService extends Service implements AudioManager.OnAudioFocusCh
         }
         PlaybackState.Builder b = new PlaybackState.Builder()
                 .setActions(PlaybackState.ACTION_PLAY | PlaybackState.ACTION_PAUSE | PlaybackState.ACTION_STOP
-                        | PlaybackState.ACTION_PLAY_PAUSE)
+                        | PlaybackState.ACTION_PLAY_PAUSE | PlaybackState.ACTION_SKIP_TO_NEXT
+                        | PlaybackState.ACTION_SKIP_TO_PREVIOUS)
                 .setState(ps, PlaybackState.PLAYBACK_POSITION_UNKNOWN, 1f);
         if (s == ERROR) b.setErrorMessage(msg);
         session.setPlaybackState(b.build());
@@ -677,6 +740,7 @@ public class RadioService extends Service implements AudioManager.OnAudioFocusCh
             }
         }
         notifyListener();
+        Widgets.radioChanged(this);
     }
 
     private static void notifyListener() {
@@ -712,6 +776,12 @@ public class RadioService extends Service implements AudioManager.OnAudioFocusCh
                 PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
+    private PendingIntent tunePi(int dir, int code) {
+        return PendingIntent.getForegroundService(this, code,
+                new Intent(this, RadioService.class).setAction(ACTION_TUNE).putExtra(EXTRA_DIR, dir),
+                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
     private Notification buildNotification() {
         boolean active = isActive();
         Station c = current;
@@ -728,12 +798,16 @@ public class RadioService extends Service implements AudioManager.OnAudioFocusCh
                 .setCategory(Notification.CATEGORY_TRANSPORT)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
                 .setColor(Ui.ACCENT)
+                .addAction(new Notification.Action.Builder(Icon.createWithResource(this, R.drawable.ic_tune_prev),
+                        "Previous station", tunePi(-1, 12)).build())
                 .addAction(new Notification.Action.Builder(
                         Icon.createWithResource(this, active ? R.drawable.ic_stop : R.drawable.ic_play),
                         active ? "Stop" : "Play", servicePi(ACTION_TOGGLE, 10)).build())
+                .addAction(new Notification.Action.Builder(Icon.createWithResource(this, R.drawable.ic_tune_next),
+                        "Next station", tunePi(1, 13)).build())
                 .addAction(new Notification.Action.Builder(Icon.createWithResource(this, R.drawable.ic_close), "Close",
                         servicePi(ACTION_CLOSE, 11)).build())
-                .setStyle(new Notification.MediaStyle().setMediaSession(session.getSessionToken()).setShowActionsInCompactView(0, 1));
+                .setStyle(new Notification.MediaStyle().setMediaSession(session.getSessionToken()).setShowActionsInCompactView(0, 1, 2));
         Bitmap art = c != null ? ImageLoader.cachedAny(c.favicon) : null;
         if (art != null) b.setLargeIcon(art);
         return b.build();
@@ -777,6 +851,7 @@ public class RadioService extends Service implements AudioManager.OnAudioFocusCh
         MAIN.removeCallbacks(sleepFade);
         MAIN.removeCallbacks(meter);
         MAIN.removeCallbacks(requality);
+        MAIN.removeCallbacks(tuneSettle);
         meterTick();
         flushMonth();
         sleepAt = 0;
