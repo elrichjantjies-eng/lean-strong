@@ -69,7 +69,7 @@ public class WidgetListService extends RemoteViewsService {
 
         @Override
         public void onDataSetChanged() {
-            List<NewsRepo.Item> all = NewsRepo.load(c);
+            List<NewsRepo.Item> all = NewsRepo.local(NewsRepo.load(c));
             items = all.subList(0, Math.min(40, all.size()));
         }
 
@@ -115,7 +115,7 @@ public class WidgetListService extends RemoteViewsService {
         @Override
         public void onDataSetChanged() {
             rows.clear();
-            List<NewsRepo.Item> items = NewsRepo.load(c);
+            List<NewsRepo.Item> items = NewsRepo.local(NewsRepo.load(c));
             if (items.isEmpty()) return;
             NewsRepo.Item it = items.get(StoryWidget.position(c, widgetId, items.size()));
             link = it.link;

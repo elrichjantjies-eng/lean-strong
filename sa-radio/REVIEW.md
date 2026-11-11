@@ -290,3 +290,21 @@ streams.
 
 The widget pictures in the launcher's list use made-up sample stories and painted letters, so no
 publisher's headlines or station logos are packaged in the app.
+
+## 4.2: World news
+
+A **World** list beside Headlines and Sport. The ask was for coverage of the Middle East and the
+rest of the world from outlets that aren't only Western, and for unbiased ones. No outlet is
+unbiased, so the list mixes countries and owners instead: Qatari, Turkish, Saudi, Israeli (left and
+right), Indian, Pakistani, Chinese, Singaporean, Japanese, Nigerian, Kenyan, Argentine, Russian,
+German, French, British and Canadian outlets, plus the UN and two non-profits. Every story shows its
+outlet and country, and Settings → World news sources says who funds each one, so readers can weigh
+a story by reading it from two places.
+
+Feeds were tested from the app's own HTTP code, not just a browser: Arab News, TRT World, Press TV,
+The New Arab, Times of Israel, teleSUR, Xinhua and The National block automated readers and were
+left out; The New Humanitarian's feed carries only a few stories a month. Three fixes came out of
+this: Middle East Eye gzips its feed without being asked (now decompressed), the Jerusalem Post
+"headlines" feed is stale (its front-page feed is used), and world outlets keep three weeks of
+stories instead of ten days because some publish weekly. World stories are kept separately from
+South African ones (up to 640 and 400), and the widgets stay on South African headlines.

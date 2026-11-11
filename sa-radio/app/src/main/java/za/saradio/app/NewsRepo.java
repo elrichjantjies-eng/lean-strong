@@ -62,6 +62,70 @@ public final class NewsRepo {
         {"The South African", "https://www.thesouthafrican.com/feed/"},
     };
 
+    /** Region keys for world feeds, and their labels. */
+    public static final String[] REGIONS = {"mideast", "africa", "asia", "europe", "americas", "global"};
+    public static final String[] REGION_NAMES = {"Middle East", "Africa", "Asia", "Europe", "Americas", "Global"};
+
+    /**
+     * World outlets, chosen from different countries and owners so no one region or view
+     * dominates; each entry is {name, url, region, country, who it is funded by}. The funding note
+     * is shown to readers so they can judge it themselves. Checked November 2026; feeds that
+     * refused automated readers (TRT World, Press TV, The New Arab, Arab News, Times of Israel,
+     * teleSUR, Xinhua, The National) are left out, as is The New Humanitarian, whose feed only carries a
+     * handful of stories a month.
+     */
+    public static final String[][] WORLD = {
+        {"Al Jazeera", "https://www.aljazeera.com/xml/rss/all.xml", "mideast", "Qatar", "funded by the Qatari state"},
+        {"Middle East Eye", "https://www.middleeasteye.net/rss", "mideast", "UK", "independent, Middle East focus"},
+        {"Saudi Gazette", "https://saudigazette.com.sa/rssFeed/74", "mideast", "Saudi Arabia", "privately owned, Saudi"},
+        {"Al-Monitor", "https://www.al-monitor.com/rss", "mideast", "US", "independent, reporters across the region"},
+        {"Haaretz", "https://www.haaretz.com/srv/haaretz-latest-headlines", "mideast", "Israel", "independent, left-leaning"},
+        {"Jerusalem Post", "https://www.jpost.com/rss/rssfeedsfrontpage.aspx", "mideast", "Israel", "privately owned, right-leaning"},
+        {"Anadolu Agency", "https://www.aa.com.tr/en/rss/default?cat=world", "mideast", "Turkey", "Turkish state news agency"},
+        {"Daily Sabah", "https://www.dailysabah.com/rssFeed/world", "mideast", "Turkey", "privately owned, pro-government"},
+        {"AllAfrica", "https://allafrica.com/tools/headlines/rdf/latest/headlines.rdf", "africa", "Pan-African", "gathers 100+ African newspapers"},
+        {"Africanews", "https://www.africanews.com/feed/rss", "africa", "Congo", "owned by Euronews"},
+        {"Premium Times", "https://www.premiumtimesng.com/feed", "africa", "Nigeria", "independent"},
+        {"Nation", "https://nation.africa/kenya/rss.xml", "africa", "Kenya", "privately owned (Nation Media Group)"},
+        {"The Hindu", "https://www.thehindu.com/news/international/feeder/default.rss", "asia", "India", "privately owned"},
+        {"NDTV", "https://feeds.feedburner.com/ndtvnews-world-news", "asia", "India", "privately owned (Adani Group)"},
+        {"Dawn", "https://www.dawn.com/feeds/home", "asia", "Pakistan", "privately owned"},
+        {"South China Morning Post", "https://www.scmp.com/rss/91/feed", "asia", "Hong Kong", "owned by Alibaba"},
+        {"CGTN", "https://www.cgtn.com/subscribe/rss/section/world.xml", "asia", "China", "Chinese state broadcaster"},
+        {"CNA", "https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml&category=6311", "asia", "Singapore", "state-linked (Mediacorp)"},
+        {"The Straits Times", "https://www.straitstimes.com/news/world/rss.xml", "asia", "Singapore", "state-linked (SPH Media)"},
+        {"The Japan Times", "https://www.japantimes.co.jp/feed/", "asia", "Japan", "privately owned"},
+        {"MercoPress", "https://en.mercopress.com/rss", "americas", "South Atlantic", "independent, South America"},
+        {"Buenos Aires Times", "https://www.batimes.com.ar/feed", "americas", "Argentina", "privately owned (Perfil)"},
+        {"CBC", "https://www.cbc.ca/webfeed/rss/rss-world", "americas", "Canada", "Canadian public broadcaster"},
+        {"DW", "https://rss.dw.com/rdf/rss-en-all", "europe", "Germany", "German public broadcaster"},
+        {"France 24", "https://www.france24.com/en/rss", "europe", "France", "French public broadcaster"},
+        {"RFI", "https://www.rfi.fr/en/rss", "europe", "France", "French public broadcaster"},
+        {"Euronews", "https://www.euronews.com/rss", "europe", "Europe", "privately owned (Alpac Capital)"},
+        {"BBC World", "https://feeds.bbci.co.uk/news/world/rss.xml", "europe", "UK", "UK public broadcaster"},
+        {"TASS", "https://tass.com/rss/v2.xml", "europe", "Russia", "Russian state news agency"},
+        {"UN News", "https://news.un.org/feed/subscribe/en/news/all/rss.xml", "global", "United Nations", "UN"},
+        {"Global Voices", "https://globalvoices.org/feed/", "global", "Worldwide", "non-profit, citizen media"},
+    };
+
+    static String regionName(String key) {
+        for (int i = 0; i < REGIONS.length; i++) if (REGIONS[i].equals(key)) return REGION_NAMES[i];
+        return "";
+    }
+
+    /** The feed entry for a world outlet, or null for a South African one. */
+    public static String[] worldFeed(String source) {
+        for (String[] f : WORLD) if (f[0].equals(source)) return f;
+        return null;
+    }
+
+    /** Just the South African stories (the Headlines list and the news widgets). */
+    public static List<Item> local(List<Item> all) {
+        List<Item> out = new ArrayList<>();
+        for (Item it : all) if (it.region.isEmpty()) out.add(it);
+        return out;
+    }
+
     private static final Pattern IMG = Pattern.compile("<img[^>]+src=[\"']([^\"']+)[\"']", Pattern.CASE_INSENSITIVE);
 
     // Two-digit-year patterns come first: eNCA writes "Wed, 04 Nov 26 15:45:00 +0200", which the old
@@ -89,6 +153,14 @@ public final class NewsRepo {
         public String source = "";
         public String image = "";
         public String summary = "";
+        /** A {@link #REGIONS} key for world stories; empty for South African ones. */
+        public String region = "";
+        public String country = "";
+
+        /** "Al Jazeera · Qatar" for world stories, just the name for South African ones. */
+        public String byline() {
+            return country.isEmpty() ? source : source + " · " + country;
+        }
 
         JSONObject toJson() {
             JSONObject o = new JSONObject();
@@ -99,6 +171,8 @@ public final class NewsRepo {
                 o.put("i", image);
                 o.put("d", summary);
                 o.put("w", time);
+                if (!region.isEmpty()) o.put("r", region);
+                if (!country.isEmpty()) o.put("c", country);
             } catch (Exception ignored) {
             }
             return o;
@@ -112,38 +186,64 @@ public final class NewsRepo {
             it.image = o.optString("i");
             it.summary = o.optString("d");
             it.time = o.optLong("w");
+            it.region = o.optString("r");
+            it.country = o.optString("c");
             return it;
         }
     }
 
+    /** South African headlines first, then the world outlets; each set is tidied on its own. */
     public static List<Item> fetchAll() {
-        ExecutorService pool = Executors.newFixedThreadPool(8);
-        List<Future<List<Item>>> jobs = new ArrayList<>();
-        for (final String[] f : FEEDS) {
-            jobs.add(pool.submit(() -> {
-                try {
-                    return fetchFeed(f[0], f[1]);
-                } catch (Throwable t) {
-                    return new ArrayList<Item>();
-                }
-            }));
+        ExecutorService pool = Executors.newFixedThreadPool(12);
+        List<Future<List<Item>>> local = new ArrayList<>(), world = new ArrayList<>();
+        for (final String[] f : FEEDS) local.add(pool.submit(() -> feedOrEmpty(f, "", "")));
+        for (final String[] f : WORLD) world.add(pool.submit(() -> feedOrEmpty(f, f[2], f[3])));
+        long deadline = System.currentTimeMillis() + 30000;
+        List<Item> out = new ArrayList<>(tidy(gather(local, deadline), 400));
+        // 32 outlets at up to 20 stories each; the cap only trims a backlog of undated items.
+        // World magazines publish less often, so they keep three weeks instead of ten days.
+        out.addAll(tidy(gather(world, deadline), 640, 21));
+        pool.shutdownNow();
+        return out;
+    }
+
+    private static List<Item> feedOrEmpty(String[] f, String region, String country) {
+        try {
+            List<Item> items = fetchFeed(f[0], f[1]);
+            if (!region.isEmpty() && items.size() > 20) items = new ArrayList<>(items.subList(0, 20));
+            for (Item it : items) {
+                it.region = region;
+                it.country = country;
+            }
+            return items;
+        } catch (Throwable t) {
+            return new ArrayList<>();
         }
+    }
+
+    private static List<Item> gather(List<Future<List<Item>>> jobs, long deadline) {
         List<Item> all = new ArrayList<>();
-        long deadline = System.currentTimeMillis() + 25000;
         for (Future<List<Item>> j : jobs) {
             try {
                 all.addAll(j.get(Math.max(1, deadline - System.currentTimeMillis()), TimeUnit.MILLISECONDS));
             } catch (Exception ignored) {
             }
         }
-        pool.shutdownNow();
-        return tidy(all);
+        return all;
     }
 
     static List<Item> tidy(List<Item> items) {
+        return tidy(items, 400);
+    }
+
+    static List<Item> tidy(List<Item> items, int max) {
+        return tidy(items, max, 10);
+    }
+
+    static List<Item> tidy(List<Item> items, int max, int days) {
         Set<String> seen = new HashSet<>();
         List<Item> out = new ArrayList<>();
-        long cutoff = System.currentTimeMillis() - 10L * 24 * 3600 * 1000;
+        long cutoff = System.currentTimeMillis() - days * 24L * 3600 * 1000;
         for (Item it : items) {
             if (it.title.length() == 0 || !it.link.startsWith("http")) continue;
             if (it.time > 0 && it.time < cutoff) continue;
@@ -154,7 +254,7 @@ public final class NewsRepo {
             out.add(it);
         }
         Collections.sort(out, (a, b) -> Long.compare(b.time, a.time));
-        return out.size() > 400 ? new ArrayList<>(out.subList(0, 400)) : out;
+        return out.size() > max ? new ArrayList<>(out.subList(0, max)) : out;
     }
 
     static List<Item> fetchFeed(String source, String url) throws Exception {
@@ -175,6 +275,16 @@ public final class NewsRepo {
                     cur = new URL(new URL(cur), loc).toString();
                 } else if (code == 200) {
                     body = StationRepo.readAll(c.getInputStream(), 8 << 20);
+                    // Some servers (Middle East Eye) gzip the feed even when it wasn't asked for.
+                    String enc = c.getHeaderField("Content-Encoding");
+                    boolean gz = (enc != null && enc.toLowerCase(Locale.ROOT).contains("gzip"))
+                            || (body.length > 2 && (body[0] & 0xFF) == 0x1F && (body[1] & 0xFF) == 0x8B);
+                    if (gz) {
+                        try {
+                            body = StationRepo.readAll(new java.util.zip.GZIPInputStream(new ByteArrayInputStream(body)), 8 << 20);
+                        } catch (IOException ignored) {
+                        }
+                    }
                 } else {
                     throw new IOException("HTTP " + code);
                 }
@@ -265,7 +375,7 @@ public final class NewsRepo {
                         }
                     }
                     out.add(it);
-                    if (out.size() >= 40) break;
+                    if (out.size() >= 30) break;
                     it = null;
                 }
             }

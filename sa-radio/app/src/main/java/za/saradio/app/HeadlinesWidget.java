@@ -53,7 +53,7 @@ public class HeadlinesWidget extends AppWidgetProvider {
 
     static RemoteViews build(Context c, int id) {
         RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget_headlines);
-        List<NewsRepo.Item> items = NewsRepo.load(c);
+        List<NewsRepo.Item> items = NewsRepo.local(NewsRepo.load(c));
         v.setTextViewText(R.id.w_sub, items.isEmpty() ? "AD-FREE" : "AD-FREE · " + items.size() + " STORIES");
         Intent svc = new Intent(c, WidgetListService.class)
                 .putExtra(WidgetListService.EXTRA_KIND, WidgetListService.KIND_HEADLINES)

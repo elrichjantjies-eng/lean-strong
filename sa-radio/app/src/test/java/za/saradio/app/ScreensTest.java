@@ -146,13 +146,28 @@ public class ScreensTest {
     public void news() throws Exception {
         Context c = RuntimeEnvironment.getApplication();
         List<NewsRepo.Item> items = NewsRepo.fetchAll();
-        assertTrue("live feeds returned " + items.size(), items.size() > 50);
+        int local = NewsRepo.local(items).size(), world = items.size() - local;
+        assertTrue("live SA feeds returned " + local, local > 50);
+        // Every world outlet should answer; report the ones that don't so the list can be kept honest.
+        java.util.Map<String, Integer> per = new java.util.TreeMap<>();
+        for (NewsRepo.Item it : items) if (!it.region.isEmpty()) per.merge(it.source + " (" + it.country + ")", 1, Integer::sum);
+        StringBuilder missing = new StringBuilder();
+        for (String[] f : NewsRepo.WORLD) if (!per.containsKey(f[0] + " (" + f[3] + ")")) missing.append(f[0]).append(' ');
+        System.out.println("WORLD " + world + " stories: " + per + " missing: [" + missing + "]");
+        assertTrue("world feeds returned " + world, world > 150);
+        assertTrue("world outlets missing: " + missing, missing.length() == 0);
         NewsRepo.save(c, items);
         playing(c);
         MainActivity a = launch();
         a.setTab(MainActivity.TAB_NEWS);
         settle(a, 25000);
         shot(a, "04_news");
+        a.showWorld("");
+        settle(a, 20000);
+        shot(a, "04b_world");
+        a.showWorld("mideast");
+        settle(a, 15000);
+        shot(a, "04c_world_mideast");
     }
 
     @Test

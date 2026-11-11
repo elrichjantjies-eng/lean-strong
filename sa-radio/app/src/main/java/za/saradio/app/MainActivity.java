@@ -118,6 +118,9 @@ public class MainActivity extends Activity implements RadioService.Listener {
     private LinearLayout newsContent;
     private Segmented newsMode;
     private boolean sportMode;
+    /** The World list instead of South African headlines. */
+    private boolean worldMode;
+    private String worldRegion = "";
 
     // Mini player
     private LinearLayout mini;
@@ -634,7 +637,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
         if (stations) articlePage.setVisibility(View.GONE);
         provinceScroll.setVisibility(t == TAB_RADIO ? View.VISIBLE : View.GONE);
         search.setHint(t == TAB_FAV ? "Search your favourites" : "Where to? Station, genre or city");
-        title.setText(t == TAB_RADIO ? "SA Radio" : t == TAB_FAV ? "Favourites" : sportMode ? "Sport" : "News");
+        title.setText(t == TAB_RADIO ? "SA Radio" : t == TAB_FAV ? "Favourites" : sportMode ? "Sport" : worldMode ? "World" : "News");
         updatePlate();
         if (t == TAB_FAV) {
             actionBtn.setImageResource(R.drawable.ic_plus);
@@ -656,7 +659,8 @@ public class MainActivity extends Activity implements RadioService.Listener {
         }
         if (t == TAB_NEWS && sportMode) sportView.shown();
         else sportView.hidden();
-        if (t == TAB_NEWS && !sportMode && (news.isEmpty() || System.currentTimeMillis() - newsLoadedAt > 15 * 60_000L)) {
+        if (t == TAB_NEWS && !sportMode && (news.isEmpty() || NewsRepo.local(news).size() == news.size()
+                || System.currentTimeMillis() - newsLoadedAt > 15 * 60_000L)) {
             refreshNews(false);
         }
         updateHeaderSpinner();
@@ -669,6 +673,12 @@ public class MainActivity extends Activity implements RadioService.Listener {
         if (tab == TAB_RADIO) s = all.isEmpty() ? "Mzansi on air" : "Mzansi · " + all.size() + " stations";
         else if (tab == TAB_FAV) s = favs.isEmpty() ? "Nothing saved yet" : favs.size() + (favs.size() == 1 ? " station saved" : " stations saved");
         else if (sportMode) s = "Scores & fixtures";
+        else if (worldMode) {
+            Set<String> countries = new LinkedHashSet<>();
+            for (NewsRepo.Item it : newsShown) countries.add(it.country);
+            s = newsShown.isEmpty() ? "Many countries, many voices"
+                    : (worldRegion.isEmpty() ? "World" : NewsRepo.regionName(worldRegion)) + " · " + countries.size() + " countries";
+        }
         else s = newsShown.isEmpty() ? "Read while you listen" : newsShown.size() + " stories · ad-free";
         greeting.setText(s.toUpperCase(Locale.ROOT));
     }
@@ -1225,7 +1235,12 @@ public class MainActivity extends Activity implements RadioService.Listener {
 
     private void applyNewsFilter() {
         newsShown.clear();
-        for (NewsRepo.Item it : news) if (newsSource.length() == 0 || newsSource.equals(it.source)) newsShown.add(it);
+        for (NewsRepo.Item it : news) {
+            boolean world = !it.region.isEmpty();
+            if (world != worldMode) continue;
+            if (world ? (worldRegion.length() > 0 && !worldRegion.equals(it.region)) : (newsSource.length() > 0 && !newsSource.equals(it.source))) continue;
+            newsShown.add(it);
+        }
         newsAdapter.notifyDataSetChanged();
         updateNewsStatus();
     }
@@ -1235,9 +1250,16 @@ public class MainActivity extends Activity implements RadioService.Listener {
         if (newsStatus == null) return;
         if (!news.isEmpty()) {
             Set<String> pubs = new LinkedHashSet<>();
-            for (NewsRepo.Item it : news) pubs.add(it.source);
-            newsStatus.setText(newsShown.size() + " stories" + (newsSource.length() > 0 ? " from " + newsSource : " from " + pubs.size() + " publishers")
-                    + (newsLoading ? " · updating…" : ""));
+            for (NewsRepo.Item it : worldMode ? newsShown : news) if (!worldMode || !it.region.isEmpty()) pubs.add(it.source);
+            String from;
+            if (worldMode) {
+                Set<String> countries = new LinkedHashSet<>();
+                for (NewsRepo.Item it : newsShown) countries.add(it.country);
+                from = "from " + pubs.size() + " outlets in " + countries.size() + " countries";
+            } else {
+                from = newsSource.length() > 0 ? "from " + newsSource : "from " + pubs.size() + " publishers";
+            }
+            newsStatus.setText(newsShown.size() + " stories " + from + (newsLoading ? " · updating…" : ""));
         } else {
             newsStatus.setText(newsLoading ? "Fetching the latest headlines…" : "No headlines yet. Tap refresh to try again.");
         }
@@ -1245,6 +1267,14 @@ public class MainActivity extends Activity implements RadioService.Listener {
 
     private void rebuildNewsChips() {
         newsChipRow.removeAllViews();
+        if (worldMode) {
+            addChip(newsChipRow, "Everywhere", worldRegion.length() == 0, v -> pickRegion(""));
+            for (int i = 0; i < NewsRepo.REGIONS.length; i++) {
+                final String r = NewsRepo.REGIONS[i];
+                addChip(newsChipRow, NewsRepo.REGION_NAMES[i], r.equals(worldRegion), v -> pickRegion(r));
+            }
+            return;
+        }
         Set<String> have = new LinkedHashSet<>();
         for (String[] f : NewsRepo.FEEDS) {
             for (NewsRepo.Item it : news) {
@@ -1271,13 +1301,23 @@ public class MainActivity extends Activity implements RadioService.Listener {
         }
     }
 
+    private void pickRegion(String r) {
+        worldRegion = r;
+        Prefs.get(this).edit().putString("worldRegion", r).apply();
+        rebuildNewsChips();
+        applyNewsFilter();
+        newsList.setSelection(0);
+    }
+
     private View buildNewsPage() {
         newsPage = Ui.column(this);
-        // Headlines or Sport. Sport is an extra for the News tab; it never touches the radio.
+        // South African headlines, the World list, or Sport. None of these touch the radio.
         sportMode = Prefs.get(this).getBoolean("newsSport", false);
-        newsMode = new Segmented(this, new String[] {"Headlines", "Sport"});
-        newsMode.select(sportMode ? 1 : 0, false);
-        newsMode.setListener(i -> applyNewsMode(i == 1));
+        worldMode = !sportMode && Prefs.get(this).getBoolean("newsWorld", false);
+        worldRegion = Prefs.get(this).getString("worldRegion", "");
+        newsMode = new Segmented(this, new String[] {"Headlines", "World", "Sport"});
+        newsMode.select(sportMode ? 2 : worldMode ? 1 : 0, false);
+        newsMode.setListener(i -> applyNewsMode(i == 2, i == 1));
         newsPage.addView(newsMode, Ui.lp(-1, -2, Ui.dp(this, 20), 0, Ui.dp(this, 20), Ui.dp(this, 12)));
         newsContent = Ui.column(this);
         newsPage.addView(newsContent, new LinearLayout.LayoutParams(-1, 0, 1f));
@@ -1312,9 +1352,13 @@ public class MainActivity extends Activity implements RadioService.Listener {
         return newsPage;
     }
 
-    private void applyNewsMode(boolean sport) {
+    private void applyNewsMode(boolean sport, boolean world) {
         sportMode = sport;
-        Prefs.get(this).edit().putBoolean("newsSport", sport).apply();
+        worldMode = world;
+        Prefs.get(this).edit().putBoolean("newsSport", sport).putBoolean("newsWorld", world).apply();
+        rebuildNewsChips();
+        applyNewsFilter();
+        newsList.setSelection(0);
         newsContent.setVisibility(sport ? View.GONE : View.VISIBLE);
         sportView.setVisibility(sport ? View.VISIBLE : View.GONE);
         if (tab == TAB_NEWS) setTab(TAB_NEWS);
@@ -1403,8 +1447,16 @@ public class MainActivity extends Activity implements RadioService.Listener {
     }
 
     void showSport(boolean sport) {
-        newsMode.select(sport ? 1 : 0, false);
-        applyNewsMode(sport);
+        newsMode.select(sport ? 2 : worldMode ? 1 : 0, false);
+        applyNewsMode(sport, !sport && worldMode);
+    }
+
+    /** Tests and widgets: the World list, optionally filtered to one region. */
+    void showWorld(String region) {
+        worldRegion = region == null ? "" : region;
+        Prefs.get(this).edit().putString("worldRegion", worldRegion).apply();
+        newsMode.select(1, false);
+        applyNewsMode(false, true);
     }
 
     ArticleView articleView() {
@@ -1605,8 +1657,8 @@ public class MainActivity extends Activity implements RadioService.Listener {
             }
             c.title.setText(it.title);
             String ago = NewsRepo.ago(it.time);
-            c.meta.setText(i == 0 ? it.source.toUpperCase(Locale.ROOT) + (ago.length() > 0 ? "  ·  " + ago.toUpperCase(Locale.ROOT) : "")
-                    : it.source + (ago.length() > 0 ? "  ·  " + ago : ""));
+            c.meta.setText(i == 0 ? it.byline().toUpperCase(Locale.ROOT) + (ago.length() > 0 ? "  ·  " + ago.toUpperCase(Locale.ROOT) : "")
+                    : it.byline() + (ago.length() > 0 ? "  ·  " + ago : ""));
             if (c.summary != null) {
                 c.summary.setText(it.summary);
                 c.summary.setVisibility(it.summary.length() > 0 ? View.VISIBLE : View.GONE);
@@ -1614,7 +1666,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
             int eff = DataMode.effective(MainActivity.this);
             int px = i == 0 ? (eff == DataMode.SAVER ? 480 : 900) : (eff == DataMode.SAVER ? 160 : 260);
             ImageLoader.loadArticleImage(c.image, it, newsPlaceholder(it.source), px, DataMode.fetchArticlePreviews(eff));
-            v.setContentDescription(it.title + ". " + it.source + ", " + ago);
+            v.setContentDescription(it.title + ". " + it.byline() + ", " + ago);
             return v;
         }
 

@@ -1,4 +1,4 @@
-# SA Radio 4.1
+# SA Radio 4.2
 
 South African radio and news for Android. This is the source of the SA Radio app, rebuilt from the
 2.0 APK and redesigned. See [REVIEW.md](REVIEW.md) for what was wrong with 2.0 and what changed.
@@ -11,9 +11,9 @@ with its logo.
 | --- | --- | --- | --- |
 | ![Stations](docs/screenshots/home.jpg) | ![Favourites](docs/screenshots/favourites.jpg) | ![Now Playing](docs/screenshots/now-playing.jpg) | ![Sound and data](docs/screenshots/now-playing-sound-and-data.jpg) |
 
-| News | Sport | Ad-free reader | Equaliser |
-| --- | --- | --- | --- |
-| ![News](docs/screenshots/news.jpg) | ![Sport](docs/screenshots/sport.jpg) | ![Reader](docs/screenshots/reader.jpg) | ![Equaliser](docs/screenshots/equaliser.jpg) |
+| News | World (4.2) | Sport | Ad-free reader | Equaliser |
+| --- | --- | --- | --- | --- |
+| ![News](docs/screenshots/news.jpg) | ![World](docs/screenshots/world.jpg) | ![Sport](docs/screenshots/sport.jpg) | ![Reader](docs/screenshots/reader.jpg) | ![Equaliser](docs/screenshots/equaliser.jpg) |
 
 Home-screen widgets (4.1):
 
@@ -40,6 +40,13 @@ Home-screen widgets (4.1):
   ad-free reader that downloads only the article's text and pictures and draws them in the app's
   own design, with adjustable text size. If a page isn't a normal article, the original page opens
   with ad networks and trackers blocked.
+- **World** (News tab → World): the same ad-free reader for 31 outlets in 25 countries, filtered by
+  region (Middle East, Africa, Asia, Europe, Americas, Global). They were chosen from different
+  countries and owners rather than one "neutral" source: Al Jazeera, Middle East Eye, Al-Monitor,
+  Haaretz, Jerusalem Post, Saudi Gazette, Anadolu, Daily Sabah, AllAfrica, Africanews, Premium
+  Times, Nation, The Hindu, NDTV, Dawn, SCMP, CGTN, CNA, Straits Times, Japan Times, MercoPress,
+  Buenos Aires Times, CBC, DW, France 24, RFI, Euronews, BBC World, TASS, UN News and Global Voices.
+  Each story is labelled with its outlet and country, and Settings lists who funds each outlet.
 - **Sport** (News tab → Sport): results from the past week and fixtures for the next two, with live
   scores. Covers rugby (Springbok tests, URC, Currie Cup and European competitions), soccer
   (Betway Premiership, cups, Bafana Bafana, CAF and, on request, the big European leagues),

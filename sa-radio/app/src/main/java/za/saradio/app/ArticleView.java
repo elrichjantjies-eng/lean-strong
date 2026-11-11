@@ -181,7 +181,7 @@ final class ArticleView extends FrameLayout {
 
     private void header(NewsRepo.Item it, Article art) {
         LinearLayout meta = Ui.row(a);
-        TextView src = Ui.text(a, it.source.toUpperCase(Locale.ROOT), 12, Ui.ACCENT, Ui.W_HEAVY);
+        TextView src = Ui.text(a, it.byline().toUpperCase(Locale.ROOT), 12, Ui.ACCENT, Ui.W_HEAVY);
         src.setLetterSpacing(0.1f);
         meta.addView(src);
         String when = NewsRepo.ago(it.time);

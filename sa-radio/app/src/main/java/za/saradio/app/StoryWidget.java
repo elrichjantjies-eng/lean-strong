@@ -52,7 +52,7 @@ public class StoryWidget extends AppWidgetProvider {
         String action = i.getAction();
         int id = i.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         if (ACTION_PREV.equals(action) || ACTION_NEXT.equals(action)) {
-            List<NewsRepo.Item> items = NewsRepo.load(c);
+            List<NewsRepo.Item> items = NewsRepo.local(NewsRepo.load(c));
             if (items.isEmpty()) return;
             int pos = position(c, id, items.size()) + (ACTION_NEXT.equals(action) ? 1 : -1);
             pos = ((pos % items.size()) + items.size()) % items.size();
@@ -141,7 +141,7 @@ public class StoryWidget extends AppWidgetProvider {
 
     static RemoteViews build(Context c, int id) {
         RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget_story);
-        List<NewsRepo.Item> items = NewsRepo.load(c);
+        List<NewsRepo.Item> items = NewsRepo.local(NewsRepo.load(c));
         v.setOnClickPendingIntent(R.id.w_prev, Widgets.broadcast(c, StoryWidget.class, ACTION_PREV, id, false));
         v.setOnClickPendingIntent(R.id.w_next, Widgets.broadcast(c, StoryWidget.class, ACTION_NEXT, id, false));
         if (items.isEmpty()) {

@@ -91,6 +91,23 @@ final class Panels {
             addStation(a);
         });
 
+        s.section("World news sources");
+        StringBuilder src = new StringBuilder();
+        String region = "";
+        for (String[] f : NewsRepo.WORLD) {
+            if (!f[2].equals(region)) {
+                region = f[2];
+                if (src.length() > 0) src.append("\n\n");
+                src.append(NewsRepo.regionName(region).toUpperCase(java.util.Locale.ROOT)).append("\n");
+            } else {
+                src.append("\n");
+            }
+            src.append(f[0]).append(" (").append(f[3]).append(") · ").append(f[4]);
+        }
+        TextView srcNote = s.note("Every outlet has a point of view, so the World list mixes countries and owners rather than "
+                + "picking one \"neutral\" source. Who pays for each one is listed here; read the same story from two places.\n\n" + src);
+        srcNote.setTextSize(12.5f);
+
         s.section("About");
         s.note("SA Radio " + BuildConfig.VERSION_NAME + ". Stations come from radio-browser.info, a free community directory, so a few may be "
                 + "off air at times. Headlines come from " + NewsRepo.FEEDS.length + " South African publishers' public "
