@@ -56,7 +56,7 @@ public class NavBar extends LinearLayout {
             plates[i] = p;
             FrameLayout slot = new FrameLayout(c);
             slot.setClipChildren(false);
-            slot.addView(p, new FrameLayout.LayoutParams(Ui.dp(c, 88), Ui.dp(c, 50), Gravity.CENTER));
+            slot.addView(p, new FrameLayout.LayoutParams(Ui.dp(c, iconRes.length > 3 ? 72 : 88), Ui.dp(c, 50), Gravity.CENTER));
             addView(slot, new LayoutParams(0, Ui.dp(c, 64), 1f));
         }
         setClipChildren(false);

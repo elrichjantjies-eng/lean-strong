@@ -52,6 +52,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
     static final int TAB_RADIO = 0;
     static final int TAB_FAV = 1;
     static final int TAB_NEWS = 2;
+    static final int TAB_GAMES = 3;
 
     private final Handler main = new Handler(Looper.getMainLooper());
     private final ArrayList<Sheet> sheets = new ArrayList<>();
@@ -134,6 +135,8 @@ public class MainActivity extends Activity implements RadioService.Listener {
     private String miniKey;
 
     private NavBar nav;
+    private GamesPage gamesPage;
+    private GameHost gameHost;
 
     // Data
     private List<Station> all = new ArrayList<>();
@@ -240,6 +243,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
         super.onResume();
         RadioService.setListener(this);
         main.post(ticker);
+        if (gameHost != null) gameHost.resume();
         if (web != null) web.onResume();
         rebuildRecents();
         if (tab == TAB_NEWS && sportMode) sportView.shown();
@@ -249,6 +253,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
     protected void onPause() {
         RadioService.setListener(null);
         main.removeCallbacks(ticker);
+        if (gameHost != null) gameHost.pause();
         if (web != null) web.onPause();
         sportView.hidden();
         super.onPause();
@@ -284,6 +289,8 @@ public class MainActivity extends Activity implements RadioService.Listener {
             sheets.get(sheets.size() - 1).dismiss();
         } else if (nowPlaying != null && nowPlaying.isOpen()) {
             nowPlaying.close();
+        } else if (gameHost != null && gameHost.isOpen()) {
+            gameHost.close();
         } else if (tab == TAB_NEWS && articlePage.getVisibility() == View.VISIBLE) {
             if (originalMode && web != null && web.canGoBack()) web.goBack();
             else if (originalMode) showReader();
@@ -335,6 +342,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
         nav.setBottomInset(insetNav);
         for (Sheet s : sheets) s.applyInsets(insetNav, insetIme, insetTop);
         if (nowPlaying != null) nowPlaying.applyInsets(insetTop, insetNav);
+        if (gameHost != null) gameHost.applyInsets(insetTop, insetNav);
         return in;
     }
 
@@ -631,13 +639,16 @@ public class MainActivity extends Activity implements RadioService.Listener {
             if (tab == TAB_NEWS && articlePage.getVisibility() == View.VISIBLE) closeArticle();
         }
         tab = t;
-        boolean stations = t != TAB_NEWS;
+        boolean stations = t == TAB_RADIO || t == TAB_FAV;
         radioPage.setVisibility(stations ? View.VISIBLE : View.GONE);
-        newsPage.setVisibility(!stations && articlePage.getVisibility() != View.VISIBLE ? View.VISIBLE : View.GONE);
-        if (stations) articlePage.setVisibility(View.GONE);
+        newsPage.setVisibility(t == TAB_NEWS && articlePage.getVisibility() != View.VISIBLE ? View.VISIBLE : View.GONE);
+        gamesPage.setVisibility(t == TAB_GAMES ? View.VISIBLE : View.GONE);
+        if (t == TAB_GAMES) gamesPage.refresh();
+        if (t != TAB_NEWS) articlePage.setVisibility(View.GONE);
         provinceScroll.setVisibility(t == TAB_RADIO ? View.VISIBLE : View.GONE);
         search.setHint(t == TAB_FAV ? "Search your favourites" : "Where to? Station, genre or city");
-        title.setText(t == TAB_RADIO ? "SA Radio" : t == TAB_FAV ? "Favourites" : sportMode ? "Sport" : worldMode ? "World" : "News");
+        title.setText(t == TAB_RADIO ? "SA Radio" : t == TAB_FAV ? "Favourites" : t == TAB_GAMES ? "Games"
+                : sportMode ? "Sport" : worldMode ? "World" : "News");
         updatePlate();
         if (t == TAB_FAV) {
             actionBtn.setImageResource(R.drawable.ic_plus);
@@ -672,6 +683,7 @@ public class MainActivity extends Activity implements RadioService.Listener {
         String s;
         if (tab == TAB_RADIO) s = all.isEmpty() ? "Mzansi on air" : "Mzansi · " + all.size() + " stations";
         else if (tab == TAB_FAV) s = favs.isEmpty() ? "Nothing saved yet" : favs.size() + (favs.size() == 1 ? " station saved" : " stations saved");
+        else if (tab == TAB_GAMES) s = Games.ALL.length + " puzzles · new every day";
         else if (sportMode) s = "Scores & fixtures";
         else if (worldMode) {
             Set<String> countries = new LinkedHashSet<>();
@@ -717,6 +729,9 @@ public class MainActivity extends Activity implements RadioService.Listener {
         pages.addView(buildRadioPage());
         pages.addView(buildNewsPage());
         pages.addView(buildArticlePage());
+        gamesPage = new GamesPage(this);
+        gamesPage.setVisibility(View.GONE);
+        pages.addView(gamesPage);
 
         // Bottom: a soft fade, the mini player and the floating nav. Lists scroll underneath.
         bottomFade = new View(this);
@@ -725,8 +740,8 @@ public class MainActivity extends Activity implements RadioService.Listener {
         root.addView(bottomFade, new FrameLayout.LayoutParams(-1, Ui.dp(this, 120), Gravity.BOTTOM));
         bottomArea = Ui.column(this);
         bottomArea.addView(buildMini(), Ui.lp(-1, -2, Ui.dp(this, 12), 0, Ui.dp(this, 12), Ui.dp(this, 10)));
-        nav = new NavBar(this, new int[] {R.drawable.ic_nav_radio, R.drawable.ic_star, R.drawable.ic_nav_news},
-                new String[] {"Radio", "Favourites", "News"});
+        nav = new NavBar(this, new int[] {R.drawable.ic_nav_radio, R.drawable.ic_star, R.drawable.ic_nav_news, R.drawable.ic_nav_games},
+                new String[] {"Radio", "Favourites", "News", "Games"});
         nav.setListener(this::setTab);
         bottomArea.addView(nav, Ui.lp(-1, -2));
         bottomArea.setClipChildren(false);
@@ -757,6 +772,8 @@ public class MainActivity extends Activity implements RadioService.Listener {
         grid.setPadding(grid.getPaddingLeft(), grid.getPaddingTop(), grid.getPaddingRight(), h);
         newsList.setPadding(newsList.getPaddingLeft(), newsList.getPaddingTop(), newsList.getPaddingRight(), h);
         sportView.setBottomPadding(h);
+        gamesPage.setPadding(0, 0, 0, 0);
+        ((View) gamesPage.getChildAt(0)).setPadding(Ui.dp(this, 20), Ui.dp(this, 4), Ui.dp(this, 20), h);
         ViewGroup.LayoutParams fl = bottomFade.getLayoutParams();
         fl.height = h + Ui.dp(this, 24);
         bottomFade.setLayoutParams(fl);
@@ -1824,6 +1841,25 @@ public class MainActivity extends Activity implements RadioService.Listener {
         View f = getCurrentFocus();
         if (im != null && f != null) im.hideSoftInputFromWindow(f.getWindowToken(), 0);
         if (search != null) search.clearFocus();
+    }
+
+    Handler main() {
+        return main;
+    }
+
+    void openGame(String id) {
+        if (gameHost == null) gameHost = new GameHost(this);
+        hideKeyboard();
+        gameHost.open(id);
+    }
+
+    /** A puzzle was finished or closed: update the Games tab's labels. */
+    void gamesChanged() {
+        if (gamesPage != null) gamesPage.refresh();
+    }
+
+    GameHost gameHost() {
+        return gameHost;
     }
 
     /** Re-binds visible station tiles (e.g. after the data mode changes logo sizes). */

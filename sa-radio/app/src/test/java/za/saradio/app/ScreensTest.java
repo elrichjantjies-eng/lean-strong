@@ -352,6 +352,30 @@ public class ScreensTest {
     }
 
     @Test
+    public void games() throws Exception {
+        playing(RuntimeEnvironment.getApplication());
+        MainActivity a = launch();
+        a.setTab(MainActivity.TAB_GAMES);
+        settle(a, 1500);
+        shot(a, "40_games");
+        String[] ids = {"sudoku", "guess", "search", "picture", "slide", "pairs"};
+        for (int i = 0; i < ids.length; i++) {
+            a.openGame(ids[i]);
+            settle(a, 1500);
+            if (ids[i].equals("guess")) {
+                WordGuessGame g = (WordGuessGame) ((ViewGroup) a.gameHost().board()).getChildAt(0);
+                for (char ch : "RADIO⏎".toCharArray()) g.key(ch);
+                for (char ch : "BRAAI⏎".toCharArray()) g.key(ch);
+                for (char ch : "SO".toCharArray()) g.key(ch);
+                settle(a, 500);
+            }
+            shot(a, "4" + (i + 1) + "_game_" + ids[i]);
+            a.onBackPressed();
+            settle(a, 600);
+        }
+    }
+
+    @Test
     @Config(qualifiers = "w360dp-h640dp-xhdpi")
     public void smallPhone() throws Exception {
         playing(RuntimeEnvironment.getApplication());

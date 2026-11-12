@@ -308,3 +308,26 @@ this: Middle East Eye gzips its feed without being asked (now decompressed), the
 "headlines" feed is stale (its front-page feed is used), and world outlets keep three weeks of
 stories instead of ten days because some publish weekly. World stories are kept separately from
 South African ones (up to 640 and 400), and the widgets stay on South African headlines.
+
+## 4.3: Games
+
+A fourth tab with six puzzles, all drawn in the Number Plate style and written from scratch (no
+game libraries, no copies of anyone's app): Sudoku, Five Letters, Word Search, Picture Logic,
+Number Plates and Pairs.
+
+- **Daily puzzles:** each game's puzzle for the day comes from a seed made of the date, so everyone
+  gets the same one. The Games page shows how many of today's six are done and a day streak. New
+  gives a random puzzle instead.
+- **Sudoku** generates a full grid, then removes cells while a solver confirms there's still exactly
+  one solution; Easy, Medium and Hard leave about 40, 32 and 26 givens. Conflicts show in red; slips
+  against the real solution are counted. Hold a number for pencil marks.
+- **Five Letters** uses a 600-word list with South African words (BRAAI, KAROO, SPAZA…); guesses must
+  be in the list. Double letters are scored the way players expect.
+- **Word Search** draws eight words from one of ten South African themes; words never nest inside
+  one another.
+- **Picture Logic** has eight hand-drawn 10×10 pictures, mirrored at random. A solution is accepted
+  if it matches every clue, even if it differs from the picture.
+- **Number Plates** shuffles by sliding from the solved state, so it's always solvable. Tap a plate
+  in line with the gap to slide the whole run.
+- Progress saves on every move, the timer pauses when the app goes to the background, and best
+  times are kept per game and level. The generators are unit-tested.
