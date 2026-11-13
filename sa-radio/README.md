@@ -1,4 +1,4 @@
-# SA Radio 4.3
+# SA Radio 4.4
 
 South African radio and news for Android. This is the source of the SA Radio app, rebuilt from the
 2.0 APK and redesigned. See [REVIEW.md](REVIEW.md) for what was wrong with 2.0 and what changed.
@@ -21,11 +21,11 @@ Home-screen widgets (4.1):
 | --- | --- | --- | --- | --- |
 | ![Pocket radio](docs/screenshots/widget-radio.jpg) | ![Presets](docs/screenshots/widget-presets.jpg) | ![Headlines](docs/screenshots/widget-headlines.jpg) | ![Read here](docs/screenshots/widget-story.jpg) | ![Scoreboard](docs/screenshots/widget-sport.jpg) |
 
-Games (4.3):
+Games (4.3–4.4):
 
-| Games | Sudoku | Five Letters | Picture Logic |
-| --- | --- | --- | --- |
-| ![Games](docs/screenshots/games.jpg) | ![Sudoku](docs/screenshots/game-sudoku.jpg) | ![Five Letters](docs/screenshots/game-five-letters.jpg) | ![Picture Logic](docs/screenshots/game-picture-logic.jpg) |
+| Games | Sudoku | Five Letters | Picture Logic | Quick Crossword | Daily Quiz |
+| --- | --- | --- | --- | --- | --- |
+| ![Games](docs/screenshots/games.jpg) | ![Sudoku](docs/screenshots/game-sudoku.jpg) | ![Five Letters](docs/screenshots/game-five-letters.jpg) | ![Picture Logic](docs/screenshots/game-picture-logic.jpg) | ![Crossword](docs/screenshots/game-crossword.jpg) | ![Quiz](docs/screenshots/game-quiz.jpg) |
 
 | Settings | Match details | Small phone (360×640 dp) |
 | --- | --- | --- |
@@ -78,7 +78,8 @@ Games (4.3):
     every 2 minutes while a game is on (5 on Saver), otherwise hourly.
 
   Add them from Settings → Home-screen widgets, or by holding the home screen and choosing Widgets.
-- **Games** (fourth tab): six puzzles to play while you listen. **Sudoku** (three levels, every puzzle
+- **Games** (fourth tab): eight puzzles to play while you listen, including the newspaper staples
+  **Quick Crossword** (a 5×5 lattice with six clues) and **Daily Quiz** (ten questions on South Africa). **Sudoku** (three levels, every puzzle
   has one solution, pencil marks), **Five Letters** (guess the word in six tries), **Word Search**
   (South African themes: lekker eats, wildlife, kasi slang…), **Picture Logic** (fill the cells the
   numbers describe to reveal a picture), **Number Plates** (a 3×3, 4×4 or 5×5 slide puzzle) and
@@ -137,7 +138,7 @@ users will have to uninstall again.
 | `Widgets`, `WidgetListService`, `WidgetJobs`, `WidgetStore` | Widget plumbing: intents and pictures, list rows, background refreshes, saved scores and story text |
 | `Games`, `GamesPage`, `GameHost`, `Game` | The Games tab, the page a puzzle plays on, and what every puzzle shares |
 | `Puzzles`, `Words` | Puzzle generators (seeded, tested) and the word list in `assets/words.txt` |
-| `SudokuGame`, `WordGuessGame`, `WordSearchGame`, `PictureGame`, `SlideGame`, `MemoryGame` | The six puzzles |
+| `SudokuGame`, `WordGuessGame`, `WordSearchGame`, `PictureGame`, `SlideGame`, `MemoryGame`, `CrosswordGame`, `QuizGame` | The eight puzzles; crosswords and quiz questions live in `assets/crosswords.txt` and `assets/quiz.txt` |
 | `PlainText` | Pulls a story's text out of its page for the Read here widget (a widget can't run the reader's WebView) |
 | `Ui`, `Livery`, `LogoView`, `NavBar`, `Segmented`, `EqCurveView` | Design system and custom views: colours and fonts, livery stripes, logo roundels and brand colours, the number-plate bar |
 

@@ -1,0 +1,75 @@
+# Daily quiz: South African general knowledge. Question|option A|option B|option C|option D|letter of the right answer
+# Geography
+Which city is South Africa's legislative capital, where Parliament sits?|Pretoria|Cape Town|Bloemfontein|Johannesburg|B
+Which city is the judicial capital, home of the Supreme Court of Appeal?|Bloemfontein|Durban|Pretoria|Gqeberha|A
+How many provinces does South Africa have?|7|9|11|12|B
+Which province is the largest by area?|Gauteng|KwaZulu-Natal|Northern Cape|Eastern Cape|C
+Which province is the smallest by area?|Gauteng|Mpumalanga|Western Cape|Free State|A
+Which is the longest river in South Africa?|Vaal|Limpopo|Orange|Tugela|C
+Table Mountain overlooks which city?|Durban|Cape Town|Port Elizabeth|East London|B
+The Drakensberg mountains are mostly in which province?|KwaZulu-Natal|Northern Cape|Western Cape|Limpopo|A
+Which ocean lies on South Africa's east coast?|Atlantic|Southern|Indian|Pacific|C
+Which country is completely surrounded by South Africa?|Eswatini|Botswana|Lesotho|Namibia|C
+Which desert stretches across the Northern Cape into Botswana and Namibia?|Sahara|Kalahari|Namib|Karoo|B
+Which city was renamed Gqeberha in 2021?|East London|Port Elizabeth|Pietermaritzburg|Polokwane|B
+Which town is the capital of Limpopo?|Mbombela|Polokwane|Mahikeng|Thohoyandou|B
+Which city is the capital of Mpumalanga?|Witbank|Secunda|Mbombela|Ermelo|C
+Which province has Kimberley as its capital?|North West|Free State|Northern Cape|Eastern Cape|C
+Robben Island lies in which bay?|False Bay|Table Bay|Algoa Bay|Saldanha Bay|B
+The Kruger National Park borders which two countries?|Mozambique and Zimbabwe|Botswana and Namibia|Lesotho and Eswatini|Zimbabwe and Botswana|A
+Which is the southernmost tip of Africa?|Cape Point|Cape of Good Hope|Cape Agulhas|Cape Columbine|C
+The Blyde River Canyon is in which province?|Limpopo|Mpumalanga|KwaZulu-Natal|Gauteng|B
+Soweto is a township on the edge of which city?|Pretoria|Durban|Johannesburg|Cape Town|C
+# Language and culture
+How many official languages does South Africa have?|9|11|12|13|C
+Which language has the most home speakers in South Africa?|isiXhosa|Afrikaans|isiZulu|Sepedi|C
+What does "Mzansi" mean?|The north|The south|The coast|The city|B
+"Ubuntu" is a word from the Nguni languages meaning roughly what?|Freedom|Humanity towards others|Wealth|Courage|B
+What is a "braai"?|A barbecue|A dance|A boat|A hat|A
+What is "bunny chow"?|A rabbit dish|Curry served in a hollowed-out loaf|A sweet pastry|A kind of salad|B
+What is "melktert"?|A milk tart|A meat pie|A fish stew|A corn porridge|A
+What does "lekker" mean?|Late|Nice|Loud|Little|B
+"Eish" is an expression of what?|Joy|Surprise or dismay|Agreement|Farewell|B
+What is a "robot" in South African English?|A traffic light|A bus stop|A petrol pump|A parking meter|A
+What is a "bakkie"?|A small bag|A pickup truck|A bicycle|A bread roll|B
+In isiZulu, what does "sawubona" mean?|Thank you|Goodbye|Hello (I see you)|Please|C
+What is the national flower of South Africa?|Protea|Rose|Jacaranda|Aloe|A
+Which animal is on the national cricket team's badge?|Springbok|Protea flower|Lion|Eagle|B
+What is the national animal of South Africa?|Lion|Elephant|Springbok|Kudu|C
+Amapiano is a style of what?|Cooking|Music|Painting|Dance only|B
+Which city's streets turn purple with jacaranda blossom each spring?|Cape Town|Durban|Pretoria|Bloemfontein|C
+Which instrument is at the heart of maskandi music?|Trumpet|Guitar|Piano|Drum kit|B
+What is "pap"?|Maize porridge|Bean stew|A sweet bun|Dried meat|A
+What is "biltong"?|Dried, cured meat|A sausage|A spicy relish|A doughnut|A
+# History and public life
+In which year did South Africa hold its first democratic election with universal suffrage?|1990|1992|1994|1996|C
+Who was South Africa's first democratically elected president?|Thabo Mbeki|Nelson Mandela|F. W. de Klerk|Desmond Tutu|B
+Which year was Nelson Mandela released from prison?|1985|1988|1990|1994|C
+On which island was Nelson Mandela imprisoned for 18 years?|Marion Island|Robben Island|Dassen Island|Seal Island|B
+Freedom Day is celebrated on which date?|16 June|27 April|24 September|21 March|B
+Youth Day, 16 June, remembers an uprising in which township in 1976?|Alexandra|Khayelitsha|Soweto|Mamelodi|C
+Heritage Day is on which date?|24 September|16 December|1 May|9 August|A
+Human Rights Day, 21 March, remembers events in which township in 1960?|Sharpeville|Langa|Soweto|Mdantsane|A
+How many colours are on the South African flag?|4|5|6|7|C
+What is the name of South Africa's currency?|Dollar|Pula|Rand|Shilling|C
+Which Nobel Peace Prize winner was Archbishop of Cape Town?|Albert Luthuli|Desmond Tutu|F. W. de Klerk|Nelson Mandela|B
+South Africa hosted the FIFA World Cup in which year?|2006|2010|2014|2018|B
+What is the nickname of the national rugby team?|The Proteas|Bafana Bafana|The Springboks|Banyana Banyana|C
+What is the nickname of the men's national football team?|The Springboks|Bafana Bafana|The Proteas|Amabokoboko|B
+What is the nickname of the women's national football team?|Banyana Banyana|Bafana Bafana|The Proteas|The Blitzboks|A
+How many Rugby World Cups had the Springboks won by 2023?|2|3|4|5|C
+Which Grand Prix circuit near Johannesburg hosted Formula 1 until 1993?|Kyalami|Zwartkops|Killarney|Phakisa|A
+The Comrades Marathon runs between Durban and which city?|Pietermaritzburg|Richards Bay|Ballito|Howick|A
+Who wrote the novel "Cry, the Beloved Country"?|Nadine Gordimer|Alan Paton|J. M. Coetzee|Zakes Mda|B
+Which South African swimmer won gold in the 200m breaststroke at the 2020 Tokyo Olympics?|Chad le Clos|Tatjana Schoenmaker|Penny Heyns|Cameron van der Burgh|B
+# Science and everyday
+Which South African hospital saw the world's first human heart transplant in 1967?|Chris Hani Baragwanath|Groote Schuur|Tygerberg|Steve Biko Academic|B
+What does Eskom supply?|Water|Electricity|Petrol|Railways|B
+Which company is South Africa's national airline?|Kulula|FlySafair|South African Airways|Airlink|C
+What is the Gautrain?|A bus service|A rapid rail link in Gauteng|A ferry|A cable car|B
+Which is the busiest airport in South Africa?|Cape Town International|King Shaka|O. R. Tambo|Lanseria|C
+Which is the tallest building in Africa, in Sandton?|Carlton Centre|The Leonardo|Ponte City|Portside|B
+In which city is the Union Buildings, the seat of government?|Cape Town|Pretoria|Bloemfontein|Johannesburg|B
+What is the dialling code for South Africa?|+27|+44|+33|+61|A
+Which side of the road do South Africans drive on?|Right|Left|Either|Centre|B
+What is rooibos?|A red tea from the Cederberg|A root vegetable|A red wine|A fish|A

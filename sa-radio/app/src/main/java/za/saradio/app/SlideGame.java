@@ -97,12 +97,13 @@ final class SlideGame extends Game {
         for (int k = 0; k < g.length; k++) if (g[k] == 0) blank = k;
         int bx = blank % n, by = blank / n;
         if (col != bx && r != by) return true;
-        // Slide the whole run of plates between the tap and the gap.
-        int step = col == bx ? (r < by ? -n : n) : (col < bx ? -1 : 1);
+        // Slide the whole run of plates between the tap and the gap: each plate moves one place
+        // towards where the gap was, and the gap ends up where you tapped.
+        int towardTap = col == bx ? (r < by ? -n : n) : (col < bx ? -1 : 1);
         int k = blank;
         while (k != i) {
-            g[k] = g[k - step];
-            k -= step;
+            g[k] = g[k + towardTap];
+            k += towardTap;
         }
         g[i] = 0;
         moves++;

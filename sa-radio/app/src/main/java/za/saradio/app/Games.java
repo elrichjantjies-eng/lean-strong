@@ -26,6 +26,8 @@ final class Games {
                 case "guess": return new WordGuessGame(c);
                 case "picture": return new PictureGame(c);
                 case "slide": return new SlideGame(c);
+                case "crossword": return new CrosswordGame(c);
+                case "quiz": return new QuizGame(c);
                 default: return new MemoryGame(c);
             }
         }
@@ -38,6 +40,8 @@ final class Games {
         new Kind("picture", "Picture Logic", "Fill the cells the numbers describe", 0xFF61107D),
         new Kind("slide", "Number Plates", "Slide the plates back into order", Ui.YELLOW),
         new Kind("pairs", "Pairs", "Find the matching signs", 0xFFF28C0F),
+        new Kind("crossword", "Quick Crossword", "Six clues, five by five", Ui.INK),
+        new Kind("quiz", "Daily Quiz", "Ten questions on Mzansi", Ui.SIGN_RED),
     };
 
     static Kind find(String id) {

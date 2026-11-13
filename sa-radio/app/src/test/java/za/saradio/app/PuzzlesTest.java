@@ -104,6 +104,30 @@ public class PuzzlesTest {
     }
 
     @Test
+    public void slideGameMovesRunsOfPlates() throws Exception {
+        SlideGame g = new SlideGame(RuntimeEnvironment.getApplication());
+        g.start(5, 1);
+        g.measure(android.view.View.MeasureSpec.makeMeasureSpec(400, android.view.View.MeasureSpec.EXACTLY),
+                android.view.View.MeasureSpec.makeMeasureSpec(400, android.view.View.MeasureSpec.AT_MOST));
+        g.layout(0, 0, 400, 400);
+        // Tap every cell of the board a few times over: no tap may crash, and the tiles stay a permutation.
+        for (int round = 0; round < 3; round++) {
+            for (int i = 0; i < 16; i++) {
+                float x = 12 + (i % 4) * 97, y = 12 + (i / 4) * 97;
+                long t = android.os.SystemClock.uptimeMillis();
+                g.onTouchEvent(android.view.MotionEvent.obtain(t, t, android.view.MotionEvent.ACTION_DOWN, x, y, 0));
+            }
+        }
+        String st = g.save();
+        assertTrue(st.contains("\"moves\""));
+        int[] sorted = new int[16];
+        String[] parts = new org.json.JSONObject(st).optString("grid").split(",");
+        for (int i = 0; i < 16; i++) sorted[i] = Integer.parseInt(parts[i]);
+        Arrays.sort(sorted);
+        for (int i = 0; i < 16; i++) assertEquals(i, sorted[i]);
+    }
+
+    @Test
     public void memoryDeckHasPairs() {
         int[] deck = Puzzles.memory(9, 8);
         assertEquals(16, deck.length);
@@ -120,6 +144,30 @@ public class PuzzlesTest {
         assertFalse(Words.isWord(c, "zzzzz"));
         assertEquals(10, Words.themes(c).size());
         for (Words.Theme t : Words.themes(c)) assertTrue(t.name, t.words.size() >= 12);
+    }
+
+    @Test
+    public void crosswordsAreConsistentAndQuizLoads() {
+        android.content.Context c = RuntimeEnvironment.getApplication();
+        java.util.List<CrosswordGame.Puzzle> ps = CrosswordGame.puzzles(c);
+        assertTrue(ps.size() >= 8);
+        for (CrosswordGame.Puzzle p : ps) {
+            for (int i = 0; i < 6; i++) {
+                assertTrue(p.answers[i] != null && p.answers[i].length() == 5);
+                assertTrue(p.clues[i] != null && p.clues[i].length() > 3);
+            }
+            // Across words on rows 0, 2, 4 must cross the down words on columns 0, 2, 4.
+            for (int a = 0; a < 3; a++) for (int dn = 0; dn < 3; dn++) {
+                assertEquals(p.answers[a] + " x " + p.answers[3 + dn], p.answers[a].charAt(dn * 2), p.answers[3 + dn].charAt(a * 2));
+            }
+            assertEquals(6, new java.util.HashSet<>(Arrays.asList(p.answers)).size());
+        }
+        java.util.List<QuizGame.Q> qs = QuizGame.bank(c);
+        assertTrue("quiz bank " + qs.size(), qs.size() >= 60);
+        for (QuizGame.Q q : qs) {
+            assertTrue(q.text, q.text.endsWith("?"));
+            assertEquals(4, new java.util.HashSet<>(Arrays.asList(q.options)).size());
+        }
     }
 
     @Test

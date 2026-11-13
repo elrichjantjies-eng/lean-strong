@@ -331,3 +331,18 @@ Number Plates and Pairs.
   in line with the gap to slide the whole run.
 - Progress saves on every move, the timer pauses when the app goes to the background, and best
   times are kept per game and level. The generators are unit-tested.
+
+## 4.4: crossword, quiz, and a crash fix
+
+- **Number Plates crashed** when you tapped a plate that wasn't right next to the gap: the code that
+  slides a whole run of plates walked in the wrong direction and ran off the grid. Fixed, and there's
+  now a test that taps every square of the board three times over.
+- **Quick Crossword:** ten hand-written 5×5 lattices (three across, three down) with South African
+  clues ("What South Africans call a traffic light"). The grids were found by searching the app's own
+  word list for lattices where every crossing works, and a test checks every crossing in the file.
+  Tap a square for its clue, tap again to switch direction; wrong letters show in red once the grid
+  is full.
+- **Daily Quiz:** ten questions from a bank of 70 on South African geography, language, culture,
+  history and everyday life, shuffled by the day's seed. The right answer turns green as soon as you
+  pick one. The questions are limited to settled facts (capitals, provinces, dates, nicknames); if
+  one looks wrong to you, say so and it comes out.

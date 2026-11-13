@@ -358,7 +358,7 @@ public class ScreensTest {
         a.setTab(MainActivity.TAB_GAMES);
         settle(a, 1500);
         shot(a, "40_games");
-        String[] ids = {"sudoku", "guess", "search", "picture", "slide", "pairs"};
+        String[] ids = {"sudoku", "guess", "search", "picture", "slide", "pairs", "crossword", "quiz"};
         for (int i = 0; i < ids.length; i++) {
             a.openGame(ids[i]);
             settle(a, 1500);
@@ -368,6 +368,11 @@ public class ScreensTest {
                 for (char ch : "BRAAI⏎".toCharArray()) g.key(ch);
                 for (char ch : "SO".toCharArray()) g.key(ch);
                 settle(a, 500);
+            }
+            if (ids[i].equals("crossword")) {
+                CrosswordGame g = (CrosswordGame) ((ViewGroup) a.gameHost().board()).getChildAt(0);
+                for (char ch : "VEL".toCharArray()) g.key(ch);
+                settle(a, 300);
             }
             shot(a, "4" + (i + 1) + "_game_" + ids[i]);
             a.onBackPressed();

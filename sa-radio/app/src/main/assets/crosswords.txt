@@ -1,0 +1,72 @@
+# Quick crosswords: a 5×5 lattice. Across words on rows 1, 3 and 5; down words on columns 1, 3 and 5.
+# Numbering: 1 across / 1 down start top left, 2 and 3 down along the top row, 4 and 5 across down the left.
+@
+A1 VELDT|Open grassland of the interior
+A4 ROBOT|What South Africans call a traffic light
+A5 SOLVE|Work out, as a puzzle
+D1 VIRUS|Bug that gives you flu
+D2 LABEL|Tag on a tin or a jar
+D3 TITLE|A book's name
+@
+A1 FIRST|Before all the others
+A4 UNDER|Beneath
+A5 THOSE|Not these ones
+D1 FAULT|Who's to blame? A ___
+D2 RADIO|What this app plays
+D3 THREE|Number of tabs you had before Games
+@
+A1 TRUST|Have faith in
+A4 KASIE|The township, in local slang
+A5 NOTED|Written down; also "understood"
+D1 TAKEN|No longer free, like a seat
+D2 UPSET|Shock result; or unhappy
+D3 TREND|What's catching on
+@
+A1 METAL|Iron, copper or gold
+A4 MIGHT|Great strength; or "may"
+A5 AFTER|Later than
+D1 MAMBA|Snake with a black mouth
+D2 TIGHT|Not loose
+D3 LATER|See you ___
+@
+A1 GRACE|Said before a meal
+A4 AGENT|Someone acting for another
+A5 SPAZA|Corner shop in the township
+D1 GLASS|What windows are made of
+D2 ARENA|Where the big fight happens
+D3 EXTRA|Something more
+@
+A1 MAKER|One who builds something
+A4 STRIP|Narrow piece; or a road of shops
+A5 CROWD|Many people together
+D1 MUSIC|What the stations play between the talk
+D2 KAROO|The dry heart of South Africa
+D3 RAPID|Quick
+@
+A1 DOING|Getting on with it
+A4 BRAAI|Where the wors goes on a Sunday
+A5 THESE|The ones here
+D1 DEBUT|First appearance
+D2 IMAGE|Picture
+D3 GUIDE|Someone who shows the way
+@
+A1 FORCE|Push; or the police ___
+A4 CHINA|Mate, in Jozi slang; also a country
+A5 SHEET|On the bed, or of paper
+D1 FOCUS|Concentrate
+D2 RAISE|Lift up; or a pay rise
+D3 EXACT|Precise
+@
+A1 PLAIN|Simple; or flat land
+A4 LEASE|Rent agreement
+A5 TIMES|___ Media; or multiplied by
+D1 PILOT|Flies the plane
+D2 ALARM|What wakes you up
+D3 NEEDS|Must have
+@
+A1 EARTH|Our planet
+A4 GIANT|Huge
+A5 ROYAL|Of the king or queen
+D1 EAGER|Keen
+D2 READY|All set
+D3 HOTEL|Where travellers sleep
